@@ -1,8 +1,10 @@
 import { useState } from 'react'
 
-type Prop = {
-	todoSummary: string,
-	owner: string
+export type Prop = {
+	// id: number,
+	summary: string,
+	owner: string,
+	done: boolean
 }
 
 export const AddChildForm = (prop: Prop) => {
@@ -20,20 +22,20 @@ export const AddChildForm = (prop: Prop) => {
 			},
 			body: JSON.stringify({
 				// todo
-				'summary': prop.todoSummary,
-				'owner': prop.owner
+				summary: prop.summary,
+				owner: prop.owner
 			})
 		})
 		.then(res => res.json())
 		.then(json => console.log(json))
-		.catch(err => console.log(err))
+		.catch(err => console.log(err));
 	}
 
 	return (
 		//<form ref="form">
 			<div>
-				<input type="text" name="todo[summary]" onChange={e => setTodo({...todo, todoSummary: e.target.value})} value={prop.todoSummary} />
-				<input type="text" name="todo[owner]" onChange={e => setTodo({...todo, owner: e.target.value})} value={prop.owner} />
+				<input type="text" name="todo[summary]" onChange={e => setTodo({...todo, summary: e.target.value})}></input>
+				<input type="text" name="todo[owner]" onChange={e => setTodo({...todo, owner: e.target.value})}></input>
 				{/* <select name="todo[done]" value={prop.done} onChange={e => setTodo({...todo, done: e.target.value})}>
 						<option value={prop.done}>True</option>
 						<option value={prop.done}>False</option>

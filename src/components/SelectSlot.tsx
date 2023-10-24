@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useMemo } from 'react'
 import { Calendar, SlotInfo, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 
@@ -35,7 +35,7 @@ export function OnSelectSlot() {
       }, 250)
     }, [])
   
-    // const defaultDate = useMemo(() => new Date(2015, 3, 1), [])
+    const defaultDate = useMemo(() => new Date(2015, 3, 1), [])
 
     const demoEvents = [
         {
@@ -53,7 +53,7 @@ export function OnSelectSlot() {
     return (
       <div className="height600">
         <Calendar
-          // defaultDate={defaultDate}
+          defaultDate={defaultDate}
           events={demoEvents}
           localizer={mLocalizer}
           onSelectSlot={onSelectSlot}

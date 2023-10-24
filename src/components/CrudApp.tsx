@@ -13,7 +13,7 @@ import ja from 'date-fns/locale/ja'
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
-import { AddChildForm } from './components/InputComponent'
+// import { AddChildForm } from './components/InputComponent'
 
 const locales = {
     'ja-JP': ja,
@@ -37,7 +37,6 @@ export const App = () => {
 	const handleSelectEvent = useCallback(
 		() => {
 			// window.alert(event.title);
-			<AddChildForm todoSummary="Teat" owner='Me'/>
 		},
 		[]
 	);
