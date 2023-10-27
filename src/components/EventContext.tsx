@@ -1,6 +1,6 @@
-import { createContext, Dispatch, ReactNode, useReducer, useContext } from 'react';
+import { createContext, Dispatch, ReactNode, useReducer } from 'react';
+import { Event } from 'react-big-calendar';
 
-import { EventState } from './InputForm';
 // export type Todo = {
 // 	id?: number,
 // 	summary: string,
@@ -8,12 +8,16 @@ import { EventState } from './InputForm';
 // 	done: boolean
 // }
 // type TodosState = Todo[];
-type EventsState = EventState[];
+// export type EventState = {
+//   title: string;
+//   onChange?: React.ChangeEventHandler<HTMLInputElement>;
+// };
+type Events = Event[];
 
 // * State専用 Context *
 // 今後 Providerを使わない時にはContextの値がundefinedになる必要があるので, 
 // Contextの値がTodosStateにもundefinedにもできるように宣言してください。
-const EventsStateContext = createContext<EventsState | undefined>(undefined);
+export const EventsStateContext = createContext<Events | undefined>(undefined);
 
 type Action = 
   | { type: 'CREATE'; title: string }
@@ -25,12 +29,12 @@ type Action =
 type EventsDispatch = Dispatch<Action>;
 
 // * Dispatch専用 Context *
-const EventsDispatchContext = createContext<EventsDispatch | undefined>(
+export const EventsDispatchContext = createContext<EventsDispatch | undefined>(
   undefined
 );
 
 // * Reducer *
-function eventsReducer(state: EventsState, action: Action): EventsState {
+function eventsReducer(state: Events, action: Action): Events {
   switch (action.type) {
     case 'CREATE':
       // const nextId = Math.max(...state.map(todo => todo.id)) + 1;
@@ -39,42 +43,19 @@ function eventsReducer(state: EventsState, action: Action): EventsState {
         // summary: action.summary,
 				// owner: action.owner,
         // done: false
-        title: action.title
+        title: action.title,
+        start: new Date(),
+        end: new Date(new Date().setHours(new Date().getHours() + 1)),    
       });
-    // case 'TOGGLE':
-    //   return state.map(todo =>
-    //     todo.id === action.id ? { ...todo, done: !todo.done } : todo
-    //   );
     // case 'REMOVE':
-    //   return state.filter(todo => todo.id !== action.id);
+    //   return state.filter(state => state.title !== action.title);
     default:
       throw new Error('Invalid action');
   }
 }
 
-
-// TodosStateContextとTodosDispatchContextのProviderを一緒に使います。 
 export function EventsContextProvider({ children }: { children: ReactNode }) {
-  const [events, dispatch] = useReducer(eventsReducer, [
-    // {
-    //   summary: 'Context APIを勉強する',
-    //   owner: 'Ken',
-    //   done: true
-    // },
-    // {
-    //   summary: 'TypeScriptを勉強する',
-    //   owner: 'Ken',
-    //   done: true
-    // },
-    // {
-    //   summary: 'TypeScriptでContext APIを使ってみる',
-    //   owner: 'Ken',
-    //   done: false
-    // }
-    {
-      title: 'Toilet'
-    }
-  ]);
+  const [events, dispatch] = useReducer(eventsReducer, []);
 
   return (
 		<EventsDispatchContext.Provider value={dispatch}>
@@ -83,16 +64,4 @@ export function EventsContextProvider({ children }: { children: ReactNode }) {
 			</EventsStateContext.Provider>
 		</EventsDispatchContext.Provider>
   );
-}
-
-export function useEventsState() {
-  const state = useContext(EventsStateContext);
-  if (!state) throw new Error('TodosProvider not found');
-  return state;
-}
-
-export function useEventsDispatch() {
-  const dispatch = useContext(EventsDispatchContext);
-  if (!dispatch) throw new Error('TodosProvider not found');
-  return dispatch;
 }
