@@ -1,30 +1,30 @@
 import { useState, FormEvent } from 'react';
+import { Event } from 'react-big-calendar'
 
-import { useEventsDispatch } from '../lib/UseContext';
-import { MyCalendar } from './date-fns';
+import { useEventsDispatch, useEventsState } from '../lib/UseContext';
+// import { MyCalendar } from './date-fns';
 
 type InputElementProps = React.ComponentProps<'input'>;
 
-// const InputFormContext = createContext('')
-
 export const InputComponent = (inputProps: InputElementProps) => {
-  const [value, setValue] = useState('');
+  const [title, setTitle] = useState<string>('');
   const dispatch = useEventsDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // このコンポーネントで onChange 発火時に必ず実行したい振る舞いを書く
-    inputProps?.onChange?.(e);
-    // console.log(inputProps);
+    // inputProps?.onChange?.(e);
+    setTitle(e.target.value);
+    // console.log(`ここにも注目：${state}`);
   };
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     dispatch({
       type: 'CREATE',
-      title: value
+      title: title
     });
-    setValue(value);
-    console.log(value);
+    // console.log(inputProps);
+    console.log(`ここ注目：${title}`);
   };
 
   return (
@@ -32,14 +32,12 @@ export const InputComponent = (inputProps: InputElementProps) => {
       <form onSubmit={onSubmit}>
         <input
           {...inputProps}
-          // value={value}
           placeholder="やることを入力してくださいー"
-          // onChange={e => setValue(e.target.value)}
-          onChange={(e) => handleChange(e)}
+          onChange={handleChange}
         />
         <button>追加</button>
       </form>
-      <MyCalendar />
+      {/* <MyCalendar title={title} /> */}
     </div>
   );
 };

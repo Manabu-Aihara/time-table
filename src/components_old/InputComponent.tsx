@@ -7,8 +7,16 @@ export type Prop = {
 	done: boolean
 }
 
-export const AddChildForm = (prop: Prop) => {
-	const [todo, setTodo] = useState<Prop>(prop);
+export const AddChildForm = () => {
+	const [todo, setTodo] = useState<Prop>({
+		summary: '', owner: '', done: false
+	});
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		// name, valueという変数名で決まっているようだ
+		const {name, value} = e.target;
+		setTodo({...todo, [name]:value});
+	}
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
@@ -17,25 +25,27 @@ export const AddChildForm = (prop: Prop) => {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				// mode: 'no-cors',
-				Accept: 'application/json',
+				// Accept: 'application/json',
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
 				// todo
-				summary: prop.summary,
-				owner: prop.owner
+				summary: todo.summary,
+				owner: todo.owner
 			})
 		})
-		.then(res => res.json())
-		.then(json => console.log(json))
-		.catch(err => console.log(err));
+		.then(res => res.json());
+		// .then(json => console.log(json))
+		// .catch(err => console.log(err));
 	}
 
 	return (
 		//<form ref="form">
 			<div>
-				<input type="text" name="todo[summary]" onChange={e => setTodo({...todo, summary: e.target.value})}></input>
-				<input type="text" name="todo[owner]" onChange={e => setTodo({...todo, owner: e.target.value})}></input>
+				さまりー：
+				<input type="text" name="summary" onChange={handleChange} value={todo.summary} />
+				おーなー：
+				<input type="text" name="owner" onChange={handleChange} value={todo.owner} />
 				{/* <select name="todo[done]" value={prop.done} onChange={e => setTodo({...todo, done: e.target.value})}>
 						<option value={prop.done}>True</option>
 						<option value={prop.done}>False</option>

@@ -1,24 +1,20 @@
 import{ useEffect, useState } from "react";
 
 import { Prop } from "./InputComponent"
-// export type Prop = {
-// 	"summary": string,
-// 	"owner": string
-// }
 
 const fetchData: Promise<Prop[]> = fetch('http://127.0.0.1:8000/todo/all',
 	{
 		method: 'GET',
 		headers: {
 			'Access-Control-Allow-Origin': '*',
-			mode: 'cors',
-			Accept: 'application/json',
+			// mode: 'cors',
+			// Accept: 'application/json',
 			'Content-Type': 'application/json',
 			// credentials: 'include' // ここを追加。
 		}
 	})
-	// .then(res => console.log(res))
 	.then(res => res.json());
+	// .then(json => console.log(json))
 	// .catch(err => console.log(err));
 
 export const AllTodo = () => {
