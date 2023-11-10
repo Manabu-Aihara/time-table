@@ -8,6 +8,7 @@ import getDay from 'date-fns/getDay'
 import ja from 'date-fns/locale/ja'
 
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+import { useDialog } from '../hooks/useDialog'
 
 const locales = {
   'ja-JP': ja,
@@ -21,55 +22,41 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-type Props = React.ComponentPropsWithRef<'input'>
-
-const EventInput = forwardRef<HTMLInputElement, Props>(
-  ({...props }, ref) => {
-    return <input {...props} ref={ref} />
-});
-
-// type Prop = {
-//   title: string;
-// }
-
 export const MyCalendar = () => {
+  const [Dialog, open, close, data] = useDialog();
   const [schedules, setSchedules] = useState<Event[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
-  console.log(inputRef);
 
-	const handleSelectEvent = useCallback(
-		(callEvent: Event) => {
-			window.alert(callEvent.title);
-		},
-		[]
-	);
+  const handleSelectSlot = useCallback(() => {
+    open();
+  }, []);
 
-  const handleSelectSlot = useCallback(
-		(data: Event) => {
-			const { start, end } = data
-			// const title = window.prompt('New Event name')
-      let title: string;
-      if(inputRef.current !== null){
-        title = inputRef.current.value;
-        setSchedules((prev) => [...prev, { start, end, title }]);
-      }
-    },
-    [setSchedules]
-	)
+  const handleReflect = (event: Event) => {
+    const { start, end } = event;
+    if(data !== null){
+      setSchedules((prev) => [...prev, { start, end, data }]);
+    }
+  }
 
   return (
     <div>
-      <EventInput ref={inputRef} />
       <Calendar
         localizer={localizer}
         events={schedules}
         startAccessor="start"
         endAccessor="end"
-        onSelectEvent={handleSelectEvent}
+        // onSelectEvent={handleSelectEvent}
         onSelectSlot={handleSelectSlot}
         selectable
         style={{ height: 500 }}
       />
+      <p>openボタンを押してダイアログを開きます</p>
+      <div style={{ height: "200px" }} />
+      <Dialog>
+        <div>
+          <p>ここにダイアログのコンテンツを入れたいんじゃ!!</p>
+          <button onClick={close}>close</button>
+        </div>
+      </Dialog>
     </div>
-  );
+  )
 }

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { EventsStateContext, EventsDispatchContext } from "../components/EventContext";
+import { EventsStateContext, EventsDispatchContext } from "../components/EventsParent";
 
 export function useEventsState() {
   const state = useContext(EventsStateContext);

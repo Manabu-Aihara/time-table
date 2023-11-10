@@ -2,7 +2,7 @@ import { useState, FormEvent } from 'react';
 import { Event } from 'react-big-calendar'
 
 import { useEventsDispatch, useEventsState } from '../lib/UseContext';
-// import { MyCalendar } from './date-fns';
+import { MyCalendar } from './date-fns';
 
 type InputElementProps = React.ComponentProps<'input'>;
 
@@ -37,7 +37,6 @@ export const InputComponent = (inputProps: InputElementProps) => {
         />
         <button>追加</button>
       </form>
-      {/* <MyCalendar title={title} /> */}
     </div>
   );
 };
