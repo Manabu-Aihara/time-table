@@ -1,14 +1,16 @@
-import { useState, useCallback, forwardRef, useRef } from 'react'
-import { Calendar, dateFnsLocalizer, Event } from 'react-big-calendar'
-import format from 'date-fns/format'
-import parse from 'date-fns/parse'
-import startOfWeek from 'date-fns/startOfWeek'
-import getDay from 'date-fns/getDay'
-// import enUS from 'date-fns/locale/en-US'
-import ja from 'date-fns/locale/ja'
+import { useState, useCallback } from 'react';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import format from 'date-fns/format';
+import parse from 'date-fns/parse';
+import startOfWeek from 'date-fns/startOfWeek';
+import getDay from 'date-fns/getDay';
+// import enUS from 'date-fns/locale/en-US';
+import ja from 'date-fns/locale/ja';
 
-import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { useDialog } from '../hooks/useDialog'
+import { useEventsState } from "../lib/UseContext";
+import { useDialog } from '../hooks/useDialog';
+
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const locales = {
   'ja-JP': ja,
@@ -23,25 +25,19 @@ const localizer = dateFnsLocalizer({
 });
 
 export const MyCalendar = () => {
-  const [Dialog, open, close, data] = useDialog();
-  const [schedules, setSchedules] = useState<Event[]>([]);
+  const [Dialog, open, close, events] = useDialog();
+  const state = useEventsState()
 
   const handleSelectSlot = useCallback(() => {
     open();
   }, []);
 
-  const handleReflect = (event: Event) => {
-    const { start, end } = event;
-    if(data !== null){
-      setSchedules((prev) => [...prev, { start, end, data }]);
-    }
-  }
-
+  console.log(`ダイアログ外:${events}->${JSON.stringify(state)}`);
   return (
     <div>
       <Calendar
         localizer={localizer}
-        events={schedules}
+        events={events}
         startAccessor="start"
         endAccessor="end"
         // onSelectEvent={handleSelectEvent}
@@ -49,14 +45,13 @@ export const MyCalendar = () => {
         selectable
         style={{ height: 500 }}
       />
-      <p>openボタンを押してダイアログを開きます</p>
-      <div style={{ height: "200px" }} />
-      <Dialog>
-        <div>
-          <p>ここにダイアログのコンテンツを入れたいんじゃ!!</p>
-          <button onClick={close}>close</button>
-        </div>
-      </Dialog>
+      <div style={{ height: "100px" }} />
+        <Dialog>
+          <div>
+            <p>ここにダイアログのコンテンツを入れたいんじゃ!!</p>
+            <button onClick={close}>close</button>
+          </div>
+        </Dialog>
     </div>
   )
 }

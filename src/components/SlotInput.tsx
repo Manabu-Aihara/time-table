@@ -11,8 +11,6 @@ import ja from 'date-fns/locale/ja'
 import addHours from 'date-fns/addHours'
 import startOfHour from 'date-fns/startOfHour'
 
-import { useEventsState } from "../lib/UseContext";
-
 // import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Dialog } from './Dialog';
@@ -95,7 +93,7 @@ export const MyCalendar = ({ onShowDialogView }: CalendarProps) => {
 			onSelectEvent={handleSelectEvent}
 			onSelectSlot={handleSelectSlot}
 			selectable
-			style={{ width: '98vh' }}
+			style={{ height: '75vw' }}
 		/>
   );
 }

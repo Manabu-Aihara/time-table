@@ -1,5 +1,6 @@
 import { createContext, Dispatch, ReactNode, useReducer } from 'react';
 import { Event } from 'react-big-calendar';
+import moment from 'moment';
 
 type Events = Event[];
 
@@ -10,7 +11,6 @@ export const EventsStateContext = createContext<Events | undefined>(undefined);
 
 type Action = 
   | { type: 'CREATE'; title: string }
-  | { type: 'TOGGLE'; id: number }
   | { type: 'REMOVE'; title: string };
 
 type EventsDispatch = Dispatch<Action>;
@@ -24,7 +24,6 @@ export const EventsDispatchContext = createContext<EventsDispatch | undefined>(
 function eventsReducer(state: Events, action: Action): Events {
   switch (action.type) {
     case 'CREATE':
-      // const nextId = Math.max(...state.map(todo => todo.id)) + 1;
       return state.concat({
         title: action.title,
         start: new Date(),
@@ -38,7 +37,13 @@ function eventsReducer(state: Events, action: Action): Events {
 }
 
 export function EventsContextProvider({ children }: { children: ReactNode }) {
-  const [events, dispatch] = useReducer(eventsReducer, []);
+  const [events, dispatch] = useReducer(eventsReducer, [
+    {
+      title: 'Learn cool stuff',
+      start: moment().toDate(),
+      end: moment().add(1, 'hours').toDate()
+    },
+  ]);
 
   return (
 		<EventsDispatchContext.Provider value={dispatch}>

@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState, useEffect, useRef } from "react";
-import { Event } from 'react-big-calendar'
+import { useCallback, useMemo, useState, useEffect } from "react";
+import { Event } from 'react-big-calendar';
 
 import type { FC, ReactNode } from "react";
 
@@ -13,38 +13,42 @@ export const useDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
-  const dataRef = useRef<HTMLInputElement>(null);
   const [schedules, setSchedules] = useState<Event[]>([]);
 
-  const handleReflect = (event: Event) => {
-    const { start, end } = event;
-    if(dataRef.current?.value !== null){
-      setSchedules((prev) => [...prev, { start, end,  }]);
-    }
-  }
-
-  useEffect(() => {
-    console.log("mount: Dialog");
-
-    return () => {
-      console.log("unmount: Dialog");
+  const Dialog: FC<DialogProps> = ({children}) => {
+    const [title, setTitle] = useState<string>('')
+  
+    useEffect(() => {
+      console.log("mount: Dialog");
+  
+      return () => {
+        console.log("unmount: Dialog");
+      };
+    }, []);
+  
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setTitle(e.target.value);
     };
-  }, []);
+    
+    const handleReflect = useCallback((event: Event) => {
+      const { start, end } = event;
+      if(title !== null){
+        setSchedules((prev) => [...prev, { start, end, title }]);
+      }
+    }, [setSchedules]);
+    console.log(`ダイアログ内:${title}`);
 
-  const Dialog: FC<DialogProps> = useMemo(() => {
-    return function Dialog({ children }) {
-      return isOpen ? (
-        <div>
-          出た？
-          <div role="dialog">
-            {children}
-            {dataRef && <input type="text" ref={dataRef} />}
-            <button onClick={handleReflect}></button>
-          </div>
-        </div>
-      ) : null;
-    };
-  }, [isOpen]);
+    return isOpen ? (
+      <div role="dialog">
+        {/* <form onSubmit={()=>handleReflect}> */}
+          <input onChange={handleChange} />
+          <button type="button" onClick={() => handleReflect}>ボタン</button>
+          {/* <button>追加</button> */}
+          {children}
+        {/* </form> */}
+      </div>
+    ) : null;
+  };  
 
   return [Dialog, open, close, schedules] as const;
 };
