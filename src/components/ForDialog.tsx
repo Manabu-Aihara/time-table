@@ -9,6 +9,7 @@ import ja from 'date-fns/locale/ja';
 
 import { useEventsState } from "../lib/UseContext";
 import { useDialog } from '../hooks/useDialog';
+// import { Dialog } from './Dialog';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -25,33 +26,34 @@ const localizer = dateFnsLocalizer({
 });
 
 export const MyCalendar = () => {
-  const [Dialog, open, close, events] = useDialog();
-  const state = useEventsState()
+  const state = useEventsState();
+  const [isShow, setShow] = useState<boolean>(false);
 
-  const handleSelectSlot = useCallback(() => {
-    open();
-  }, []);
+  const { Dialog, open, close } = useDialog();
+  // const handleSelectSlot = useCallback(() => {
+  //   open();
+  // }, []);
+  console.log(`ダイアログ外:${JSON.stringify(state)}`);
 
-  console.log(`ダイアログ外:${events}->${JSON.stringify(state)}`);
   return (
     <div>
+      <button type="button" onClick={open}>Add Event</button>
       <Calendar
         localizer={localizer}
-        events={events}
+        events={state}
         startAccessor="start"
         endAccessor="end"
         // onSelectEvent={handleSelectEvent}
-        onSelectSlot={handleSelectSlot}
+        // onSelectSlot={handleSelectSlot}
         selectable
         style={{ height: 500 }}
       />
-      <div style={{ height: "100px" }} />
-        <Dialog>
-          <div>
-            <p>ここにダイアログのコンテンツを入れたいんじゃ!!</p>
-            <button onClick={close}>close</button>
-          </div>
-        </Dialog>
+      <Dialog>
+        <div>
+          <p>入力フォームコンテンツ</p>
+          <button type="button" onClick={close}>close</button>
+        </div>
+      </Dialog>
     </div>
   )
 }

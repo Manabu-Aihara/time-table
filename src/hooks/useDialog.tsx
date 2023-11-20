@@ -1,54 +1,35 @@
-import { useCallback, useMemo, useState, useEffect } from "react";
-import { Event } from 'react-big-calendar';
+import { ComponentProps, useCallback, useState } from "react";
 
-import type { FC, ReactNode } from "react";
+import { Dialog as Component } from "../components/Dialog";
 
-// import styles from "./Dialog.module.css";
+type UseDialogProp = Omit<
+  ComponentProps<typeof Component>,
+  "isOpen" | "onClose" | "rootElement"
+>;
 
-type DialogProps = {
-  readonly children: ReactNode;
+type Result = {
+  open: () => void;
+  Dialog: React.FC<UseDialogProp>;
+  close: () => void;
 };
 
-export const useDialog = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
-  const [schedules, setSchedules] = useState<Event[]>([]);
+export const useDialog = (): Result => {
+  const [isOpen, setOpen] = useState<boolean>(false);
 
-  const Dialog: FC<DialogProps> = ({children}) => {
-    const [title, setTitle] = useState<string>('')
-  
-    useEffect(() => {
-      console.log("mount: Dialog");
-  
-      return () => {
-        console.log("unmount: Dialog");
-      };
-    }, []);
-  
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTitle(e.target.value);
-    };
-    
-    const handleReflect = useCallback((event: Event) => {
-      const { start, end } = event;
-      if(title !== null){
-        setSchedules((prev) => [...prev, { start, end, title }]);
-      }
-    }, [setSchedules]);
-    console.log(`ダイアログ内:${title}`);
+  const open = useCallback((): void => {
+    setOpen(true);
+  }, []);
 
-    return isOpen ? (
-      <div role="dialog">
-        {/* <form onSubmit={()=>handleReflect}> */}
-          <input onChange={handleChange} />
-          <button type="button" onClick={() => handleReflect}>ボタン</button>
-          {/* <button>追加</button> */}
-          {children}
-        {/* </form> */}
-      </div>
-    ) : null;
-  };  
+  const close = useCallback((): void => {
+    setOpen(false);
+  }, []);
 
-  return [Dialog, open, close, schedules] as const;
+  const Dialog: React.FC<UseDialogProp> = useCallback(
+    (prop: UseDialogProp): React.ReactNode => {
+      return <Component isOpen={isOpen} onClose={close} {...prop} />;
+    },
+    [close, isOpen]
+  );
+
+  return { open, close, Dialog };
 };

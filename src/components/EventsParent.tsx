@@ -21,14 +21,16 @@ export const EventsDispatchContext = createContext<EventsDispatch | undefined>(
 );
 
 // * Reducer *
-function eventsReducer(state: Events, action: Action): Events {
+export function eventsReducer(state: Events, action: Action): Events {
+
   switch (action.type) {
     case 'CREATE':
+      console.log("呼ばれました");
       return state.concat({
-        title: action.title,
-        start: new Date(),
-        end: new Date(new Date().setHours(new Date().getHours() + 1)),    
-      });
+          title: action.title,
+          start: new Date(),
+          end: new Date(new Date().setHours(new Date().getHours() + 1)),    
+        });
     // case 'REMOVE':
     //   return state.filter(state => state.title !== action.title);
     default:
@@ -46,10 +48,10 @@ export function EventsContextProvider({ children }: { children: ReactNode }) {
   ]);
 
   return (
-		<EventsDispatchContext.Provider value={dispatch}>
-			<EventsStateContext.Provider value={events}>
+    <EventsStateContext.Provider value={events}>
+      <EventsDispatchContext.Provider value={dispatch}>
 				{children}
-			</EventsStateContext.Provider>
-		</EventsDispatchContext.Provider>
+      </EventsDispatchContext.Provider>
+    </EventsStateContext.Provider>
   );
 }
