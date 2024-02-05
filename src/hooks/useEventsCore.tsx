@@ -18,7 +18,7 @@ const reducer = <T extends { [key: string]: any }>(
   state: T,
   action: { type: keyof T; value: any }
 ) => {
-  return { ...state, [action.type]: action.value };
+  return { ...state, [action.type]: action.value } as T;
 };
 
 // type InputField<C extends keyof React.ComponentProps<'input'>> = {

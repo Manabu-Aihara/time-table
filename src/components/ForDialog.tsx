@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
@@ -9,7 +9,7 @@ import ja from 'date-fns/locale/ja';
 
 import { useEventsState } from "../lib/UseContext";
 import { useDialog } from '../hooks/useDialog';
-// import { Dialog } from './Dialog';
+import { InputComponent } from './InputForm';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -27,7 +27,6 @@ const localizer = dateFnsLocalizer({
 
 export const MyCalendar = () => {
   const state = useEventsState();
-  const [isShow, setShow] = useState<boolean>(false);
 
   const { Dialog, open, close } = useDialog();
   // const handleSelectSlot = useCallback(() => {
@@ -51,7 +50,8 @@ export const MyCalendar = () => {
       <Dialog>
         <div>
           <p>入力フォームコンテンツ</p>
-          <button type="button" onClick={close}>close</button>
+          {/* <button type="button" onClick={close}>close</button> */}
+          <InputComponent />
         </div>
       </Dialog>
     </div>

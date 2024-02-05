@@ -28,10 +28,6 @@ const EventInput = forwardRef<HTMLInputElement, Props>(
     return <input {...props} ref={ref} />
 });
 
-type Prop = {
-  events: Event[];
-}
-
 export const MyCalendar = (/*{events}: Prop*/) => {
   const [schedules, setSchedules] = useState<Event[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);

@@ -2,15 +2,12 @@ import { useState, FormEvent, useEffect, useCallback } from 'react';
 import { Event } from 'react-big-calendar'
 
 import { useEventsDispatch, useEventsState } from '../lib/UseContext';
-import { MyCalendar } from './date-fns';
 import { eventsReducer } from './EventsParent';
-import { Dialog } from './Dialog';
 
 type InputElementProps = React.ComponentProps<'input'>;
 
 export const InputComponent = (inputProps: InputElementProps) => {
   const [title, setTitle] = useState<string>('');
-  const [events, setEvents] = useState<Event[]>([]);
   const currentState = useEventsState();
   const dispatch = useEventsDispatch();
 
@@ -40,18 +37,15 @@ export const InputComponent = (inputProps: InputElementProps) => {
 
   return (
     <div>
-      {/* <Dialog>
-        <button onClick={close}>close</button>
-      </Dialog> */}
-      {/* <form onSubmit={onSubmit}> */}
+      <form onSubmit={onSubmit}>
         <input
           {...inputProps}
           placeholder="やることを入力してくださいー"
           onChange={handleChange}
         />
         <button onClick={onSubmit}>追加</button>
-      {/* </form> */}
-      {/* <MyCalendar events={currentState} /> */}
+      </form>
+      <button onClick={close}>close</button>
     </div>
   );
 };

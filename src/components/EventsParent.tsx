@@ -21,7 +21,7 @@ export const EventsDispatchContext = createContext<EventsDispatch | undefined>(
 );
 
 // * Reducer *
-export function eventsReducer(state: Events, action: Action): Events {
+export function eventsReducer (state: Events, action: Action): Events {
 
   switch (action.type) {
     case 'CREATE':
@@ -38,7 +38,7 @@ export function eventsReducer(state: Events, action: Action): Events {
   }
 }
 
-export function EventsContextProvider({ children }: { children: ReactNode }) {
+export const EventsContextProvider = ({ children }: { children: ReactNode }) => {
   const [events, dispatch] = useReducer(eventsReducer, [
     {
       title: 'Learn cool stuff',
