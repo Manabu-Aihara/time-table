@@ -11,6 +11,7 @@ node_modules/
 dist/
 dist-ssr
 *.local
+# こっちの都合
 sample/
 
 # Editor directories and files
@@ -27,5 +28,6 @@ sample/
 *.lock
 *.old
 
+# こっちの都合
 *.bak
 package-lock.json
