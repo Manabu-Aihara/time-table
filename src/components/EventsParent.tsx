@@ -1,17 +1,18 @@
 import { createContext, Dispatch, ReactNode, useReducer } from 'react';
-import { Event } from 'react-big-calendar';
+// import { Event } from 'react-big-calendar';
+import { EventItem } from '../lib/EventItem';
 import moment from 'moment';
 
-type Events = Event[];
+type EventItems = EventItem[];
 
 // * State専用 Context *
 // 今後 Providerを使わない時にはContextの値がundefinedになる必要があるので, 
 // Contextの値がEventsにもundefinedにもできるように宣言してください。
-export const EventsStateContext = createContext<Events | undefined>(undefined);
+export const EventsStateContext = createContext<EventItems | undefined>(undefined);
 
 type Action = 
-  | { type: 'CREATE'; title: string }
-  | { type: 'REMOVE'; title: string };
+  | { type: 'CREATE'; payload: {title: ReactNode} }
+  | { type: 'UPDATE'; payload: EventItem };
 
 type EventsDispatch = Dispatch<Action>;
 
@@ -21,18 +22,22 @@ export const EventsDispatchContext = createContext<EventsDispatch | undefined>(
 );
 
 // * Reducer *
-export function eventsReducer (state: Events, action: Action): Events {
+export function eventsReducer (eventState: EventItems, action: Action): EventItems {
+  const { type, payload } = action;
 
-  switch (action.type) {
+  switch (type) {
     case 'CREATE':
-      console.log("呼ばれました");
-      return state.concat({
-          title: action.title,
+      return eventState.concat({
+          title: payload.title,
           start: new Date(),
           end: new Date(new Date().setHours(new Date().getHours() + 1)),    
         });
-    // case 'REMOVE':
-    //   return state.filter(state => state.title !== action.title);
+    case 'UPDATE':
+      return eventState.concat({
+        summary: payload.summary,
+        owner: payload.owner,
+        // done: payload.done
+      })
     default:
       throw new Error('Invalid action');
   }

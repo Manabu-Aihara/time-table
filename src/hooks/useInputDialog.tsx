@@ -1,5 +1,4 @@
-import { useState, useCallback, FormEvent, ReactNode } from 'react';
-import { Event } from 'react-big-calendar'
+import { useState, FormEvent, ReactNode } from 'react';
 
 import { useEventsDispatch, useEventsState } from '../lib/UseContext';
 import { eventsReducer } from '../components/EventsParent';
@@ -14,9 +13,7 @@ type DialogProps = {
 
 export const useInputDialog = () => {
   const [title, setTitle] = useState<string>('');
-  // const [isOpen, setIsOpen] = useState(false);
-  // const open = useCallback(() => setIsOpen(true), []);
-  // const close = useCallback(() => setIsOpen(false), []);
+  // const [eventItem, setEventItem] = useState<EventItem>(null)
   const currentState = useEventsState();
   const dispatch = useEventsDispatch();
 
@@ -26,10 +23,6 @@ export const useInputDialog = () => {
       // このコンポーネントで onChange 発火時に必ず実行したい振る舞いを書く
       // const {name, value} = e.target;
       setTitle(e.target.value);
-      // dispatch({
-      //   type: 'CREATE',
-      //   title: value
-      // });
       // console.log(`ここにも注目：${title}`);
     };
 
@@ -37,25 +30,44 @@ export const useInputDialog = () => {
       e.preventDefault();
       dispatch({
         type: 'CREATE',
-        title: title
+        payload: {title: title}
       });
-      console.log(`ここ注目：${JSON.stringify(currentState)}`);
-      const nextStage = eventsReducer(currentState, {type: 'CREATE', title: title});
+      // console.log(`ここ注目：${JSON.stringify(currentState)}`);
+      const nextStage = eventsReducer(currentState, {type: 'CREATE', payload: {title: title}});
       console.log(`ここ注目：${JSON.stringify(nextStage)}`);
     };
 
-    return (
+  // const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+	// 	e.preventDefault();
+	// 	fetch('http://127.0.0.1:8000/todo/add', {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			'Access-Control-Allow-Origin': '*',
+	// 			// mode: 'no-cors',
+	// 			// Accept: 'application/json',
+	// 			'Content-Type': 'application/json'
+	// 		},
+	// 		body: JSON.stringify({
+	// 			// todo
+	// 			summary: todo.summary,
+	// 			owner: todo.owner,
+	// 			done: todo.done
+	// 		})
+	// 	})
+	// 	.then(res => res.json());
+	// 	// .then(json => console.log(json))
+	// 	// .catch(err => console.log(err));
+	// }
+
+  return (
       <div>
         {children}
-        {/* <form onSubmit={onSubmit}> */}
           <input
             // {...inputProps}
             placeholder="やることを入力してくださいー"
             onChange={handleChange}
           />
           <button onClick={onSubmit}>追加</button>
-        {/* </form> */}
-
       </div>
     );
   }

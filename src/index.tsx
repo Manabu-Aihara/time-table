@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import { EventsContextProvider } from './components/EventsParent';
-import { MyCalendar } from './components/ForDialog';
+import { ViewComponent } from './components/ViewComponents';
 // import { InputComponent } from "./components/InputForm";
 
 export const Index = () => {
@@ -10,7 +9,7 @@ export const Index = () => {
 		<EventsContextProvider>
 			<BrowserRouter>
 				<Routes>
-					<Route path="/"	element={<MyCalendar />} />
+					<Route path="/"	element={<ViewComponent />} />
 				</Routes>
 			</BrowserRouter>
 		</EventsContextProvider>

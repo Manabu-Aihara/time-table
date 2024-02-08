@@ -1,5 +1,4 @@
-import { useState, FormEvent, useEffect, useCallback } from 'react';
-import { Event } from 'react-big-calendar'
+import { useState, FormEvent } from 'react';
 
 import { useEventsDispatch, useEventsState } from '../lib/UseContext';
 import { eventsReducer } from './EventsParent';
@@ -15,36 +14,31 @@ export const InputComponent = (inputProps: InputElementProps) => {
     // このコンポーネントで onChange 発火時に必ず実行したい振る舞いを書く
     // const {name, value} = e.target;
     setTitle(e.target.value);
-    // dispatch({
-    //   type: 'CREATE',
-    //   title: value
-    // });
-    // console.log(`ここにも注目：${title}`);
   };
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     dispatch({
       type: 'CREATE',
-      title: title
+      payload: {title: title}
     });
-    console.log(`ここ注目：${JSON.stringify(currentState)}`);
+    // console.log(`ここ注目：${JSON.stringify(currentState)}`);
     // I’ve dispatched an action, but logging gives me the old state value
     // https://react.dev/reference/react/useReducer
-    const nextStage = eventsReducer(currentState, {type: 'CREATE', title: title});
+    const nextStage = eventsReducer(currentState, {type: 'CREATE', payload: {title: title}});
     console.log(`ここ注目：${JSON.stringify(nextStage)}`);
   };
 
   return (
     <div>
-      <form onSubmit={onSubmit}>
-        <input
-          {...inputProps}
-          placeholder="やることを入力してくださいー"
-          onChange={handleChange}
-        />
-        <button onClick={onSubmit}>追加</button>
-      </form>
+      {/* <form onSubmit={onSubmit}> */}
+      <input
+        {...inputProps}
+        placeholder="やることを入力してくださいー"
+        onChange={handleChange}
+      />
+      <button onClick={onSubmit}>追加</button>
+      {/* </form> */}
       <button onClick={close}>close</button>
     </div>
   );

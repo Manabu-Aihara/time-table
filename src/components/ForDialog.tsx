@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
@@ -7,9 +7,10 @@ import getDay from 'date-fns/getDay';
 // import enUS from 'date-fns/locale/en-US';
 import ja from 'date-fns/locale/ja';
 
-import { useEventsState } from "../lib/UseContext";
+import { InputComponent } from './InputTitle';
+import { useEventsState } from '../lib/UseContext';
+import { EventItem } from '../lib/EventItem';
 import { useDialog } from '../hooks/useDialog';
-import { InputComponent } from './InputForm';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -25,13 +26,33 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-export const MyCalendar = () => {
+interface EventProps {
+	onShowDialogView: (targetEvent: EventItem) => void;
+}
+
+
+export const MyCalendar = ({onShowDialogView}: EventProps) => {
+  const components = useMemo(() => ({
+    event: ({ event }: { event: EventItem }) => {
+      console.log(`反応します:${JSON.stringify(event)}`);
+      return (
+        <div>
+          {event.title}
+        </div>
+      );
+    }
+  }), []);
+
   const state = useEventsState();
 
   const { Dialog, open, close } = useDialog();
-  // const handleSelectSlot = useCallback(() => {
-  //   open();
-  // }, []);
+
+  const handleSelectEvent = useCallback((callingEvent: EventItem) => {
+    // const { title, start, end } = callingEvent;
+    // console.log(`${start}:${end}::${title}`);
+    onShowDialogView(callingEvent);
+  }, [])
+
   console.log(`ダイアログ外:${JSON.stringify(state)}`);
 
   return (
@@ -42,9 +63,10 @@ export const MyCalendar = () => {
         events={state}
         startAccessor="start"
         endAccessor="end"
-        // onSelectEvent={handleSelectEvent}
+        onSelectEvent={handleSelectEvent}
         // onSelectSlot={handleSelectSlot}
         selectable
+        components={components}
         style={{ height: 500 }}
       />
       <Dialog>
