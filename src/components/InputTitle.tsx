@@ -11,8 +11,6 @@ export const InputComponent = (inputProps: InputElementProps) => {
   const dispatch = useEventsDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // このコンポーネントで onChange 発火時に必ず実行したい振る舞いを書く
-    // const {name, value} = e.target;
     setTitle(e.target.value);
   };
 
@@ -22,11 +20,11 @@ export const InputComponent = (inputProps: InputElementProps) => {
       type: 'CREATE',
       payload: {title: title}
     });
-    // console.log(`ここ注目：${JSON.stringify(currentState)}`);
+    console.log(`Dialog前の: ${JSON.stringify(currentState)}`);
     // I’ve dispatched an action, but logging gives me the old state value
     // https://react.dev/reference/react/useReducer
     const nextStage = eventsReducer(currentState, {type: 'CREATE', payload: {title: title}});
-    console.log(`ここ注目：${JSON.stringify(nextStage)}`);
+    console.log(`Dialog後の: ${JSON.stringify(nextStage)}`);
   };
 
   return (
@@ -39,6 +37,7 @@ export const InputComponent = (inputProps: InputElementProps) => {
       />
       <button onClick={onSubmit}>追加</button>
       {/* </form> */}
+      <p></p>
       <button onClick={close}>close</button>
     </div>
   );

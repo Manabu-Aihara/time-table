@@ -11,6 +11,8 @@ import { InputComponent } from './InputTitle';
 import { useEventsState } from '../lib/UseContext';
 import { EventItem } from '../lib/EventItem';
 import { useDialog } from '../hooks/useDialog';
+import { AddSlideForm } from './InputItem';
+import { ItemComponent } from './EventItemComponent';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -27,34 +29,32 @@ const localizer = dateFnsLocalizer({
 });
 
 interface EventProps {
+  targetEvent: EventItem | undefined;
 	onShowDialogView: (targetEvent: EventItem) => void;
 }
 
-
-export const MyCalendar = ({onShowDialogView}: EventProps) => {
+export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
   const components = useMemo(() => ({
     event: ({ event }: { event: EventItem }) => {
-      console.log(`反応します:${JSON.stringify(event)}`);
+      console.log(`入ってくるもの: ${JSON.stringify(event)}`);
       return (
-        <div>
-          {event.title}
-        </div>
+        <>
+          <ItemComponent {...event} />
+        </>
       );
     }
   }), []);
 
   const state = useEventsState();
-
   const { Dialog, open, close } = useDialog();
 
   const handleSelectEvent = useCallback((callingEvent: EventItem) => {
-    // const { title, start, end } = callingEvent;
-    // console.log(`${start}:${end}::${title}`);
+    const { title, start, end } = callingEvent;
+    console.log(`選んだイベント: ${start}:${end}:${title}`);
     onShowDialogView(callingEvent);
   }, [])
 
-  console.log(`ダイアログ外:${JSON.stringify(state)}`);
-
+  console.log(`ダイアログ外: ${JSON.stringify(state)}`);
   return (
     <div>
       <button type="button" onClick={open}>Add Event</button>
@@ -76,6 +76,7 @@ export const MyCalendar = ({onShowDialogView}: EventProps) => {
           <InputComponent />
         </div>
       </Dialog>
+      {targetEvent && <AddSlideForm {...targetEvent} />}
     </div>
   )
 }

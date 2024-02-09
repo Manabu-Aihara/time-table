@@ -34,6 +34,7 @@ export const AddSlideForm = (eventItem: EventItem) => {
 		// name, valueという変数名で決まっているようだ
 		const {name, value} = e.target;
 		setTodo({...todo, [name]:value});
+		// setTodo(e.target.value);
 	}
 
 	const handleUpdate = (e: FormEvent/*e: React.MouseEvent<HTMLInputElement>*/) => {
@@ -46,7 +47,7 @@ export const AddSlideForm = (eventItem: EventItem) => {
     console.log(`ここ注目：${JSON.stringify(nextStage)}`);
 	}
 
-	console.log(todo);
+	console.log(`これが理想なんだ: ${JSON.stringify(todo)}`);
 
 	return (
 			<div>

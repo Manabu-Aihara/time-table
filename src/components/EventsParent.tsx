@@ -33,11 +33,7 @@ export function eventsReducer (eventState: EventItems, action: Action): EventIte
           end: new Date(new Date().setHours(new Date().getHours() + 1)),    
         });
     case 'UPDATE':
-      return eventState.concat({
-        summary: payload.summary,
-        owner: payload.owner,
-        // done: payload.done
-      })
+      return eventState.map(evt => evt.title === action.payload.title ? action.payload : evt)
     default:
       throw new Error('Invalid action');
   }
