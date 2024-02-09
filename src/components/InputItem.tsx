@@ -8,19 +8,8 @@ const options = [
 	{value: 'from now', label: 'これから'},
 	{value: 'still', label: 'まだ'},
 	{value: 'almost', label: 'もうすぐ'},
-	{value: 'done', label: '完了'}
+	{value: 'complete', label: '完了'}
 ];
-
-const getEventItem = (targetEvent: EventItem) => {
-	const awesomeItem = JSON.stringify({
-		// todo
-		summary: targetEvent.summary,
-		owner: targetEvent.owner,
-		done: targetEvent.done
-	});
-	console.log({...targetEvent, awesomeItem});
-	// return {...targetEvent, awesomeItem};
-}
 
 export const AddSlideForm = (eventItem: EventItem) => {
 	const [todo, setTodo] = useState<EventItem>({
@@ -30,7 +19,7 @@ export const AddSlideForm = (eventItem: EventItem) => {
   const currentState = useEventsState();
   const dispatch = useEventsDispatch();
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>/* & React.ChangeEvent<HTMLSelectElement>*/) => {
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>) => {
 		// name, valueという変数名で決まっているようだ
 		const {name, value} = e.target;
 		setTodo({...todo, [name]:value});
@@ -45,23 +34,27 @@ export const AddSlideForm = (eventItem: EventItem) => {
 		});
     const nextStage = eventsReducer([eventItem], {type: 'UPDATE', payload: todo});
     console.log(`ここ注目：${JSON.stringify(nextStage)}`);
+		setTodo({summary: '', owner: '', done: options[0].value});
 	}
 
 	console.log(`これが理想なんだ: ${JSON.stringify(todo)}`);
 
 	return (
-			<div>
-				<p>{todo.title}</p>
-				さまりー：
-				<input type="text" name="summary" onChange={handleChange} value={todo.summary} />
-				おーなー：
-				<input type="text" name="owner" onChange={handleChange} value={todo.owner} />
-				{/* <select value={todo.done} onChange={handleChange}>
-					{options.map((option) => (
-						<option value={option.value}>{option.label}</option>
-					))}
-				</select> */}
-				<button onClick={handleUpdate}>送信</button>
-			</div>
+		<div>
+			<p>{todo.title}</p>
+			さまりー：
+			<input type="text" name="summary" onChange={handleChange} value={todo.summary} />
+			おーなー：
+			<input type="text" name="owner" onChange={handleChange} value={todo.owner} />
+			<select name="done" onChange={handleChange}>
+				{options.map((option) => {
+					return (
+						<option value={option.label} key={option.value}>{option.label}</option>
+					);
+					})
+				}
+			</select>
+			<button onClick={handleUpdate}>送信</button>
+		</div>
 	);
 }

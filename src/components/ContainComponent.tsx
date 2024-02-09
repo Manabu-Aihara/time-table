@@ -61,6 +61,7 @@ export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
       <Calendar
         localizer={localizer}
         events={state}
+        defaultView='day'
         startAccessor="start"
         endAccessor="end"
         onSelectEvent={handleSelectEvent}
