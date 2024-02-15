@@ -7,12 +7,12 @@ import getDay from 'date-fns/getDay';
 // import enUS from 'date-fns/locale/en-US';
 import ja from 'date-fns/locale/ja';
 
-import { InputComponent } from './InputTitle';
-import { useEventsState } from '../lib/UseContext';
-import { EventItem } from '../lib/EventItem';
-import { useDialog } from '../hooks/useDialog';
-import { AddSlideForm } from './InputItem';
-import { ItemComponent } from './EventItemComponent';
+import { InputComponent } from '../organisms/InputTitle';
+import { useEventsState } from '../../lib/UseContext';
+import { EventItem } from '../../lib/EventItem';
+import { useDialog } from '../../hooks/useDialog';
+import { AddSlideForm } from '../organisms/InputItem';
+import { ItemComponent } from '../molecules/EventItemComponent';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -52,12 +52,12 @@ export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
     const { title, start, end } = callingEvent;
     console.log(`選んだイベント: ${start}:${end}:${title}`);
     onShowDialogView(callingEvent);
-  }, [])
+  }, []);
 
   console.log(`ダイアログ外: ${JSON.stringify(state)}`);
   return (
     <div>
-      <button type="button" onClick={open}>Add Event</button>
+      <button type='button' onClick={open}>Add Event</button>
       <Calendar
         localizer={localizer}
         events={state}
@@ -68,8 +68,8 @@ export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
         // onSelectSlot={handleSelectSlot}
         selectable
         components={components}
-        style={{ height: 500 }}
       />
+      {targetEvent && <AddSlideForm {...targetEvent} />}
       <Dialog>
         <div>
           <p>入力フォームコンテンツ</p>
@@ -77,7 +77,6 @@ export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
           <InputComponent />
         </div>
       </Dialog>
-      {targetEvent && <AddSlideForm {...targetEvent} />}
     </div>
-  )
+  );
 }

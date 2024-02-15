@@ -1,4 +1,4 @@
-import { EventItem } from '../lib/EventItem';
+import { EventItem } from '../../lib/EventItem';
 
 export const ItemComponent = (updatedEvent: EventItem) => {
   const { title, start, end, summary, owner, done } = updatedEvent;

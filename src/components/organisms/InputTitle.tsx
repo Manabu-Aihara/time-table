@@ -1,11 +1,11 @@
 import { useState, FormEvent } from 'react';
 
-import { useEventsDispatch, useEventsState } from '../lib/UseContext';
-import { eventsReducer } from './EventsParent';
+import { useEventsDispatch, useEventsState } from '../../lib/UseContext';
+import { eventsReducer } from '../EventsParent';
 
 type InputElementProps = React.ComponentProps<'input'>;
 
-export const InputComponent = (inputProps: InputElementProps) => {
+export const InputComponent = (inputAttr: InputElementProps) => {
   const [title, setTitle] = useState<string>('');
   const currentState = useEventsState();
   const dispatch = useEventsDispatch();
@@ -31,8 +31,8 @@ export const InputComponent = (inputProps: InputElementProps) => {
     <div>
       {/* <form onSubmit={onSubmit}> */}
       <input
-        {...inputProps}
-        placeholder="やることを入力してくださいー"
+        {...inputAttr}
+        placeholder="やることを入力してください"
         onChange={handleChange}
       />
       <button onClick={onSubmit}>追加</button>
