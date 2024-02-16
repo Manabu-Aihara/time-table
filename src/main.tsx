@@ -6,8 +6,8 @@ import ReactDOM from 'react-dom/client';
 import { Index } from './components/Routes';
 // import { View } from './components/SlotInput';
 
-import './css/reset.css';
-import './index.css';
+// import './css/reset.css';
+// import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(  
   <React.StrictMode>

@@ -9,7 +9,7 @@ const space = {
   // etc.
 };
 const horizon = {
-  full: '98%',
+  full: '96%',
   half: '48%',
   normal: '28%',
 };

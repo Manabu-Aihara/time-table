@@ -13,7 +13,7 @@ import startOfHour from 'date-fns/startOfHour'
 
 // import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { Dialog } from '../components/Dialog';
+import { Dialog } from '../components/organisms/Dialog';
 // import { InputComponent } from './InputTitle';
 
 const locales = {

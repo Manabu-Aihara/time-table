@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { EventsContextProvider } from './components/EventsParent';
-import { ViewComponent } from './components/templates/ViewComponents';
+import { EventsContextProvider } from './EventsParent';
+import { ViewComponent } from './templates/ViewComponents';
 // import { InputComponent } from "./components/InputForm";
 
 export const Index = () => {

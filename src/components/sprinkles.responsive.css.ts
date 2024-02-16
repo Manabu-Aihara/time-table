@@ -23,3 +23,19 @@ export const boundaryBottom = atoms({
 		desktop: 'large'
 	}
 });
+
+export const boundaryX = atoms({
+	paddingX: {
+		mobile: 'small',
+		tablet: 'medium',
+		desktop: 'large'
+	}
+});
+
+export const topWidth = atoms({
+	width: {
+		mobile: 'full',
+		tablet: 'full',
+		desktop: 'half'
+	}
+});

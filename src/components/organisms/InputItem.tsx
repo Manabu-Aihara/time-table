@@ -1,9 +1,13 @@
-import { useState, FormEvent } from 'react';
-// import Select, { ActionMeta, SingleValue } from 'react-select';
+import { useState, FormEvent, forwardRef, Ref, MutableRefObject } from 'react';
+import { Box, Text, Input, Button } from '@chakra-ui/react';
+import Select, { ActionMeta, SingleValue } from 'react-select';
 
 import { useEventsDispatch, useEventsState } from '../../lib/UseContext';
 import { EventItem } from '../../lib/EventItem';
 import { eventsReducer } from '../EventsParent';
+
+import { boundaryTop, boundaryY, topWidth } from '../sprinkles.responsive.css';
+import { formParent } from './InputItem.css';
 
 type OptionType = {
 	value: string;
@@ -18,14 +22,14 @@ const options: OptionType[] = [
 
 // type InitialValueProps = Omit<EventItem, 'done'>;
 
-export const AddSlideForm = (eventItem: EventItem) => {
+const AddChildForm = ((eventItem: EventItem, ref: Ref<HTMLDivElement>) => {
 	const initialValue: EventItem = {
 		title: eventItem.title, start: eventItem.start, end: eventItem.end,
 		summary: '', owner: '', done: options[0].value
 	}
 	
 	const [todo, setTodo] = useState<EventItem>(initialValue);
-	// const [done, setDone] = useState<string | undefined>(options[0].value);
+	const [done, setDone] = useState<string | undefined>(options[0].value);
 
   const currentState = useEventsState();
   const dispatch = useEventsDispatch();
@@ -36,9 +40,9 @@ export const AddSlideForm = (eventItem: EventItem) => {
 		setTodo({...todo, [name]:value});
 	}
 
-	// const handleSelectChange = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-	// 	setDone(selectedOption?.label);
-	// }
+	const handleSelectChange = (selectedOption: SingleValue<OptionType>/*, actionMeta: ActionMeta<OptionType>*/) => {
+		setDone(selectedOption?.label);
+	}
 
 	const handleUpdate = (e: FormEvent/*e: React.MouseEvent<HTMLInputElement>*/) => {
 		e.preventDefault();
@@ -51,25 +55,34 @@ export const AddSlideForm = (eventItem: EventItem) => {
 		setTodo({summary: '', owner: ''});
 	}
 
-	// console.log(`これが理想なんだ: ${JSON.stringify(todo)}`);
-
 	return (
-		<div>
-			<p>{todo.title}</p>
-			<p>さまりー：</p>
-			<input name="summary" onChange={handleChange} value={todo.summary} />
-			<p>誰が：</p>
-			<input name="owner" onChange={handleChange} value={todo.owner} />
-			<select name="done" value={todo.done} onChange={handleChange}>
-				{options.map((option) => {
-					return (
-						<option value={option.label} key={option.value}>{option.label}</option>
-					);
-					})
-				}
-			</select>
-			{/* <Select options={options} onChange={handleSelectChange} /> */}
-			<button onClick={handleUpdate}>送信</button>
-		</div>
+		<Box scrollSnapAlign="start" ref={ref} className={`${topWidth} ${formParent}`}>
+			<Text className={boundaryTop}>{todo.title}</Text>
+			<section className={boundaryTop}>
+				<Text>さまりー：</Text>
+				<Input name="summary" onChange={handleChange} value={todo.summary} />
+			</section>
+			<section className={boundaryTop}>
+				<Text>誰が：</Text>
+				<Input name="owner" onChange={handleChange} value={todo.owner} />
+			</section>
+			<section className={boundaryTop}>
+				<Text>どんな感じ：</Text>
+				{/* <select name="done" value={todo.done} onChange={handleChange}>
+					{options.map((option) => {
+						return (
+							<option value={option.label} key={option.value}>{option.label}</option>
+						);
+						})
+					}
+				</select> */}
+				<Select options={options} onChange={handleSelectChange} />
+			</section>
+			<section className={boundaryY}>
+				<Button onClick={handleUpdate}>送信</Button>
+			</section>
+		</Box>
 	);
-}
+});
+
+export const AddSlideForm = forwardRef<HTMLDivElement, EventItem>(AddChildForm);

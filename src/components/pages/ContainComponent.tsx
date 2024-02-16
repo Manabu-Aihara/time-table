@@ -1,4 +1,7 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef, useEffect } from 'react';
+import { chakra } from '@chakra-ui/system';
+import { ChakraProvider } from '@chakra-ui/react';
+
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
@@ -15,6 +18,8 @@ import { AddSlideForm } from '../organisms/InputItem';
 import { ItemComponent } from '../molecules/EventItemComponent';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { topWidth } from '../sprinkles.responsive.css';
+import { addButton } from './ContainComponent.css';
 
 const locales = {
   'ja-JP': ja,
@@ -36,7 +41,7 @@ interface EventProps {
 export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
   const components = useMemo(() => ({
     event: ({ event }: { event: EventItem }) => {
-      console.log(`入ってくるもの: ${JSON.stringify(event)}`);
+      // console.log(`入ってくるもの: ${JSON.stringify(event)}`);
       return (
         <>
           <ItemComponent {...event} />
@@ -48,34 +53,49 @@ export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
   const state = useEventsState();
   const { Dialog, open, close } = useDialog();
 
+	const ref = useRef<HTMLDivElement>(null);
+  // const childRef = useRef<typeof AddSlideForm>(AddSlideForm);
+
   const handleSelectEvent = useCallback((callingEvent: EventItem) => {
     const { title, start, end } = callingEvent;
     console.log(`選んだイベント: ${start}:${end}:${title}`);
     onShowDialogView(callingEvent);
+    ref?.current?.scrollIntoView({behavior: 'smooth'});
+    console.log(ref.current);  
   }, []);
+
+	// const scroll = () => {
+  //   ref?.current?.scrollIntoView({behavior: 'smooth'});
+  //   console.log(ref.current);
+  // }
+  // useEffect(() => {
+  //   console.log(ref.current);
+  // }, [targetEvent, handleSelectEvent]);
 
   console.log(`ダイアログ外: ${JSON.stringify(state)}`);
   return (
     <div>
-      <button type='button' onClick={open}>Add Event</button>
-      <Calendar
-        localizer={localizer}
-        events={state}
-        defaultView='day'
-        startAccessor="start"
-        endAccessor="end"
-        onSelectEvent={handleSelectEvent}
-        // onSelectSlot={handleSelectSlot}
-        selectable
-        components={components}
-      />
-      {targetEvent && <AddSlideForm {...targetEvent} />}
+      <chakra.div display="flex" justifyContent="space-around" overflowX="auto" scrollSnapType="x mandatory">
+        <chakra.div className={topWidth} scrollSnapAlign="start">
+          <button onClick={open} className={addButton}>Add Event</button>
+          <Calendar
+            localizer={localizer}
+            events={state}
+            defaultView='day'
+            startAccessor="start"
+            endAccessor="end"
+            onSelectEvent={handleSelectEvent}
+            // onSelectSlot={handleSelectSlot}
+            selectable
+            components={components}
+          />
+        </chakra.div>
+        {targetEvent && <ChakraProvider><AddSlideForm {...targetEvent} ref={ref} /></ChakraProvider>}
+      </chakra.div>
       <Dialog>
-        <div>
-          <p>入力フォームコンテンツ</p>
-          {/* <button type="button" onClick={close}>close</button> */}
-          <InputComponent />
-        </div>
+        <p>入力フォームコンテンツ</p>
+        {/* <button type="button" onClick={close}>close</button> */}
+        <InputComponent />
       </Dialog>
     </div>
   );

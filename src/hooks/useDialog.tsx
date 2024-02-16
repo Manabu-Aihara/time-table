@@ -1,6 +1,6 @@
 import { ComponentProps, useCallback, useState } from "react";
 
-import { Dialog as Component } from "../components/Dialog";
+import { Dialog as Component } from "../components/organisms/Dialog";
 
 type UseDialogProp = Omit<
   ComponentProps<typeof Component>,

@@ -1,8 +1,8 @@
 // 1. Import the utilities
-import { extendTheme } from "@chakra-ui/react";
+import { Theme } from "@emotion/react";
 
 // 2. Update the breakpoints as key-value pairs
-const breakpoints = {
+const breakpoints: Theme = {
   // base: "0px",
   sm: "320px",
   md: "768px",
@@ -13,7 +13,7 @@ const breakpoints = {
 };
 
 // 3. Extend the theme
-export const customTheme = extendTheme({ breakpoints });
+export const customTheme = { breakpoints };
 
 // 4. Now you can use the custom breakpoints
 // function Example() {
