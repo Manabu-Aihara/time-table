@@ -56,7 +56,7 @@ const AddChildForm = ((eventItem: EventItem, ref: Ref<HTMLDivElement>) => {
 	}
 
 	return (
-		<Box scrollSnapAlign="start" ref={ref} className={`${topWidth} ${formParent}`}>
+		<Box flexShrink="0" scrollSnapAlign="start" ref={ref} className={`${topWidth} ${formParent}`}>
 			<Text className={boundaryTop}>{todo.title}</Text>
 			<section className={boundaryTop}>
 				<Text>さまりー：</Text>

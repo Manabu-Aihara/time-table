@@ -60,23 +60,22 @@ export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
     const { title, start, end } = callingEvent;
     console.log(`選んだイベント: ${start}:${end}:${title}`);
     onShowDialogView(callingEvent);
-    ref?.current?.scrollIntoView({behavior: 'smooth'});
-    console.log(ref.current);  
   }, []);
 
 	// const scroll = () => {
   //   ref?.current?.scrollIntoView({behavior: 'smooth'});
   //   console.log(ref.current);
   // }
-  // useEffect(() => {
-  //   console.log(ref.current);
-  // }, [targetEvent, handleSelectEvent]);
+  useEffect(() => {
+    ref?.current?.scrollIntoView({behavior: 'smooth'});
+    console.log(ref.current);  
+  }, [targetEvent]);
 
   console.log(`ダイアログ外: ${JSON.stringify(state)}`);
   return (
     <div>
-      <chakra.div display="flex" justifyContent="space-around" overflowX="auto" scrollSnapType="x mandatory">
-        <chakra.div className={topWidth} scrollSnapAlign="start">
+      <chakra.div display="flex" justifyContent="flex-start" overflowX="auto" scrollSnapType="x mandatory">
+        <chakra.div className={topWidth} display="grid" flexShrink="0" scrollSnapAlign="start" m="0 1%">
           <button onClick={open} className={addButton}>Add Event</button>
           <Calendar
             localizer={localizer}
