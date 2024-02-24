@@ -38,7 +38,7 @@ export const InputComponent = (inputAttr: InputElementProps) => {
       <button onClick={onSubmit}>追加</button>
       {/* </form> */}
       <p></p>
-      <button onClick={close}>close</button>
+      {/* <button onClick={close}>close</button> */}
     </div>
   );
 };

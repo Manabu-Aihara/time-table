@@ -7,9 +7,10 @@ import { MyCalendar } from '../pages/ContainComponent';
 export const ViewComponent = () => {
 	const [item, setItem] = useState<EventItem>();
 
+  console.log(`View: ${JSON.stringify(item)}`);
   return (
     <>
-      <MyCalendar onShowDialogView={(event: EventItem) => setItem(event)} targetEvent={item} />
+      <MyCalendar onShowFormView={(event: EventItem | undefined) => setItem(event)} targetEvent={item} />
     </>
   )
 }

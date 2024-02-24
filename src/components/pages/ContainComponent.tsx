@@ -1,6 +1,5 @@
-import { useCallback, useMemo, useRef, useEffect } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect, FormEvent, MouseEventHandler } from 'react';
 import { chakra } from '@chakra-ui/system';
-import { ChakraProvider } from '@chakra-ui/react';
 
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
@@ -11,10 +10,10 @@ import getDay from 'date-fns/getDay';
 import ja from 'date-fns/locale/ja';
 
 import { InputComponent } from '../organisms/InputTitle';
-import { useEventsState } from '../../lib/UseContext';
+import { useEventsState, useEventsDispatch } from '../../lib/UseContext';
 import { EventItem } from '../../lib/EventItem';
 import { useDialog } from '../../hooks/useDialog';
-import { AddSlideForm } from '../organisms/InputItem';
+import { AddChildForm } from "../organisms/InputItem";
 import { ItemComponent } from '../molecules/EventItemComponent';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -35,10 +34,10 @@ const localizer = dateFnsLocalizer({
 
 interface EventProps {
   targetEvent: EventItem | undefined;
-	onShowDialogView: (targetEvent: EventItem) => void;
+	onShowFormView: (targetEvent: EventItem) => void;
 }
 
-export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
+export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   const components = useMemo(() => ({
     event: ({ event }: { event: EventItem }) => {
       // console.log(`入ってくるもの: ${JSON.stringify(event)}`);
@@ -51,27 +50,32 @@ export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
   }), []);
 
   const state = useEventsState();
+  const dispatch = useEventsDispatch();
   const { Dialog, open, close } = useDialog();
 
 	const ref = useRef<HTMLDivElement>(null);
-  // const childRef = useRef<typeof AddSlideForm>(AddSlideForm);
+	const [showModal, setShowModal] = useState(false);
 
   const handleSelectEvent = useCallback((callingEvent: EventItem) => {
     const { title, start, end } = callingEvent;
     console.log(`選んだイベント: ${start}:${end}:${title}`);
-    onShowDialogView(callingEvent);
+    onShowFormView(callingEvent);
+    setShowModal(true);
   }, []);
 
-	// const scroll = () => {
-  //   ref?.current?.scrollIntoView({behavior: 'smooth'});
-  //   console.log(ref.current);
-  // }
+  const handleOuterBubbling = (e: React.MouseEvent<HTMLDivElement>) => {
+    if(!(e.target instanceof HTMLButtonElement)){
+      return;
+    }
+    setShowModal(false);
+  }
+
   useEffect(() => {
     ref?.current?.scrollIntoView({behavior: 'smooth'});
-    console.log(ref.current);  
+    // console.log(`Container: ${ref.current?.outerHTML}`);
   }, [targetEvent]);
 
-  console.log(`ダイアログ外: ${JSON.stringify(state)}`);
+  // console.log(`ダイアログ外: ${JSON.stringify(state)}`);
   return (
     <div>
       <chakra.div display="flex" justifyContent="flex-start" overflowX="auto" scrollSnapType="x mandatory">
@@ -89,12 +93,15 @@ export const MyCalendar = ({onShowDialogView, targetEvent}: EventProps) => {
             components={components}
           />
         </chakra.div>
-        {targetEvent && <ChakraProvider><AddSlideForm {...targetEvent} ref={ref} /></ChakraProvider>}
+        {/* <button onClick={handleOuterBubbling}></button> */}
+        <chakra.div flexShrink="0" scrollSnapAlign="start" className={topWidth} onClick={handleOuterBubbling}>
+          {showModal && <AddChildForm {...targetEvent} ref={ref} />}
+        </chakra.div>
       </chakra.div>
       <Dialog>
         <p>入力フォームコンテンツ</p>
-        {/* <button type="button" onClick={close}>close</button> */}
         <InputComponent />
+        <button onClick={close}>close</button>
       </Dialog>
     </div>
   );

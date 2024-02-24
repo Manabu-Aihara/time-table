@@ -30,6 +30,7 @@ export const Dialog: React.FC<DialogProps> = ({
         return;
       }
       dialogElement.close();
+      console.log("ダイアログ閉じました: effect");
     }
   }, [isOpen]);
 
@@ -37,6 +38,7 @@ export const Dialog: React.FC<DialogProps> = ({
 		(event: React.MouseEvent<HTMLDialogElement>): void => {
       [event];
 			onClose?.();
+      console.log("ダイアログ閉じました: click");
 		},
 		[onClose]
 	);
