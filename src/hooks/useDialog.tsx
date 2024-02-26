@@ -1,6 +1,10 @@
 import { ComponentProps, useCallback, useState } from "react";
 
+<<<<<<< HEAD
 import { Dialog as Component } from "../components/Dialog";
+=======
+import { Dialog as Component } from "../components/organisms/Dialog";
+>>>>>>> origin/second
 
 type UseDialogProp = Omit<
   ComponentProps<typeof Component>,
@@ -26,7 +30,11 @@ export const useDialog = (): Result => {
 
   const Dialog: React.FC<UseDialogProp> = useCallback(
     (prop: UseDialogProp): React.ReactNode => {
+<<<<<<< HEAD
       return <Component isOpen={isOpen} onClose={close} {...prop} />;
+=======
+      return <div>これhookの<Component isOpen={isOpen} onClose={close} {...prop} /></div>;
+>>>>>>> origin/second
     },
     [close, isOpen]
   );

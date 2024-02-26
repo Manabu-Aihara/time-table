@@ -1,17 +1,33 @@
 import { createContext, Dispatch, ReactNode, useReducer } from 'react';
+<<<<<<< HEAD
 import { Event } from 'react-big-calendar';
 import moment from 'moment';
 
 type Events = Event[];
+=======
+// import { Event } from 'react-big-calendar';
+import { EventItem } from '../lib/EventItem';
+import moment from 'moment';
+
+type EventItems = EventItem[];
+>>>>>>> origin/second
 
 // * State専用 Context *
 // 今後 Providerを使わない時にはContextの値がundefinedになる必要があるので, 
 // Contextの値がEventsにもundefinedにもできるように宣言してください。
+<<<<<<< HEAD
 export const EventsStateContext = createContext<Events | undefined>(undefined);
 
 type Action = 
   | { type: 'CREATE'; title: string }
   | { type: 'REMOVE'; title: string };
+=======
+export const EventsStateContext = createContext<EventItems | undefined>(undefined);
+
+type Action = 
+  | { type: 'CREATE'; payload: {title: ReactNode} }
+  | { type: 'UPDATE'; payload: EventItem };
+>>>>>>> origin/second
 
 type EventsDispatch = Dispatch<Action>;
 
@@ -21,6 +37,7 @@ export const EventsDispatchContext = createContext<EventsDispatch | undefined>(
 );
 
 // * Reducer *
+<<<<<<< HEAD
 export function eventsReducer (state: Events, action: Action): Events {
 
   switch (action.type) {
@@ -33,6 +50,20 @@ export function eventsReducer (state: Events, action: Action): Events {
         });
     // case 'REMOVE':
     //   return state.filter(state => state.title !== action.title);
+=======
+export function eventsReducer (eventState: EventItems, action: Action): EventItems {
+  const { type, payload } = action;
+
+  switch (type) {
+    case 'CREATE':
+      return eventState.concat({
+          title: payload.title,
+          start: new Date(),
+          end: new Date(new Date().setHours(new Date().getHours() + 1)),    
+        });
+    case 'UPDATE':
+      return eventState.map(evt => evt.title === action.payload.title ? action.payload : evt)
+>>>>>>> origin/second
     default:
       throw new Error('Invalid action');
   }
