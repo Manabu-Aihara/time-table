@@ -7,7 +7,12 @@ import { EventItem } from '../../lib/EventItem';
 import { eventsReducer } from '../EventsParent';
 
 import { boundaryTop, boundaryY } from '../sprinkles.responsive.css';
-import { formParent } from './InputItem.css';
+import { fixedClose, formParent } from './InputItem.css';
+
+type InputItemProps = {
+	eventItem: EventItem;
+	closeClick: () => void;
+}
 
 type OptionType = {
 	value: string;
@@ -20,10 +25,10 @@ const options: OptionType[] = [
 	{value: 'complete', label: '完了'}
 ];
 
-export const AddChildForm = forwardRef((eventItem: EventItem, divRef: Ref<HTMLDivElement>) => {
+export const AddChildForm = forwardRef(({eventItem, closeClick}: InputItemProps, childRef: Ref<HTMLDivElement>) => {
 	const initialValue: EventItem = {
 		title: eventItem.title, start: eventItem.start, end: eventItem.end,
-		summary: '', owner: '', done: options[0].value
+		summary: '', owner: '', done: ''
 	}
 	const [todo, setTodo] = useState<EventItem>(initialValue);
 	// const [done, setDone] = useState<string | undefined>(options[0].value);
@@ -61,8 +66,11 @@ export const AddChildForm = forwardRef((eventItem: EventItem, divRef: Ref<HTMLDi
 
 	return (
 		<ChakraProvider>
-			<Box ref={divRef} className={formParent}>
-				<Text className={boundaryTop}>{todo.title}</Text>
+			<Box ref={childRef} className={formParent}>
+				<Button type='button' onClick={closeClick} className={fixedClose}>
+					<Text fontSize='2rem' color='white'>×</Text><Text color='white'>閉じる</Text>
+				</Button>
+				<Text fontSize='2rem' fontWeight='bold' className={boundaryTop}>{todo.title}</Text>
 				<section className={boundaryTop}>
 					<Text>さまりー：</Text>
 					<Input name="summary" onChange={handleChange} value={todo.summary} />
