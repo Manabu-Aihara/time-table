@@ -67,7 +67,7 @@ export const AddChildForm = forwardRef(({eventItem, closeClick}: InputItemProps,
 	return (
 		<ChakraProvider>
 			<Box ref={childRef} className={formParent}>
-				<Button type='button' onClick={closeClick} className={fixedClose}>
+				<Button type='button' position='fixed' color='gainsboro' onClick={closeClick}>
 					<Text fontSize='2rem' color='white'>×</Text><Text color='white'>閉じる</Text>
 				</Button>
 				<Text fontSize='2rem' fontWeight='bold' className={boundaryTop}>{todo.title}</Text>
