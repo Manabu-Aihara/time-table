@@ -19,6 +19,7 @@ import { ItemComponent } from '../molecules/EventItemComponent';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { topWidth } from '../sprinkles.responsive.css';
 import { addButton } from './ContainComponent.css';
+import { customView } from '../organisms/DaysComponent';
 
 const locales = {
   'ja-JP': ja,
@@ -89,13 +90,14 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
           <Calendar
             localizer={localizer}
             events={state}
-            defaultView='day'
+            defaultView='week'
             startAccessor="start"
             endAccessor="end"
             onSelectEvent={handleSelectEvent}
             // onSelectSlot={handleSelectSlot}
             selectable
             components={components}
+            views={customView}
           />
         </chakra.div>
         {/* <button onClick={handleOuterBubbling}></button> */}

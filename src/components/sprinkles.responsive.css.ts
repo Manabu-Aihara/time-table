@@ -39,3 +39,11 @@ export const topWidth = atoms({
 		desktop: 'half'
 	}
 });
+
+export const buttonPosition = atoms({
+	position: {
+		mobile: 'static',
+		tablet: 'static',
+		desktop: 'fixed'
+	}
+});

@@ -6,7 +6,7 @@ import { useEventsDispatch, useEventsState } from '../../lib/UseContext';
 import { EventItem } from '../../lib/EventItem';
 import { eventsReducer } from '../EventsParent';
 
-import { boundaryTop, boundaryY } from '../sprinkles.responsive.css';
+import { boundaryTop, boundaryY, buttonPosition } from '../sprinkles.responsive.css';
 import { fixedClose, formParent } from './InputItem.css';
 
 type InputItemProps = {
@@ -67,7 +67,7 @@ export const AddChildForm = forwardRef(({eventItem, closeClick}: InputItemProps,
 	return (
 		<ChakraProvider>
 			<Box ref={childRef} className={formParent}>
-				<Button type='button' position='fixed' color='gainsboro' onClick={closeClick}>
+				<Button type='button' color='gainsboro' onClick={closeClick} className={buttonPosition}>
 					<Text fontSize='2rem' color='white'>×</Text><Text color='white'>閉じる</Text>
 				</Button>
 				<Text fontSize='2rem' fontWeight='bold' className={boundaryTop}>{todo.title}</Text>
