@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-// @ts-ignore
-import * as TimeGrid from 'react-big-calendar/lib/TimeGrid';
+// import * as TimeGrid from 'react-big-calendar/lib/TimeGrid';
 import { NavigateAction } from 'react-big-calendar';
 import moment from 'moment';
 // import { TimeGrid } from 'react-big-calendar';
