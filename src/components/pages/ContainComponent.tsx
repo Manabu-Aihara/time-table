@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { chakra } from '@chakra-ui/system';
 
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
@@ -18,8 +19,9 @@ import { ItemComponent } from '../molecules/EventItemComponent';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { topWidth } from '../sprinkles.responsive.css';
-import { addButton } from './ContainComponent.css';
-import { customView } from '../organisms/DaysComponent';
+import { addButton, gridArea } from './ContainComponent.css';
+import { MyWeek } from '../organisms/DaysClassComponent';
+// import { views } from '../organisms/DaysComponent';
 
 const locales = {
   'ja-JP': ja,
@@ -85,22 +87,27 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   return (
     <div>
       <chakra.div display="flex" justifyContent="flex-start" overflowX="auto" scrollSnapType="x mandatory">
-        <chakra.div className={topWidth} display="grid" flexShrink="0" scrollSnapAlign="start" m="0 1%">
+        <chakra.div className={`${topWidth} ${gridArea}`} flexShrink="0" scrollSnapAlign="start">
           <button onClick={open} className={addButton}>Add Event</button>
+          <button>
+            <Link to="/timeline">サンプルタイムライン</Link>
+          </button>
           <Calendar
             localizer={localizer}
             events={state}
-            defaultView='week'
+            defaultView='month'
             startAccessor="start"
             endAccessor="end"
             onSelectEvent={handleSelectEvent}
             // onSelectSlot={handleSelectSlot}
             selectable
             components={components}
-            views={customView}
+            views={{
+              month: true,
+              week: MyWeek
+            }}
           />
         </chakra.div>
-        {/* <button onClick={handleOuterBubbling}></button> */}
         <chakra.div flexShrink="0" scrollSnapAlign="start" className={topWidth} onClick={handleOuterBubbling}>
           {showModal && <AddChildForm eventItem={targetEvent} closeClick={closeInputForm} ref={divRef} />}
         </chakra.div>

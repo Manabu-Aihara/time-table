@@ -1,10 +1,12 @@
-import { useState, useMemo } from 'react';
-import Timeline from 'react-calendar-timeline';
-import { ViewStatic, ViewsProps } from 'react-big-calendar';
+import { useMemo } from 'react';
+import { DateLocalizer, Navigate, TitleOptions } from 'react-big-calendar';
+// 🙆‍♂️ valid (@ts-expect-error のあとに続けて説明を書く必要がある)
+// @ts-expect-error どうしても "foo" から bar() が呼びたいんです
+import * as TimeGrid from 'react-big-calendar/lib/TimeGrid'
+import Timeline from 'react-calendar-timeline'
 // make sure you include the timeline stylesheet or the timeline will not be styled
-import 'react-calendar-timeline/lib/Timeline.css';
+import 'react-calendar-timeline/lib/Timeline.css'
 import moment from 'moment';
-import { EventItem } from '../../lib/EventItem';
 
 const groups = [{ id: 1, title: 'group 1' }, { id: 2, title: 'group 2' }]
 
@@ -32,36 +34,66 @@ const items = [
   }
 ]
 
-export const MyTimeline = () => {
+export const SampleTimeline = () => {
 
-  // console.log(`ダイアログ外: ${JSON.stringify(eventItem)}`);
   return (
     <div>
       Rendered by react!
-      <Timeline
+      {/* <Timeline
         groups={groups}
         items={items}
         defaultTimeStart={moment().add(-12, 'hour')}
         defaultTimeEnd={moment().add(12, 'hour')}
-      />
+      /> */}
     </div>
   );
 }
 
-type Props = ViewsProps<EventItem, object>
+SampleTimeline.range = (date: Date, localizer: DateLocalizer ) => {
+  console.log(localizer);
+  const range: Date[] = [];
+  const start = date
+  const end = localizer.add(start, 2, 'day')
 
-const CustomView: React.ComponentType<any> & ViewStatic = (vprop: ViewStatic) => {
-  const { navigate, title } = vprop
-  const [evtItem, setEvtItem] = useState<EventItem>({});
+  let current = start
 
-  return <MyTimeline />
+  while (localizer.lte(current, end, 'day')) {
+    range.push(current)
+    current = localizer.add(current, 1, 'day')
+  }
+
+  return range;
 }
 
-export const customView: Props = useMemo(() => (
-  {
+SampleTimeline.navigate = (date: Date, action: 'PREV' | 'NEXT' | 'DATE', localizer: DateLocalizer) => {
+  switch (action) {
+    case Navigate.PREVIOUS:
+      return localizer.add(date, -3, 'day')
+
+    case Navigate.NEXT:
+      return localizer.add(date, 3, 'day')
+
+    default:
+      return date
+  }
+}
+
+SampleTimeline.title = (date: Date, option: TitleOptions): string => {
+  // type AnyType = ComponentProps<typeof option['']>
+  // const l: DateLocalizer | AnyType = option
+  // const castLocalizer: DateLocalizer = l as DateLocalizer
+  // const [start, ...rest] = MyTimeline.range(date, l);
+  console.log(`option.dateFormats: ${option.formats}`);
+  console.log(date);
+  //   return localizer.format(new Date(), 'dayRangeHeaderFormat')/* + ' — ' + castLocalizer.format(rest.pop()!, 'dayRangeHeaderFormat')*/
+  return date.toISOString();
+}
+  
+export const {views, ...otherprops} = {
+  views: {
     month: true,
     week: true,
-    day: CustomView
+    day: SampleTimeline
   }
   // ... other props
-), []);
+}
