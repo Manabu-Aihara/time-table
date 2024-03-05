@@ -1,4 +1,5 @@
 import { Event } from 'react-big-calendar';
+// import { TimelineEventProps } from './TimelineType';
 
 // export type EventItem = Event & {
 // 	summary: string;
@@ -6,7 +7,8 @@ import { Event } from 'react-big-calendar';
 // 	done: string;
 // }
 export interface EventItem extends Event {
+	staff_id: number;
 	summary?: string;
-	owner?: string;
+	// owner?: string;
 	done?: string;
 }

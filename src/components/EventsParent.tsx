@@ -1,18 +1,27 @@
 import { createContext, Dispatch, ReactNode, useReducer } from 'react';
-// import { Event } from 'react-big-calendar';
-import { EventItem } from '../lib/EventItem';
+
 import moment from 'moment';
 
-type EventItems = EventItem[];
+// import { EventItem } from '../lib/EventItem';
+import { TimelineEventProps } from '../lib/TimelineType';
+import { timelineEventsReducer } from '../lib/reducer';
+
+// type EventItems = EventItem[];
+export type TimelineEventPropsList = TimelineEventProps[]
 
 // * State専用 Context *
 // 今後 Providerを使わない時にはContextの値がundefinedになる必要があるので, 
 // Contextの値がEventsにもundefinedにもできるように宣言してください。
-export const EventsStateContext = createContext<EventItems | undefined>(undefined);
+export const EventsStateContext = createContext<TimelineEventPropsList | undefined>(undefined);
 
-type Action = 
-  | { type: 'CREATE'; payload: {title: ReactNode} }
-  | { type: 'UPDATE'; payload: EventItem };
+export type Action = 
+  | { type: 'CREATE'; payload: {
+      staff_id: number,
+      group: number,
+      title: ReactNode
+      }
+    }
+  | { type: 'UPDATE'; payload: TimelineEventProps };
 
 type EventsDispatch = Dispatch<Action>;
 
@@ -21,27 +30,11 @@ export const EventsDispatchContext = createContext<EventsDispatch | undefined>(
   undefined
 );
 
-// * Reducer *
-export function eventsReducer (eventState: EventItems, action: Action): EventItems {
-  const { type, payload } = action;
-
-  switch (type) {
-    case 'CREATE':
-      return eventState.concat({
-          title: payload.title,
-          start: new Date(),
-          end: new Date(new Date().setHours(new Date().getHours() + 1)),    
-        });
-    case 'UPDATE':
-      return eventState.map(evt => evt.title === action.payload.title ? action.payload : evt)
-    default:
-      throw new Error('Invalid action');
-  }
-}
-
 export const EventsContextProvider = ({ children }: { children: ReactNode }) => {
-  const [events, dispatch] = useReducer(eventsReducer, [
+  const [events, dispatch] = useReducer(timelineEventsReducer, [
     {
+      staff_id: 1000,
+      group: 0,
       title: 'Learn cool stuff',
       start: moment().toDate(),
       end: moment().add(1, 'hours').toDate()

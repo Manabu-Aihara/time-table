@@ -3,14 +3,15 @@ import { ChakraProvider, Box, Text, Input, Button, Select } from '@chakra-ui/rea
 // import Select, { ActionMeta, SingleValue } from 'react-select';
 
 import { useEventsDispatch, useEventsState } from '../../lib/UseContext';
-import { EventItem } from '../../lib/EventItem';
-import { eventsReducer } from '../EventsParent';
+// import { EventItem } from '../../lib/EventItem';
+import { TimelineEventProps } from '../../lib/TimelineType';
+import { timelineEventsReducer } from '../../lib/reducer';
 
 import { boundaryTop, boundaryY, buttonPosition } from '../sprinkles.responsive.css';
 import { fixedClose, formParent } from './InputItem.css';
 
-type InputItemProps = {
-	eventItem: EventItem;
+type InputEventProps = {
+	timelineEvent: TimelineEventProps;
 	closeClick: () => void;
 }
 
@@ -25,18 +26,20 @@ const options: OptionType[] = [
 	{value: 'complete', label: '完了'}
 ];
 
-export const AddChildForm = forwardRef(({eventItem, closeClick}: InputItemProps, childRef: Ref<HTMLDivElement>) => {
-	const initialValue: EventItem = {
-		title: eventItem.title, start: eventItem.start, end: eventItem.end,
-		summary: '', owner: '', done: ''
+export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventProps, childRef: Ref<HTMLDivElement>) => {
+	const initialValue: TimelineEventProps = {
+		staff_id: timelineEvent.staff_id, group: timelineEvent.group,
+		title: timelineEvent.title,
+		start: timelineEvent.start, end: timelineEvent.end,
+		summary: '', done: ''
 	}
-	const [todo, setTodo] = useState<EventItem>(initialValue);
+	const [todo, setTodo] = useState<TimelineEventProps>(initialValue);
 	// const [done, setDone] = useState<string | undefined>(options[0].value);
 
   const currentState = useEventsState();
   const dispatch = useEventsDispatch();
 
-  console.log(`Childの今のイベント: ${JSON.stringify(eventItem)}`);
+  console.log(`Childの今のイベント: ${JSON.stringify(timelineEvent)}`);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>) => {
 		// name, valueという変数名で決まっているようだ
@@ -55,12 +58,12 @@ export const AddChildForm = forwardRef(({eventItem, closeClick}: InputItemProps,
 			type: 'UPDATE',
 			payload: todo
 		});
-    const nextStage = eventsReducer([eventItem], {type: 'UPDATE', payload: todo});
+    const nextStage = timelineEventsReducer([timelineEvent], {type: 'UPDATE', payload: todo});
     console.log(`ここ注目：${JSON.stringify(nextStage)}`);
 	}
 
 	useEffect(() => {
-		setTodo({...eventItem, summary: eventItem.summary, owner: eventItem.owner, done: eventItem.done});
+		setTodo({...timelineEvent, summary: timelineEvent.summary, done: timelineEvent.done});
 		console.log(`setTodo: ${JSON.stringify(todo)}`);
 	}, []);
 
@@ -75,10 +78,10 @@ export const AddChildForm = forwardRef(({eventItem, closeClick}: InputItemProps,
 					<Text>さまりー：</Text>
 					<Input name="summary" onChange={handleChange} value={todo.summary} />
 				</section>
-				<section className={boundaryTop}>
+				{/* <section className={boundaryTop}>
 					<Text>誰が：</Text>
 					<Input name="owner" onChange={handleChange} value={todo.owner} />
-				</section>
+				</section> */}
 				<section className={boundaryTop}>
 					<Text>どんな感じ：</Text>
 					<Select name="done" value={todo.done} onChange={handleChange}>
@@ -99,6 +102,6 @@ export const AddChildForm = forwardRef(({eventItem, closeClick}: InputItemProps,
 	);
 });
 
-// export const AddSideForm = forwardRef<HTMLDivElement, EventItem>((prop, _ref) => {
+// export const AddSideForm = forwardRef<HTMLDivElement, timelineEvent>((prop, _ref) => {
 // 	return <AddChildForm {...prop} ref />}
 // );

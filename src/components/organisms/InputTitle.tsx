@@ -1,12 +1,15 @@
 import { useState, FormEvent } from 'react';
 
 import { useEventsDispatch, useEventsState } from '../../lib/UseContext';
-import { eventsReducer } from '../EventsParent';
+import { timelineEventsReducer } from '../../lib/reducer';
 
 type InputElementProps = React.ComponentProps<'input'>;
 
 export const InputComponent = (inputAttr: InputElementProps) => {
   const [title, setTitle] = useState<string>('');
+  const [staff_id, setStaff_id] = useState<number>(0);
+  const [group, setGroup] = useState<number>(0);
+
   const currentState = useEventsState();
   const dispatch = useEventsDispatch();
 
@@ -18,12 +21,23 @@ export const InputComponent = (inputAttr: InputElementProps) => {
     e.preventDefault();
     dispatch({
       type: 'CREATE',
-      payload: {title: title}
+      payload: {
+        staff_id: staff_id,
+        group: group,
+        title: title
+      }
     });
     console.log(`Dialog前の: ${JSON.stringify(currentState)}`);
     // I’ve dispatched an action, but logging gives me the old state value
     // https://react.dev/reference/react/useReducer
-    const nextStage = eventsReducer(currentState, {type: 'CREATE', payload: {title: title}});
+    const nextStage = timelineEventsReducer(currentState, {
+      type: 'CREATE',
+      payload: {
+        staff_id: staff_id,
+        group: group,
+        title: title
+      }
+    });
     console.log(`Dialog後の: ${JSON.stringify(nextStage)}`);
   };
 

@@ -12,7 +12,7 @@ import ja from 'date-fns/locale/ja';
 
 import { InputComponent } from '../organisms/InputTitle';
 import { useEventsState } from '../../lib/UseContext';
-import { EventItem } from '../../lib/EventItem';
+import { TimelineEventProps } from '../../lib/TimelineType';
 import { useDialog } from '../../hooks/useDialog';
 import { AddChildForm } from "../organisms/InputItem";
 import { ItemComponent } from '../molecules/EventItemComponent';
@@ -36,13 +36,13 @@ const localizer = dateFnsLocalizer({
 });
 
 interface EventProps {
-  targetEvent: EventItem;
-	onShowFormView: (targetEvent: EventItem) => void;
+  targetEvent: TimelineEventProps;
+	onShowFormView: (targetEvent: TimelineEventProps) => void;
 }
 
 export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   const components = useMemo(() => ({
-    event: ({ event }: { event: EventItem }) => {
+    event: ({ event }: { event: TimelineEventProps }) => {
       // console.log(`入ってくるもの: ${JSON.stringify(event)}`);
       return (
         <>
@@ -58,7 +58,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
 	const divRef = useRef<HTMLDivElement>(null);
 	const [showModal, setShowModal] = useState(false);
 
-  const handleSelectEvent = useCallback((callingEvent: EventItem) => {
+  const handleSelectEvent = useCallback((callingEvent: TimelineEventProps) => {
     const { title, start, end } = callingEvent;
     console.log(`選んだイベント: ${start}:${end}:${title}`);
     onShowFormView(callingEvent);
@@ -109,7 +109,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
           />
         </chakra.div>
         <chakra.div flexShrink="0" scrollSnapAlign="start" className={topWidth} onClick={handleOuterBubbling}>
-          {showModal && <AddChildForm eventItem={targetEvent} closeClick={closeInputForm} ref={divRef} />}
+          {showModal && <AddChildForm timelineEvent={targetEvent} closeClick={closeInputForm} ref={divRef} />}
         </chakra.div>
       </chakra.div>
       <Dialog>
