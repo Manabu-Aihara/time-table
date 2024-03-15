@@ -5,8 +5,9 @@ import { timelineEventsReducer } from '../../lib/reducer';
 
 type InputElementProps = React.ComponentProps<'input'>;
 
-export const InputComponent = (inputAttr: InputElementProps) => {
+export const TitleInput = (inputAttr: InputElementProps) => {
   const [title, setTitle] = useState<string>('');
+  const [id, setId] = useState<number>(0);
   const [staff_id, setStaff_id] = useState<number>(0);
   const [group, setGroup] = useState<number>(0);
 
@@ -22,6 +23,7 @@ export const InputComponent = (inputAttr: InputElementProps) => {
     dispatch({
       type: 'CREATE',
       payload: {
+        id: id,
         staff_id: staff_id,
         group: group,
         title: title
@@ -33,6 +35,7 @@ export const InputComponent = (inputAttr: InputElementProps) => {
     const nextStage = timelineEventsReducer(currentState, {
       type: 'CREATE',
       payload: {
+        id: id,
         staff_id: staff_id,
         group: group,
         title: title

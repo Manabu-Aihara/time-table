@@ -1,9 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { EventsContextProvider } from './EventsParent';
-import { ViewComponent } from './templates/ViewComponents';
-import { SampleTimeline } from "./organisms/TLComponent";
+import { RoutesComponent } from './templates/ViewComponents';
 // import { InputComponent } from "./components/InputForm";
 
 const queryClient = new QueryClient({
@@ -19,12 +17,7 @@ export const Index = () => {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<EventsContextProvider>
-				<BrowserRouter>
-					<Routes>
-						<Route path="/"	element={<ViewComponent />} />
-						<Route path="/timeline" element={<SampleTimeline />} />
-					</Routes>
-				</BrowserRouter>
+				<RoutesComponent />
 			</EventsContextProvider>
 		</QueryClientProvider>
 	);

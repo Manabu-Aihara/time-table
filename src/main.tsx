@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 
 // import App from './DnDApp';
 // import { AllTodo } from './components_temp/TodoList';
-import { Index } from './components/Routes';
+import { Index } from './components';
 // import { View } from './components/SlotInput';
 
 // import './css/reset.css';

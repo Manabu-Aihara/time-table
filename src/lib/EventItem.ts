@@ -1,6 +1,6 @@
 import { Event } from 'react-big-calendar';
-// import { TimelineEventProps } from './TimelineType';
 
+// type CustomEvent = Omit<Event, 'title'>
 // export type EventItem = Event & {
 // 	summary: string;
 // 	owner: string;

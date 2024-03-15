@@ -16,6 +16,7 @@ export const EventsStateContext = createContext<TimelineEventPropsList | undefin
 
 export type Action = 
   | { type: 'CREATE'; payload: {
+      id: number,
       staff_id: number,
       group: number,
       title: ReactNode
@@ -33,11 +34,12 @@ export const EventsDispatchContext = createContext<EventsDispatch | undefined>(
 export const EventsContextProvider = ({ children }: { children: ReactNode }) => {
   const [events, dispatch] = useReducer(timelineEventsReducer, [
     {
+      id: 0,
       staff_id: 1000,
       group: 0,
       title: 'Learn cool stuff',
-      start: moment().toDate(),
-      end: moment().add(1, 'hours').toDate()
+      start_time: moment().toDate(),
+      end_time: moment().add(1, 'hours').toDate()
     },
   ]);
 

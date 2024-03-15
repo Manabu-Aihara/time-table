@@ -28,10 +28,11 @@ const options: OptionType[] = [
 
 export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventProps, childRef: Ref<HTMLDivElement>) => {
 	const initialValue: TimelineEventProps = {
-		staff_id: timelineEvent.staff_id, group: timelineEvent.group,
-		title: timelineEvent.title,
-		start: timelineEvent.start, end: timelineEvent.end,
-		summary: '', done: ''
+		// staff_id: timelineEvent.staff_id, group: timelineEvent.group,
+		// title: timelineEvent.title,
+		// start: timelineEvent.start, end: timelineEvent.end,
+		// summary: '', done: ''
+		...timelineEvent
 	}
 	const [todo, setTodo] = useState<TimelineEventProps>(initialValue);
 	// const [done, setDone] = useState<string | undefined>(options[0].value);
