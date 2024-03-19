@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 
-import { useEventsDispatch, useEventsState } from '../../lib/UseContext';
+import { useEventsDispatch, useEventsState } from '../../hooks/useContextFamily';
 import { timelineEventsReducer } from '../../lib/reducer';
 
 type InputElementProps = React.ComponentProps<'input'>;

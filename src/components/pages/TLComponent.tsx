@@ -4,7 +4,7 @@ import { chakra } from '@chakra-ui/system';
 import Timeline from 'react-calendar-timeline';
 
 import { TimelineEventProps } from '../../lib/TimelineType';
-import { useEventsState } from '../../lib/UseContext';
+import { useEventsState } from '../../hooks/useContextFamily';
 import { AddChildForm } from "../organisms/InputItem";
 import { AddEventButton } from '../molecules/AddButtonComponent';
 

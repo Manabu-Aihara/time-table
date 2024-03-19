@@ -1,12 +1,12 @@
 import { TimelineEventPropsList, Action } from '../components/EventsParent';
 
 // * Reducer *
-export const timelineEventsReducer = (timelineEventventState: TimelineEventPropsList, action: Action): TimelineEventPropsList => {
+export const timelineEventsReducer = (timelineEventsState: TimelineEventPropsList, action: Action): TimelineEventPropsList => {
   const { type, payload } = action;
 
   switch (type) {
     case 'CREATE':
-      return timelineEventventState.concat({
+      return timelineEventsState.concat({
         id: payload.id,
         staff_id: payload.staff_id,
         group: payload.group,
@@ -15,7 +15,7 @@ export const timelineEventsReducer = (timelineEventventState: TimelineEventProps
         end_time: new Date(new Date().setHours(new Date().getHours() + 1)),
       });
     case 'UPDATE':
-      return timelineEventventState.map(evt => evt.title === action.payload.title ? action.payload : evt)
+      return timelineEventsState.map(evt => evt.title === action.payload.title ? action.payload : evt)
     default:
       throw new Error('Invalid action');
   }

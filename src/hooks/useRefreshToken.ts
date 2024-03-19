@@ -1,24 +1,21 @@
 import axios from "axios";
-import { useContext } from "react";
-import { AuthContext } from "../auth/AuthParent";
 
-const useRefreshToken = () => {
-  const { setAuth } = useContext(AuthContext);
+import { AuthGuardContext, AuthDispatchContext } from "../auth/AuthParent";
+import { useAuthContext, useAuthDispatch } from "./useContextFamily";
 
-  const refresh = async () => {
-    // cookieに保存されたrefresh_tokenを送付してaccess_tokenを取得する
-    const response = await axios.get("/refresh", {
-      withCredentials: true,
-    });
-    setAuth((prev) => {
-      // access_tokenを保持する
-      return { ...prev, accessToken: response.data.accessToken };
-    });
+const dispatch = useAuthDispatch();
 
-    return response.data.accessToken;
-  };
-
-  return refresh;
+export const refresh = async () => {
+  // cookieに保存されたrefresh_tokenを送付してaccess_tokenを取得する
+  const response = await axios.get<AuthGuardContext>("/refresh", {
+    withCredentials: true,
+  });
+  // state((prev: AuthGuardContext) => {
+  //   // access_tokenを保持する
+  //   return { ...prev, accessToken: response.data.accessToken };
+  // });
+  dispatch({
+    type: 'UPDATE',
+    retrieveToken: response.data.accessToken
+  });
 };
-
-export default useRefreshToken;

@@ -2,7 +2,7 @@ import { useState, useEffect, FormEvent, forwardRef, Ref } from 'react';
 import { ChakraProvider, Box, Text, Input, Button, Select } from '@chakra-ui/react';
 // import Select, { ActionMeta, SingleValue } from 'react-select';
 
-import { useEventsDispatch, useEventsState } from '../../lib/UseContext';
+import { useEventsDispatch, useEventsState } from '../../hooks/useContextFamily';
 // import { EventItem } from '../../lib/EventItem';
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { timelineEventsReducer } from '../../lib/reducer';

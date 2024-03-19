@@ -1,16 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter as TopRouter } from 'react-router-dom';
 
-// import App from './DnDApp';
-// import { AllTodo } from './components_temp/TodoList';
 import { Index } from './components';
-// import { View } from './components/SlotInput';
 
-// import './css/reset.css';
-// import './index.css';
-
-ReactDOM.createRoot(document.getElementById('root')!).render(  
-  <React.StrictMode>
-    <Index />
-  </React.StrictMode>,
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  // [SOLVED] useRoutes() may be used only in the context of a Router | How to use useRoutes in Reactjs?
+  // https://www.youtube.com/watch?v=6uQ5gwd8QGY
+  <TopRouter>
+    <React.StrictMode>
+      <Index />
+    </React.StrictMode>
+  </TopRouter>,
 );

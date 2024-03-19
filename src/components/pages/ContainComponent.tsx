@@ -10,7 +10,7 @@ import getDay from 'date-fns/getDay';
 // import enUS from 'date-fns/locale/en-US';
 import ja from 'date-fns/locale/ja';
 
-import { useEventsState } from '../../lib/UseContext';
+import { useEventsState } from '../../hooks/useContextFamily';
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { ItemComponent } from '../molecules/EventCardComponent';
 
@@ -18,6 +18,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { topWidth } from '../sprinkles.responsive.css';
 import { gridArea } from './ContainComponent.css';
 import { MyWeek } from '../organisms/DaysClassComponent';
+import { useAuthAxios } from '../../hooks/useAuthToken';
 // import { views } from '../organisms/DaysComponent';
 
 const locales = {
