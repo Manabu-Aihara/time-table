@@ -1,7 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-import { EventsContextProvider } from './EventsParent';
-import { AuthProvider } from '../auth/AuthParent';
 import { RoutesComponent } from './templates/ViewComponents';
 // import { InputComponent } from "./components/InputForm";
 
@@ -17,11 +15,7 @@ export const Index = () => {
 
 	return (
 		<QueryClientProvider client={queryClient}>
-			<EventsContextProvider>
-				<AuthProvider>
-					<RoutesComponent />
-				</AuthProvider>
-			</EventsContextProvider>
+			<RoutesComponent />
 		</QueryClientProvider>
 	);
 };

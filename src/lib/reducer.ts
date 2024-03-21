@@ -1,4 +1,4 @@
-import { TimelineEventPropsList, Action } from '../components/EventsParent';
+import { TimelineEventPropsList, Action } from '../components/templates/EventsParent';
 
 // * Reducer *
 export const timelineEventsReducer = (timelineEventsState: TimelineEventPropsList, action: Action): TimelineEventPropsList => {

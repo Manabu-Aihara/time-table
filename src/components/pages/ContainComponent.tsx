@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { chakra } from '@chakra-ui/system';
 
@@ -47,9 +47,31 @@ export const MyCalendar = () => {
 
   const state = useEventsState();
 
+  const authAxios = useAuthAxios();
+
+  useEffect(() => {
+    const f = async () => {
+      authAxios.get('http://127.0.0.1:8000/refresh')
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err));
+      // console.log(`Is there token?: ${response}`);
+    }
+    f();
+  }, []);
+
+  useEffect(() => {
+    const f = async () => {
+      authAxios.get('http://127.0.0.1:8000/event/all')
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err));
+      // console.log(`Is there token?: ${response}`);
+    }
+    f();
+  }, []);
+
 	// const [showModal, setShowModal] = useState(false);
 
-  // ここは後にツールチップで
+  // ここは後にツールチップか何かで
   // const handleSelectEvent = useCallback((callingEvent: TimelineEventProps) => {
   //   const { title, start, end } = callingEvent;
   //   console.log(`選んだイベント: ${start}:${end}:${title}`);

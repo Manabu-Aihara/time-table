@@ -3,8 +3,8 @@ import { createContext, Dispatch, ReactNode, useReducer } from 'react';
 import moment from 'moment';
 
 // import { EventItem } from '../lib/EventItem';
-import { TimelineEventProps } from '../lib/TimelineType';
-import { timelineEventsReducer } from '../lib/reducer';
+import { TimelineEventProps } from '../../lib/TimelineType';
+import { timelineEventsReducer } from '../../lib/reducer';
 
 // type EventItems = EventItem[];
 export type TimelineEventPropsList = TimelineEventProps[]

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
-import { EventsStateContext, EventsDispatchContext } from "../components/EventsParent";
-import { AuthStateContext, AuthDispatchContext } from "../auth/AuthParent";
+import { EventsStateContext, EventsDispatchContext } from "../components/templates/EventsParent";
+import { AuthStateContext, AuthDispatchContext } from "../components/templates/AuthParent";
 
 export function useEventsState() {
   const state = useContext(EventsStateContext);
