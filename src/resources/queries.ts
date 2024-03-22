@@ -1,9 +1,9 @@
 import { useQuery, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-import { fetchData } from "../hooks/useFetch";
-import { eventKeys } from "./cache";
 import { TimelineEventProps } from "../lib/TimelineType";
+import { fetchEventsData } from "../hooks/useFetch";
+import { eventKeys } from "./cache";
 
 export const useAllQuery = <TData = TimelineEventProps[]>(
   options?: Omit<
@@ -11,7 +11,7 @@ export const useAllQuery = <TData = TimelineEventProps[]>(
     "queryKey" | "queryFn"
   >
 ) => {
-  return useQuery({queryKey: eventKeys.all, queryFn: fetchData, ...options});
+  return useQuery({queryKey: eventKeys.all, queryFn: fetchEventsData, ...options});
 };
 
 type UtilOption<TData = TimelineEventProps[]> = {

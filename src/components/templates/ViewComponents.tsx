@@ -13,10 +13,10 @@ import { TimelineEventProps } from "../../lib/TimelineType";
 
 export const RoutesComponent = () => {
 	const [event, setEvent] = useState<TimelineEventProps>();
-  const todos = useEventsQuery();
+  // const todos = useEventsQuery();
 
   // console.log(`View: ${JSON.stringify(event)}`);
-  console.log((`From attendance: ${JSON.stringify(todos)}`));
+  // console.log((`From attendance: ${JSON.stringify(todos)}`));
   return (
     <>
       <AuthProvider>

@@ -8,9 +8,7 @@ import { useAuthContext, useAuthDispatch } from "../hooks/useContextFamily";
 
 export const refresh = async () => {
   // cookieに保存されたrefresh_tokenを送付してaccess_tokenを取得する
-  const response = await axios.get<AuthGuardContext>("/refresh", {
-    withCredentials: true,
-  });
+  const response = await axios.get<AuthGuardContext>("/refresh");
   ((prev: AuthGuardContext) => {
     // access_tokenを保持する
     return { ...prev, accessToken: response.data.accessToken };

@@ -1,7 +1,7 @@
-import authAxios, { AxiosError } from "axios";
+import authAxios, { AxiosError, AxiosResponse } from "axios";
 import { useEffect } from "react";
 
-import { useAuthContext, useAuthDispatch } from './useContextFamily';
+import { useAuthContext } from './useContextFamily';
 import { refresh } from "../lib/refresh";
 import basicAxios from "../lib/AuthInfo";
 
@@ -26,19 +26,19 @@ export const useAuthAxios = () => {
 
     // レスポンスを受け取った直後に実行。もし認証エラーだった場合、再度リクエストする。
     const responseIntercept = basicAxios.interceptors.response.use(
-      (response) => response,
-      async (error/*: AxiosError*/) => {
-        const prevRequest = error?.config;
-        console.log(`Old token: ${prevRequest.headers["Authorization"]}`);
+      (response: AxiosResponse) => response,
+      async (error: AxiosError) => {
+        const prevRequest = error.config;
+        console.log(`Old token: ${prevRequest?.headers["Authorization"]}`);
         // 403認証エラー(headerにaccess_tokenがない。もしくはaccess_tokenが無効)
-        if (error?.response?.status === 403 && !prevRequest.sent) {
-          prevRequest.sent = true;
+        if (error?.response?.status === 403/* && !prevRequest.sent*/) {
+          // prevRequest.sent = true;
           // 新しくaccess_tokenを発行する
           const newAccessToken = await refresh();
           console.log(`New token: ${newAccessToken}`);
-          prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          prevRequest!.headers["Authorization"] = `Bearer ${newAccessToken}`;
           // 再度実行する
-          return authAxios(prevRequest);
+          return basicAxios(prevRequest!);
         }
         return Promise.reject(error);
       }

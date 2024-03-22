@@ -1,7 +1,6 @@
 import { ReactNode, createContext, useReducer, Dispatch, useState } from "react";
 import { useLocation } from 'react-router-dom';
-
-// import { useGetSearch } from "../../lib/search";
+import { fetchAuthData, useAuthQuery } from "../../hooks/useFetch";
 
 export type AuthGuardContext = {
   accessToken: string;
@@ -39,9 +38,12 @@ export const AuthProvider = ({children}: {children : ReactNode}) => {
 
   const search = useLocation().search;
   const query = new URLSearchParams(search);
+  // const authQuery = useAuthQuery();
+  // console.log("It's move!");
+  // console.log(`${JSON.stringify(authQuery.data)}`);
 
   const [auth, dispatch] = useReducer(useAuthReducer, {
-    accessToken: ''
+    accessToken: query.get('token')!
   });
   // const [auth, setAuth] = useState<AuthGuardContext>()
 
