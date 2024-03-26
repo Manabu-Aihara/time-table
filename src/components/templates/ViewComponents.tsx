@@ -3,13 +3,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { AuthProvider } from './AuthParent';
 import { EventsContextProvider } from './EventsParent';
-import { MyCalendar } from '../pages/ContainComponent';
+import { MyCalendar } from '../pages/CalendarComponent';
 import { SampleTimeline } from '../pages/TLComponent';
-import { AuthTestPage } from "../pages/TestAuthComponent";
-import { useEventsQuery } from '../../hooks/useFetch';
+import { AuthLeavePage } from "../pages/AuthLeaveComponent";
+import { AuthAxios } from "./AxiosClientProvider";
+import { useEventsQuery } from '../../resources/queries';
 // import { EventItem } from '../../lib/EventItem';
 import { TimelineEventProps } from "../../lib/TimelineType";
-// import { customTheme } from '../../lib/Theme';
 
 export const RoutesComponent = () => {
 	const [event, setEvent] = useState<TimelineEventProps>();
@@ -20,19 +20,21 @@ export const RoutesComponent = () => {
   return (
     <>
       <AuthProvider>
-        <EventsContextProvider>
-          {/* <BrowserRouter> */}
-            <Routes>
-              <Route path="/calendar"	element={<MyCalendar />} />
-              <Route path="/timeline" element={
-                <SampleTimeline
-                  onShowFormView={(event: TimelineEventProps) => setEvent(event)}
-                  targetEvent={event!} />
-                } />
-              <Route path="/auth" element={<AuthTestPage />} />             
-            </Routes>
-          {/* </BrowserRouter> */}
-        </EventsContextProvider>
+        <AuthAxios>
+          <EventsContextProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/calendar"	element={<MyCalendar />} />
+                <Route path="/timeline" element={
+                  <SampleTimeline
+                    onShowFormView={(event: TimelineEventProps) => setEvent(event)}
+                    targetEvent={event!} />
+                  } />
+                <Route path="/auth" element={<AuthLeavePage />} />             
+              </Routes>
+            </BrowserRouter>
+          </EventsContextProvider>
+        </AuthAxios>
       </AuthProvider>
     </>
   );

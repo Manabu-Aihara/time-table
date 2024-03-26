@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
 
 import { TimelineEventProps } from "../lib/TimelineType";
 import { AuthGuardContext } from "../components/templates/AuthParent";
+import basicAxios from "../lib/AuthInfo";
+import { useAuthContext } from "./useContextFamily";
 
 export const fetchEventsData = async (): Promise<TimelineEventProps[]> => {
 	const { data } = await axios.request<TimelineEventProps[]>({
@@ -24,48 +25,34 @@ export const fetchEventsData = async (): Promise<TimelineEventProps[]> => {
 	// .catch(err => console.log(err));
 }
   
-export const useEventsQuery = () => {
-	return useQuery({queryKey: ["events"], queryFn: fetchEventsData});
+export const fetchGetId = async (postToken: string): Promise<number> => {
+	// cookieに保存されたrefresh_tokenを送付してaccess_tokenを取得する
+	const resultID: number = await basicAxios.post('/event/all', postToken,
+		{
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				'Authorization': `Bearer ${postToken}`,
+				'credentials': 'include', // ここを追加。
+			}
+		});
+	console.log(`とりあえず結果のID: ${JSON.stringify(resultID)}`);
+	return resultID;
 }
 
-export const fetchAuthData = async (): Promise<AuthGuardContext> => {
+export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse> => {
   // cookieに保存されたrefresh_tokenを送付してaccess_tokenを取得する
-  const authData: AuthGuardContext = await axios.get('http://127.0.0.1:8000/refresh',
+  const authResponse = await basicAxios.post<AxiosResponse>('/event/all', postToken,
 		{
 			headers: {
 				'Access-Control-Allow-Origin': '*',
-				'Content-Type': 'application/json',
-				'credentials': 'include', // ここを追加。
-				'withCredentials': true
-		}
+				'Authorization': `Bearer ${postToken}`,
+				'credentials': 'include' // ここを追加。
+			}
 		});
-  ((prev: AuthGuardContext) => {
-    // access_tokenを保持する
-    return { ...prev, accessToken: authData.accessToken };
-  });
-	console.log(`フェッチデータ: ${JSON.stringify(authData)}`);
-  return authData;
-};
-
-const fetchAuthResponse = async (): Promise<AxiosResponse<AuthGuardContext>> => {
-  // cookieに保存されたrefresh_tokenを送付してaccess_tokenを取得する
-  const authResponse = await axios.get<AxiosResponse<AuthGuardContext>>('http://127.0.0.1:8000/refresh',
-		{
-			headers: {
-				'Access-Control-Allow-Origin': '*',
-				'Content-Type': 'application/json'
-				// credentials: 'include' // ここを追加。
-				// withCredentials: true
-		}
-		});
-  ((prev: AuthGuardContext) => {
-    // access_tokenを保持する
-    return { ...prev, accessToken: authResponse.data };
-  });
+  // ((prev: AuthGuardContext) => {
+  //   // access_tokenを保持する
+  //   return { ...prev, accessToken: authResponse.data };
+  // });
 	console.log(`フェッチデータ: ${authResponse}`);
   return authResponse.data;
 };
-
-export const useAuthQuery = () => {
-	return useQuery({queryKey: ["auth"], queryFn: fetchAuthData})
-}

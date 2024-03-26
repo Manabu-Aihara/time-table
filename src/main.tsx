@@ -7,9 +7,9 @@ import { Index } from './components';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // [SOLVED] useRoutes() may be used only in the context of a Router | How to use useRoutes in Reactjs?
   // https://www.youtube.com/watch?v=6uQ5gwd8QGY
-  <TopRouter>
+  // <TopRouter>
     <React.StrictMode>
       <Index />
     </React.StrictMode>
-  </TopRouter>,
+  // </TopRouter>,
 );

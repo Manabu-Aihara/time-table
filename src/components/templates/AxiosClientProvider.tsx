@@ -1,28 +1,36 @@
-import authAxios, { AxiosError, AxiosResponse } from "axios";
-import { useEffect } from "react";
+import { AxiosError, AxiosResponse } from "axios";
+import { ReactNode, useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 
-import { useAuthContext } from './useContextFamily';
-import { refresh } from "../lib/refresh";
-import basicAxios from "../lib/AuthInfo";
+import { useAuthContext } from '../../hooks/useContextFamily';
+import { refresh } from "../../lib/refresh";
+import basicAxios from "../../lib/AuthInfo";
+import { AuthGuardContext } from "./AuthParent";
 
-export const useAuthAxios = () => {
-
+export const AuthAxios = ({children}: {children: ReactNode}) => {
   // useContext(AuthStateContext);
   const state = useAuthContext();
+
+  // const search = useLocation().search;
 
   useEffect(() => {
     // リクエスト前に実行。headerに認証情報を付与する
     const requestIntercept = basicAxios.interceptors.request.use(
       (config) => {
-        if (!config.headers["Authorization"]) {
+        if (config.headers["Authorization"] === '') {
+          console.log("It's passed if!");
           config.headers["Authorization"] = `Bearer ${state?.accessToken}`;
+        } else {
+          console.log("It's passed else!");
+          // const query = new URLSearchParams(search);
+          // config.headers["Authorization"] = `Bearer ${query.get('token')}`;
         }
         console.log(`initial token: ${JSON.stringify(state)}`)
         console.log(`headers: ${config.headers}`);
         return config;
       },
-      (error) => Promise.reject(error)
-    );
+      (error: AxiosError) => Promise.reject(error)
+      );
 
     // レスポンスを受け取った直後に実行。もし認証エラーだった場合、再度リクエストする。
     const responseIntercept = basicAxios.interceptors.response.use(
@@ -51,5 +59,9 @@ export const useAuthAxios = () => {
     };
   }, [state]);
 
-  return basicAxios;
+  return (
+    <>
+      {children}
+    </>
+  );
 };

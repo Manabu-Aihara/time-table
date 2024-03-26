@@ -1,16 +1,18 @@
 import { ReactNode, createContext, useReducer, Dispatch, useState } from "react";
-import { useLocation } from 'react-router-dom';
-import { fetchAuthData, useAuthQuery } from "../../hooks/useFetch";
+
+import { useAuthContext } from "../../hooks/useContextFamily";
 
 export type AuthGuardContext = {
   accessToken: string;
+  retrieveInfo: (token: string) => number;
+  // children: ReactNode;
 }
 
 export const AuthStateContext = createContext<AuthGuardContext | undefined>(undefined);
 
 export type Action = {
   type: 'UPDATE';
-  retrieveToken: string;
+  setToken: string;
 }
 
 type AuthDispatch = Dispatch<Action>;
@@ -25,7 +27,7 @@ const useAuthReducer = (authState: AuthGuardContext, action: Action): AuthGuardC
 
   switch(action.type){
     case 'UPDATE':
-      authState.accessToken = action.retrieveToken;
+      authState.accessToken = action.setToken;
       break;
     default:
       throw new Error('Invalid action');
@@ -34,24 +36,23 @@ const useAuthReducer = (authState: AuthGuardContext, action: Action): AuthGuardC
   return authState;
 }
 
-export const AuthProvider = ({children}: {children : ReactNode}) => {
+export const AuthProvider = ({children}: {children: ReactNode}) => {
 
-  const search = useLocation().search;
-  const query = new URLSearchParams(search);
-  // const authQuery = useAuthQuery();
-  // console.log("It's move!");
-  // console.log(`${JSON.stringify(authQuery.data)}`);
-
-  const [auth, dispatch] = useReducer(useAuthReducer, {
-    accessToken: query.get('token')!
-  });
-  // const [auth, setAuth] = useState<AuthGuardContext>()
+  // const { accessToken, retrieveInfo, children } = props;
+  // const [auth, setAuth] = useState<AuthGuardContext>();
+  // const [auth, dispatch] = useReducer(useAuthReducer, {
+  //   accessToken: ''
+  // });
+  const initialState: AuthGuardContext = {
+    accessToken: '',
+    retrieveInfo: () => 0
+  }
 
   return (
-    <AuthStateContext.Provider value={auth}>
-      <AuthDispatchContext.Provider value={dispatch}>
+    <AuthStateContext.Provider value={initialState}>
+      {/* <AuthDispatchContext.Provider value={dispatch}> */}
         {children}
-      </AuthDispatchContext.Provider>
+      {/* </AuthDispatchContext.Provider> */}
     </AuthStateContext.Provider>
   );
 };

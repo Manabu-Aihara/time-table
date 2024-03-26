@@ -16,9 +16,9 @@ import { ItemComponent } from '../molecules/EventCardComponent';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { topWidth } from '../sprinkles.responsive.css';
-import { gridArea } from './ContainComponent.css';
+import { gridArea } from './CalendarComponent.css';
 import { MyWeek } from '../organisms/DaysClassComponent';
-import { useAuthAxios } from '../../hooks/useAuthToken';
+import basicAxios from '../../lib/AuthInfo';
 // import { views } from '../organisms/DaysComponent';
 
 const locales = {
@@ -46,28 +46,6 @@ export const MyCalendar = () => {
   }), []);
 
   const state = useEventsState();
-
-  const authAxios = useAuthAxios();
-
-  useEffect(() => {
-    const f = async () => {
-      authAxios.get('http://127.0.0.1:8000/refresh')
-      .then(res => console.log(res.data))
-      .catch(err => console.log(err));
-      // console.log(`Is there token?: ${response}`);
-    }
-    f();
-  }, []);
-
-  useEffect(() => {
-    const f = async () => {
-      authAxios.get('http://127.0.0.1:8000/event/all')
-      .then(res => console.log(res.data))
-      .catch(err => console.log(err));
-      // console.log(`Is there token?: ${response}`);
-    }
-    f();
-  }, []);
 
 	// const [showModal, setShowModal] = useState(false);
 
