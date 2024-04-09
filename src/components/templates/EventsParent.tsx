@@ -4,7 +4,8 @@ import moment from 'moment';
 
 // import { EventItem } from '../lib/EventItem';
 import { TimelineEventProps } from '../../lib/TimelineType';
-import { timelineEventsReducer } from '../../lib/reducer';
+// import { timelineEventsReducer } from '../../lib/reducer';
+import { useEventsState } from '../../hooks/useContextFamily';
 
 // type EventItems = EventItem[];
 export type TimelineEventPropsList = TimelineEventProps[]
@@ -32,22 +33,23 @@ export const EventsDispatchContext = createContext<EventsDispatch | undefined>(
 );
 
 export const EventsContextProvider = ({ children }: { children: ReactNode }) => {
-  const [events, dispatch] = useReducer(timelineEventsReducer, [
-    {
-      id: 0,
-      staff_id: 1000,
-      group: 0,
-      title: 'Learn cool stuff',
-      start_time: moment().toDate(),
-      end_time: moment().add(1, 'hours').toDate()
-    },
-  ]);
+  // const [events, dispatch] = useReducer(timelineEventsReducer, [
+  const initialData: TimelineEventProps = {
+    id: 0,
+    staff_id: {auth_id: 1000},
+    group: 0,
+    title: 'Learn cool stuff',
+    start_time: moment().toDate(),
+    end_time: moment().add(1, 'hours').toDate()
+  }
+  const state = useEventsState();
+  state.concat(initialData);
 
   return (
-    <EventsStateContext.Provider value={events}>
-      <EventsDispatchContext.Provider value={dispatch}>
+    <EventsStateContext.Provider value={state}>
+      {/* <EventsDispatchContext.Provider value={dispatch}> */}
 				{children}
-      </EventsDispatchContext.Provider>
+      {/* </EventsDispatchContext.Provider> */}
     </EventsStateContext.Provider>
   );
 }

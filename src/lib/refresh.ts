@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { AuthGuardContext } from "../components/templates/AuthParent";
+import { AuthGuardContext } from "./AppType";
 import { useAuthContext, useAuthDispatch } from "../hooks/useContextFamily";
 import basicAxios from "./AuthInfo";
 

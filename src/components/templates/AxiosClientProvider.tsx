@@ -1,11 +1,10 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 
 import { useAuthContext } from '../../hooks/useContextFamily';
 import { refresh } from "../../lib/refresh";
 import basicAxios from "../../lib/AuthInfo";
-import { AuthGuardContext } from "./AuthParent";
 
 export const AuthAxios = ({children}: {children: ReactNode}) => {
   // useContext(AuthStateContext);

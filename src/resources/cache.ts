@@ -6,14 +6,14 @@ import { useQueryClient } from "@tanstack/react-query";
 export const eventKeys = {
   all: ["events"] as const,
   list: () => [...eventKeys.all, "list"] as const,
-  paginateList: (page?: number) => [...eventKeys.list(), { page }] as const,
+  groupList: (group?: number) => [...eventKeys.list(), group] as const,
   detail: (id: number) => [...eventKeys.all, "detail", id] as const,
 };
 
 export const authKeys = {
   auth: ["auth"] as const,
   // pulls: () => [...authKeys.all, "detail"] as const,
-  pull: (token: string) => [...authKeys.auth, token] as const
+  pull: (token: string) => [...authKeys.auth, 'user_id', token] as const
 }
 // ② キャッシュ操作のためのカスタムフック
 // mutations.ts がある場合に必要に応じて宣言
@@ -23,6 +23,8 @@ export function useEventCache() {
   return useMemo(
     () => ({
       invalidateList: () => queryClient.invalidateQueries({queryKey: eventKeys.list()}),
+      invalidGroupList: (group: number) =>
+        queryClient.invalidateQueries({queryKey: eventKeys.groupList(group)}),
       invalidateDetail: (id: number) =>
         queryClient.invalidateQueries({queryKey: eventKeys.detail(id)}),
     }),

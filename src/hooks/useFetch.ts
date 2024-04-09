@@ -1,13 +1,12 @@
 import axios, { AxiosResponse } from "axios";
 
 import { TimelineEventProps } from "../lib/TimelineType";
-import { AuthGuardContext } from "../components/templates/AuthParent";
+// import { AuthGuardContext } from "../components/templates/AuthParent";
 import basicAxios from "../lib/AuthInfo";
-import { useAuthContext } from "./useContextFamily";
 
 export const fetchEventsData = async (): Promise<TimelineEventProps[]> => {
 	const { data } = await axios.request<TimelineEventProps[]>({
-		url: 'http://127.0.0.1:8000/todo/all',
+		url: 'http://127.0.0.1:8000/event/all',
 		method: 'GET',
 		headers: {
 			'Access-Control-Allow-Origin': '*',
@@ -27,7 +26,7 @@ export const fetchEventsData = async (): Promise<TimelineEventProps[]> => {
   
 export const fetchGetId = async (postToken: string): Promise<number> => {
 	// cookieに保存されたrefresh_tokenを送付してaccess_tokenを取得する
-	const resultID: number = await basicAxios.post('/event/all', postToken,
+	const resultID: number = await basicAxios.get('/event/all',
 		{
 			headers: {
 				'Access-Control-Allow-Origin': '*',
@@ -35,12 +34,18 @@ export const fetchGetId = async (postToken: string): Promise<number> => {
 				'credentials': 'include', // ここを追加。
 			}
 		});
+  // ((prev: AuthGuardContext) => {
+  //   // access_tokenを保持する
+  //   return { ...prev, accessToken: authResponse.data };
+  // });
 	console.log(`とりあえず結果のID: ${JSON.stringify(resultID)}`);
 	return resultID;
 }
 
-export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse> => {
-  // cookieに保存されたrefresh_tokenを送付してaccess_tokenを取得する
+// とりあえず、値が取れるからこっち採用
+const cache = new Map();
+
+export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse<number>> => {
   const authResponse = await basicAxios.post<AxiosResponse>('/event/all', postToken,
 		{
 			headers: {
@@ -49,10 +54,10 @@ export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse
 				'credentials': 'include' // ここを追加。
 			}
 		});
-  // ((prev: AuthGuardContext) => {
-  //   // access_tokenを保持する
-  //   return { ...prev, accessToken: authResponse.data };
-  // });
-	console.log(`フェッチデータ: ${authResponse}`);
-  return authResponse.data;
+	if (!cache.has(postToken)) {
+    cache.set(postToken, authResponse);
+  }
+  return cache.get(postToken);
+	// console.log(`フェッチデータ: ${JSON.stringify(authResponse)}`);
+  // return authResponse.data;
 };

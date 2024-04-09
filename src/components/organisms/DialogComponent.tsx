@@ -1,4 +1,4 @@
-import { TitleInput } from './InputTitle';
+import { TitleInput } from './InputTitleDialog';
 
 import { useDialog } from '../../hooks/useDialog';
 

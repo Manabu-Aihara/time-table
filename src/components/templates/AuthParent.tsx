@@ -1,18 +1,14 @@
-import { ReactNode, createContext, useReducer, Dispatch, useState } from "react";
+import { ReactNode, createContext, useReducer, Dispatch } from "react";
 
+import { AuthGuardContext } from "../../lib/AppType";
 import { useAuthContext } from "../../hooks/useContextFamily";
-
-export type AuthGuardContext = {
-  accessToken: string;
-  retrieveInfo: (token: string) => number;
-  // children: ReactNode;
-}
+import { useAuthQuery } from "../../resources/queries";
 
 export const AuthStateContext = createContext<AuthGuardContext | undefined>(undefined);
 
 export type Action = {
   type: 'UPDATE';
-  setToken: string;
+  setId: number;
 }
 
 type AuthDispatch = Dispatch<Action>;
@@ -27,7 +23,7 @@ const useAuthReducer = (authState: AuthGuardContext, action: Action): AuthGuardC
 
   switch(action.type){
     case 'UPDATE':
-      authState.accessToken = action.setToken;
+      authState.auth_id = action.setId;
       break;
     default:
       throw new Error('Invalid action');
@@ -40,16 +36,11 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
 
   // const { accessToken, retrieveInfo, children } = props;
   // const [auth, setAuth] = useState<AuthGuardContext>();
-  // const [auth, dispatch] = useReducer(useAuthReducer, {
-  //   accessToken: ''
-  // });
-  const initialState: AuthGuardContext = {
-    accessToken: '',
-    retrieveInfo: () => 0
-  }
+  const auth = useAuthContext();
+  // const { data } = useAuthQuery()
 
   return (
-    <AuthStateContext.Provider value={initialState}>
+    <AuthStateContext.Provider value={auth}>
       {/* <AuthDispatchContext.Provider value={dispatch}> */}
         {children}
       {/* </AuthDispatchContext.Provider> */}

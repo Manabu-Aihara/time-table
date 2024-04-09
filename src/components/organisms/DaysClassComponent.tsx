@@ -1,52 +1,65 @@
-import React, { Component } from 'react';
+import { useState, ComponentProps } from 'react';
 // import * as TimeGrid from 'react-big-calendar/lib/TimeGrid';
-import { NavigateAction } from 'react-big-calendar';
-import moment from 'moment';
 // import { TimeGrid } from 'react-big-calendar';
+import { NavigateAction } from 'react-big-calendar';
+import { DateLocalizer, Navigate, TitleOptions } from 'react-big-calendar';
+import moment from 'moment';
 
-interface MyWeekProps {
-  date: Date
-}
+import { SampleTimeline } from '../pages/TLComponent';
+import { TimelineEventProps } from '../../lib/TimelineType';
 
 export const MyWeek = () => {
-  // let {date} = this.props
+	const [event, setEvent] = useState<TimelineEventProps>();
   const range = MyWeek.range(new Date())
 
   // return <TimeGrid range={range} eventOffset={15}/>
-  return <div>{`${range}`}</div>
-}
-
-MyWeek.title = (date: Date) => {
-    return `My awesome week: ${date.toLocaleDateString()}`
+  return <SampleTimeline onShowFormView={
+    (event: TimelineEventProps) => setEvent(event)}
+    targetEvent={event!}></SampleTimeline>
+  // return <div>{`${range}`}</div>
 }
 
 MyWeek.navigate = (date: Date, action: NavigateAction) => {
-    switch (action) {
-      case 'PREV':
-        return moment(date).add(-3, 'day').toDate()
+  switch (action) {
+    case 'PREV':
+      return moment(date).add(-3, 'day').toDate()
 
-      case 'NEXT':
-        return moment(date).add(3, 'day').toDate()
+    case 'NEXT':
+      return moment(date).add(3, 'day').toDate()
 
-      default:
-        return date
-    }
+    default:
+      return date
   }
+}
 
 MyWeek.range = (date: Date) => {
-    const start = date
-    const end = moment(start).add(2, 'day')
+  const start = date;
+  const end = moment(start).add(2, 'day');
 
-    let current = start
-    const range = []
+  let current = start;
+  const range = [];
 
-    while (moment(current).isSameOrBefore(moment(end), 'day')) {
-      range.push(current)
-      current = moment(current).add(1, 'day').toDate()
-    }
-
-    return range
+  while (moment(current).isSameOrBefore(moment(end), 'day')) {
+    range.push(current);
+    current = moment(current).add(1, 'day').toDate();
   }
+
+  return range;
+}
+
+MyWeek.title = (date: Date, option: TitleOptions): string => {
+  type AnyType = ComponentProps<typeof option['']>;
+  const l: DateLocalizer | AnyType = option;
+  const castLocalizer: DateLocalizer = l as DateLocalizer;
+
+  const [...rest] = MyWeek.range(date);
+
+  console.log(`option.dateFormats: ${option.formats}`);
+  console.log(date);
+
+  return castLocalizer.format(new Date(), 'dayRangeHeaderFormat') + ' — ' + castLocalizer.format(rest.pop()!, 'dayRangeHeaderFormat');
+  // return `My awesome week: ${date.toLocaleDateString()}`
+}
 
 // export default MyWeek
 // export class MyWeek extends React.Component<MyWeekProps> {

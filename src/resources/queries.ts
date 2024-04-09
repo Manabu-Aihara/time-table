@@ -17,10 +17,10 @@ export const useAuthQuery = () => {
   const search = useLocation().search;
   const query = new URLSearchParams(search);
 
-  console.log(`存在するかトークン: ${query.get('token')}`);
+  // console.log(`存在するかトークン: ${query.get('token')}`);
 
 	return useQuery({
-		queryKey: authKeys.pull(query.get('token')!),
+		queryKey: ['user_id'],
 		queryFn: () => fetchGetResponse(query.get('token')!),
     // select: useCallback((result: number) => {
     //   return result;
@@ -28,7 +28,7 @@ export const useAuthQuery = () => {
 	});
 }
 
-export const useAllQuery = <TData = TimelineEventProps[]>(
+const useAllQuery = <TData = TimelineEventProps[]>(
   options?: Omit<
     UseQueryOptions<TimelineEventProps[], AxiosError, TData, typeof eventKeys.all>,
     "queryKey" | "queryFn"

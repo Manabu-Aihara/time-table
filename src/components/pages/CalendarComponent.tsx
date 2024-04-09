@@ -18,7 +18,6 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { topWidth } from '../sprinkles.responsive.css';
 import { gridArea } from './CalendarComponent.css';
 import { MyWeek } from '../organisms/DaysClassComponent';
-import basicAxios from '../../lib/AuthInfo';
 // import { views } from '../organisms/DaysComponent';
 
 const locales = {
@@ -74,10 +73,11 @@ export const MyCalendar = () => {
           // onSelectSlot={handleSelectSlot}
           selectable
           components={components}
-          // views={{
-          //   month: true,
-          //   week: MyWeek
-          // }}
+          views={{
+            month: true,
+            week: true,
+            day: MyWeek
+          }}
         />
       </chakra.div>
     </div>

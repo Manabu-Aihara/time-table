@@ -5,7 +5,7 @@ import { ChakraProvider, Box, Text, Input, Button, Select } from '@chakra-ui/rea
 import { useEventsDispatch, useEventsState } from '../../hooks/useContextFamily';
 // import { EventItem } from '../../lib/EventItem';
 import { TimelineEventProps } from '../../lib/TimelineType';
-import { timelineEventsReducer } from '../../lib/reducer';
+// import { timelineEventsReducer } from '../../lib/reducer';
 
 import { boundaryTop, boundaryY, buttonPosition } from '../sprinkles.responsive.css';
 import { fixedClose, formParent } from './InputItem.css';
@@ -31,10 +31,10 @@ export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventP
 		// staff_id: timelineEvent.staff_id, group: timelineEvent.group,
 		// title: timelineEvent.title,
 		// start: timelineEvent.start, end: timelineEvent.end,
-		// summary: '', done: ''
+		// summary: '', progress: ''
 		...timelineEvent
 	}
-	const [todo, setTodo] = useState<TimelineEventProps>(initialValue);
+	const [eventItem, setEventItem] = useState<TimelineEventProps>(initialValue);
 	// const [done, setDone] = useState<string | undefined>(options[0].value);
 
   const currentState = useEventsState();
@@ -45,7 +45,7 @@ export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventP
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>) => {
 		// name, valueという変数名で決まっているようだ
 		const {name, value} = e.target;
-		setTodo({...todo, [name]:value});
+		setEventItem({...eventItem, [name]:value});
 	}
 
 	// const handleSelectChange = (selectedOption: SingleValue<OptionType>/*, actionMeta: ActionMeta<OptionType>*/) => {
@@ -55,17 +55,22 @@ export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventP
 
 	const handleUpdate = (e: FormEvent) => {
 		e.preventDefault();
-		dispatch({
-			type: 'UPDATE',
-			payload: todo
-		});
-    const nextStage = timelineEventsReducer([timelineEvent], {type: 'UPDATE', payload: todo});
-    console.log(`ここ注目：${JSON.stringify(nextStage)}`);
+		// dispatch({
+		// 	type: 'UPDATE',
+		// 	payload: eventItem
+		// });
+		
+    // const nextStage = timelineEventsReducer([timelineEvent], {type: 'UPDATE', payload: eventItem});
+    // console.log(`ここ注目：${JSON.stringify(nextStage)}`);
 	}
 
 	useEffect(() => {
-		setTodo({...timelineEvent, summary: timelineEvent.summary, done: timelineEvent.done});
-		console.log(`setTodo: ${JSON.stringify(todo)}`);
+		setEventItem({
+			...timelineEvent,
+			summary: timelineEvent.summary,
+			progress: timelineEvent.progress
+		});
+		console.log(`setEventItem: ${JSON.stringify(eventItem)}`);
 	}, []);
 
 	return (
@@ -74,10 +79,11 @@ export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventP
 				<Button type='button' color='gainsboro' onClick={closeClick} className={buttonPosition}>
 					<Text fontSize='2rem' color='white'>×</Text><Text color='white'>閉じる</Text>
 				</Button>
-				<Text fontSize='2rem' fontWeight='bold' className={boundaryTop}>{todo.title}</Text>
+				<Text fontSize='2rem' fontWeight='bold'>{timelineEvent.staff_id}</Text>
+				<Text fontSize='2rem' fontWeight='bold' className={boundaryTop}>{timelineEvent.title}</Text>
 				<section className={boundaryTop}>
-					<Text>さまりー：</Text>
-					<Input name="summary" onChange={handleChange} value={todo.summary} />
+					<Text>内容：</Text>
+					<Input name="summary" onChange={handleChange} value={eventItem.summary} />
 				</section>
 				{/* <section className={boundaryTop}>
 					<Text>誰が：</Text>
@@ -85,7 +91,7 @@ export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventP
 				</section> */}
 				<section className={boundaryTop}>
 					<Text>どんな感じ：</Text>
-					<Select name="done" value={todo.done} onChange={handleChange}>
+					<Select name="progress" value={eventItem.progress} onChange={handleChange}>
 						{options.map((option) => {
 							return (
 								<option value={option.label} key={option.value}>{option.label}</option>
