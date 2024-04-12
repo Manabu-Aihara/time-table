@@ -1,14 +1,13 @@
-import { ReactNode, createContext, useReducer, Dispatch } from "react";
+import { ReactNode, createContext, useReducer, Dispatch, useState } from "react";
 
-import { AuthGuardContext } from "../../lib/AppType";
-import { useAuthContext } from "../../hooks/useContextFamily";
-import { useAuthQuery } from "../../resources/queries";
+import { TokenProp } from "../../lib/AppType";
+import { useAuthContext, useAuthDispatch } from "../../hooks/useContextFamily";
 
-export const AuthStateContext = createContext<AuthGuardContext | undefined>(undefined);
+export const AuthStateContext = createContext<TokenProp | undefined>(undefined);
 
 export type Action = {
   type: 'UPDATE';
-  setId: number;
+  setAccessToken: TokenProp;
 }
 
 type AuthDispatch = Dispatch<Action>;
@@ -18,29 +17,31 @@ export const AuthDispatchContext = createContext<AuthDispatch | undefined>(
   undefined
 );
 
-const useAuthReducer = (authState: AuthGuardContext, action: Action): AuthGuardContext => {
-  const next: AuthGuardContext = {...authState};
+const useAuthReducer = (token: TokenProp, action: Action): TokenProp => {
+  const next: TokenProp = token;
 
   switch(action.type){
     case 'UPDATE':
-      authState.auth_id = action.setId;
+      token = action.setAccessToken;
       break;
     default:
       throw new Error('Invalid action');
   }
   console.log(`Next: ${JSON.stringify(next)}`);
-  return authState;
+  return token;
 }
 
 export const AuthProvider = ({children}: {children: ReactNode}) => {
 
-  // const { accessToken, retrieveInfo, children } = props;
-  // const [auth, setAuth] = useState<AuthGuardContext>();
-  const auth = useAuthContext();
-  // const { data } = useAuthQuery()
+  // const [token, setToken] = useState<TokenProp>({
+  //   accessToken: '0123456789abcdef'
+  // });
+  // const [auth, dispatch] = useReducer(useAuthReducer, '');
+  const token: TokenProp = {accessToken: '0123456789abcdef'};
+  console.log(`Parent: ${JSON.stringify(token)}`);
 
   return (
-    <AuthStateContext.Provider value={auth}>
+    <AuthStateContext.Provider value={token}>
       {/* <AuthDispatchContext.Provider value={dispatch}> */}
         {children}
       {/* </AuthDispatchContext.Provider> */}

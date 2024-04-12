@@ -1,8 +1,8 @@
-import { useMutation } from "@tanstack/react-query"
-import basicAxios from "../lib/AuthInfo"
-import { TimelineEventProps } from "../lib/TimelineType"
-import { useEventCache } from "../resources/cache"
-import { AuthNumber } from "../lib/AppType"
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import basicAxios from "../lib/AuthInfo";
+import { TimelineEventProps } from "../lib/TimelineType";
+import { useEventCache } from "../resources/cache";
 
 // ⑦ mutationFn
 // export const mutation = {
@@ -11,13 +11,26 @@ import { AuthNumber } from "../lib/AppType"
 //   },
 // };
 
-export const useCreateMutation = (staffId: AuthNumber) => {
+export const useCreateMutation = () => {
   const eventCache = useEventCache();
 
   return useMutation({
-    mutationFn: (timelineEvent: TimelineEventProps) => basicAxios.post(`/event/add/${staffId}`, timelineEvent),
-    // onSuccess: () => {
-    //   return eventCache.invalidGroupList(staffId);
-    // }
+    mutationFn: (timelineEvent: TimelineEventProps) => basicAxios.post(`/event/add`, timelineEvent),
+    onSuccess: () => {
+      return eventCache.invalidateList();
+    }
   });
+}
+
+export const useUpdateMutation = (staffId: number) => {
+  const queryClient = useQueryClient();
+  const eventCache = useEventCache();
+
+  return useMutation({
+    mutationFn: (timelineEvent: TimelineEventProps) => basicAxios.post(`/event/update/${staffId}`, timelineEvent),
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(["item", staffId], data);
+      console.log(`こっちが本命？: ${variables}`);
+    },
+  });  
 }

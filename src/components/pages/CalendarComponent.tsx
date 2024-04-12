@@ -13,12 +13,13 @@ import ja from 'date-fns/locale/ja';
 import { useEventsState } from '../../hooks/useContextFamily';
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { ItemComponent } from '../molecules/EventCardComponent';
+import { AddEventButton } from '../molecules/AddButtonComponent';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { topWidth } from '../sprinkles.responsive.css';
 import { gridArea } from './CalendarComponent.css';
 import { MyWeek } from '../organisms/DaysClassComponent';
-// import { views } from '../organisms/DaysComponent';
+import { views } from '../organisms/DaysComponent';
 
 const locales = {
   'ja-JP': ja,
@@ -59,6 +60,7 @@ export const MyCalendar = () => {
   console.log(`ダイアログ外: ${JSON.stringify(state)}`);
   return (
     <div>
+      <AddEventButton />
       <chakra.div className={`${topWidth} ${gridArea}`} flexShrink="0" scrollSnapAlign="start">
         <button>
           <Link to="/timeline">サンプルタイムライン</Link>
@@ -73,11 +75,7 @@ export const MyCalendar = () => {
           // onSelectSlot={handleSelectSlot}
           selectable
           components={components}
-          views={{
-            month: true,
-            week: true,
-            day: MyWeek
-          }}
+          views={views}
         />
       </chakra.div>
     </div>

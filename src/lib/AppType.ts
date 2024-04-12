@@ -1,33 +1,29 @@
 import { Event } from 'react-big-calendar';
 
-// export type EventItem = Event & {
-// 	summary: string;
-// 	owner: string;
-// 	done: string;
-// }
-
-export type AuthGuardContext = {
-  accessToken: string;
-  auth_id: number;
+export type AccessToken = string | undefined;
+export type TokenProp = {
+	accessToken: string;
 }
-export type AuthNumber = Pick<AuthGuardContext, 'auth_id'>;
+// export interface AuthGuardContext<T, U = 'auth'> {
+export interface AuthGuardContext {
+	type: 'auth',
+  // accessToken: string,
+  auth_id: number
+}
+
+// type None = { type: 'None' };
+// type Option<T> = None | AuthGuardContext<T>;
+/**
+ * ValueOfOption<V>: Option<T>を受け取って、渡されたのがAuthGuardContext型なら、
+ * 中身の値の型を返す。
+ * 渡されたのがNone型ならundefinedを返す。
+ */
+// type ValueOfOption<V extends Option<unknown>> = V extends AuthGuardContext<infer R> ? R : undefined;
+// export type AuthNumber = ValueOfOption<AuthGuardContext<number>>;
 
 // type CustomEvent = Omit<Event, 'title'>
 export interface EventItem extends Event {
-	staff_id: AuthNumber;
-	summary?: string;
-	progress?: string;
+	staff_id: number,
+	summary?: string,
+	progress?: string
 }
-
-// type TimelineEventProps = {
-// 	id: Id;
-// 	group: Id;
-// 	// title?: React.ReactNode;
-// 	start_time: DateType;
-// 	end_time: DateType;
-
-// 	staff_id: number;
-// 	title: React.ReactNode;
-// 	summary?: string;
-// 	progress?: string;
-// }

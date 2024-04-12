@@ -34,7 +34,7 @@ MyWeek.navigate = (date: Date, action: NavigateAction) => {
 
 MyWeek.range = (date: Date) => {
   const start = date;
-  const end = moment(start).add(2, 'day');
+  const end = moment(start).add(2, 'day').toDate();
 
   let current = start;
   const range = [];
@@ -43,23 +43,42 @@ MyWeek.range = (date: Date) => {
     range.push(current);
     current = moment(current).add(1, 'day').toDate();
   }
+  // while (localizer.lte(current, end, 'day')) {
+  //   range.push(current)
+  //   current = localizer.add(current, 1, 'day')
+  // }
 
   return range;
 }
 
-MyWeek.title = (date: Date, option: TitleOptions): string => {
-  type AnyType = ComponentProps<typeof option['']>;
-  const l: DateLocalizer | AnyType = option;
-  const castLocalizer: DateLocalizer = l as DateLocalizer;
-
+MyWeek.title = (date: Date, localizer: DateLocalizer): string => {
   const [...rest] = MyWeek.range(date);
-
-  console.log(`option.dateFormats: ${option.formats}`);
-  console.log(date);
-
-  return castLocalizer.format(new Date(), 'dayRangeHeaderFormat') + ' — ' + castLocalizer.format(rest.pop()!, 'dayRangeHeaderFormat');
+  // return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
+  return localizer.format(new Date(), 'dayRangeHeaderFormat') + ' — ' + localizer.format(rest.pop()!, 'dayRangeHeaderFormat');
   // return `My awesome week: ${date.toLocaleDateString()}`
 }
+
+// export const {views, ...otherprops} = {
+//   views: {
+//     month: true,
+//     week: MyWeek,
+//     day: true
+//   },
+//   // ... other props
+// }
+
+// MyWeek.title = (date: Date, option: TitleOptions): string => {
+//   type AnyType = ComponentProps<typeof option['']>;
+//   const l: DateLocalizer | AnyType = option;
+//   const castLocalizer: DateLocalizer = l as DateLocalizer;
+
+//   const [...rest] = MyWeek.range(date);
+
+//   console.log(`option.dateFormats: ${option.formats}`);
+//   console.log(date);
+
+//   return castLocalizer.format(new Date(), 'dayRangeHeaderFormat') + ' — ' + castLocalizer.format(rest.pop()!, 'dayRangeHeaderFormat');
+// }
 
 // export default MyWeek
 // export class MyWeek extends React.Component<MyWeekProps> {

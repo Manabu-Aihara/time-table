@@ -54,10 +54,10 @@ export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse
 				'credentials': 'include' // ここを追加。
 			}
 		});
-	if (!cache.has(postToken)) {
-    cache.set(postToken, authResponse);
-  }
-  return cache.get(postToken);
-	// console.log(`フェッチデータ: ${JSON.stringify(authResponse)}`);
-  // return authResponse.data;
+	// if (!cache.has(postToken)) {
+  //   cache.set(postToken, authResponse);
+  // }
+  // return cache.get(postToken);
+	console.log(`フェッチデータ: ${JSON.stringify(authResponse)}`);
+  return authResponse.data;
 };

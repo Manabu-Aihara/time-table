@@ -1,12 +1,11 @@
-import { useEffect, Suspense } from "react";
+import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { useAuthQuery } from "../../resources/queries";
-import { fetchGetId } from "../../hooks/useFetch";
 
 export const AuthLeavePage = () => {
 
-  const { data, isError, isLoading } = useAuthQuery();
+  const { data, isError,isPending } = useAuthQuery();
   const navigate = useNavigate();
 
   console.log(`とりあえず結果のID: ${JSON.stringify(data)}`);
@@ -21,9 +20,10 @@ export const AuthLeavePage = () => {
 
   return (
     <>
-      <Suspense fallback={<div>ユーザー情報を照合しています</div>}>
+      {isPending && <div>ユーザー情報を照合しています
+        <p>だいぶお待ちください</p>
+      </div>}
         {/* {data && <Link to='calendar'></Link>} */}
-      </Suspense>
     </>
   );
 };

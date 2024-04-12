@@ -1,16 +1,19 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 
 import { useAuthContext } from '../../hooks/useContextFamily';
 import { refresh } from "../../lib/refresh";
 import basicAxios from "../../lib/AuthInfo";
+import { AccessToken } from "../../lib/AppType";
 
 export const AuthAxios = ({children}: {children: ReactNode}) => {
   // useContext(AuthStateContext);
-  const state = useAuthContext();
+  const token = useAuthContext();
+  // const [token, setToken] = useState<AccessToken>('');
+  console.log(`Child: ${token}`);
 
-  // const search = useLocation().search;
+  const search = useLocation().search;
 
   useEffect(() => {
     // リクエスト前に実行。headerに認証情報を付与する
@@ -18,13 +21,12 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
       (config) => {
         if (config.headers["Authorization"] === '') {
           console.log("It's passed if!");
-          config.headers["Authorization"] = `Bearer ${state?.accessToken}`;
+          config.headers["Authorization"] = `Bearer ${token}`;
         } else {
           console.log("It's passed else!");
-          // const query = new URLSearchParams(search);
-          // config.headers["Authorization"] = `Bearer ${query.get('token')}`;
+          const query = new URLSearchParams(search);
+          config.headers["Authorization"] = `Bearer ${query.get('token')}`;
         }
-        console.log(`initial token: ${JSON.stringify(state)}`)
         console.log(`headers: ${config.headers}`);
         return config;
       },
@@ -56,7 +58,7 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
       basicAxios.interceptors.request.eject(requestIntercept);
       basicAxios.interceptors.response.eject(responseIntercept);
     };
-  }, [state]);
+  }, [token]);
 
   return (
     <>

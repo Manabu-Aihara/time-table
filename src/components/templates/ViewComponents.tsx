@@ -22,7 +22,7 @@ export const RoutesComponent = () => {
       <AuthProvider>
         <AuthAxios>
           <EventsContextProvider>
-            <BrowserRouter>
+            {/* <BrowserRouter> */}
               <Routes>
                 <Route path="/calendar"	element={<MyCalendar />} />
                 <Route path="/timeline" element={
@@ -32,7 +32,7 @@ export const RoutesComponent = () => {
                   } />
                 <Route path="/auth" element={<AuthLeavePage />} />             
               </Routes>
-            </BrowserRouter>
+            {/* </BrowserRouter> */}
           </EventsContextProvider>
         </AuthAxios>
       </AuthProvider>

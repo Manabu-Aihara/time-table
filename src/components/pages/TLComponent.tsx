@@ -5,8 +5,7 @@ import Timeline from 'react-calendar-timeline';
 
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { useEventsState } from '../../hooks/useContextFamily';
-import { useDialog } from '../../hooks/useDialog';
-import { TitleInput } from '../organisms/InputTitleDialog';
+import { TitleInputModal } from '../organisms/DialogComponent'; 
 import { AddChildForm } from "../organisms/InputItem";
 import { AddEventButton } from '../molecules/AddButtonComponent';
 
@@ -25,7 +24,6 @@ interface EventProps {
 
 export const SampleTimeline = ({onShowFormView, targetEvent}: EventProps) => {
 
-  const { Dialog, close } = useDialog();
   const [showModal, setShowModal] = useState(false);
 	const divRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +57,7 @@ export const SampleTimeline = ({onShowFormView, targetEvent}: EventProps) => {
   return (
     <div>
       Rendered by react!
-      <AddEventButton />
+      {/* <AddEventButton /> */}
       <chakra.div display="flex" justifyContent="flex-start" overflowY="auto" scrollSnapType="y mandatory">
         <Timeline
           groups={groups}
@@ -86,11 +84,7 @@ export const SampleTimeline = ({onShowFormView, targetEvent}: EventProps) => {
       <chakra.div flexShrink="0" scrollSnapAlign="start" className={topWidth} onClick={handleOuterBubbling}>
         {showModal && <AddChildForm timelineEvent={targetEvent} closeClick={closeInputForm} ref={divRef} />}
       </chakra.div>
-      <Dialog>
-        <p>入力フォームコンテンツ</p>
-        <TitleInput {...targetEvent.staff_id} />
-        <button onClick={close}>close</button>
-      </Dialog>
+      <TitleInputModal />
     </div>
   );
 }

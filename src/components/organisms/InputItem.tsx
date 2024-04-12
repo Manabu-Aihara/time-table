@@ -9,6 +9,7 @@ import { TimelineEventProps } from '../../lib/TimelineType';
 
 import { boundaryTop, boundaryY, buttonPosition } from '../sprinkles.responsive.css';
 import { fixedClose, formParent } from './InputItem.css';
+import { useUpdateMutation } from '../../hooks/useEventMutation';
 
 type InputEventProps = {
 	timelineEvent: TimelineEventProps;
@@ -37,8 +38,10 @@ export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventP
 	const [eventItem, setEventItem] = useState<TimelineEventProps>(initialValue);
 	// const [done, setDone] = useState<string | undefined>(options[0].value);
 
-  const currentState = useEventsState();
-  const dispatch = useEventsDispatch();
+	// 君から卒業
+	const dispatch = useEventsDispatch();
+
+	const updateEvent = useUpdateMutation(timelineEvent.staff_id);
 
   console.log(`Childの今のイベント: ${JSON.stringify(timelineEvent)}`);
 
@@ -59,19 +62,23 @@ export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventP
 		// 	type: 'UPDATE',
 		// 	payload: eventItem
 		// });
-		
+		updateEvent.mutate({
+			...eventItem,
+			summary: eventItem.summary,
+			progress: eventItem.progress
+		});
     // const nextStage = timelineEventsReducer([timelineEvent], {type: 'UPDATE', payload: eventItem});
-    // console.log(`ここ注目：${JSON.stringify(nextStage)}`);
+    console.log(`ここ注目：${JSON.stringify(eventItem)}`);
 	}
 
-	useEffect(() => {
-		setEventItem({
-			...timelineEvent,
-			summary: timelineEvent.summary,
-			progress: timelineEvent.progress
-		});
-		console.log(`setEventItem: ${JSON.stringify(eventItem)}`);
-	}, []);
+	// useEffect(() => {
+	// 	setEventItem({
+	// 		...timelineEvent,
+	// 		summary: timelineEvent.summary,
+	// 		progress: timelineEvent.progress
+	// 	});
+	// 	console.log(`setEventItem: ${JSON.stringify(eventItem)}`);
+	// }, []);
 
 	return (
 		<ChakraProvider>
