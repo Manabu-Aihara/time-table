@@ -4,10 +4,9 @@ import { chakra } from '@chakra-ui/system';
 import Timeline from 'react-calendar-timeline';
 
 import { TimelineEventProps } from '../../lib/TimelineType';
-import { useEventsState } from '../../hooks/useContextFamily';
+import { useEventsState, useAuthContext } from '../../hooks/useContextFamily';
 import { TitleInputModal } from '../organisms/DialogComponent'; 
 import { AddChildForm } from "../organisms/InputItem";
-import { AddEventButton } from '../molecules/AddButtonComponent';
 
 // make sure you include the timeline stylesheet or the timeline will not be styled
 import 'react-calendar-timeline/lib/Timeline.css';
@@ -16,6 +15,31 @@ import { topWidth } from '../sprinkles.responsive.css';
 import moment from 'moment';
 
 const groups = [{ id: 1, title: 'group 1' }, { id: 2, title: 'group 2' }]
+
+const exItems = [
+  {
+    id: 1,
+    group: 1,
+    staff_id: 500,
+    title: 'item 1',
+    start_time: moment(),
+    end_time: moment().add(1, 'hour')
+  },
+  {
+    id: 2,
+    group: 2,
+    title: 'item 2',
+    start_time: moment().add(-0.5, 'hour'),
+    end_time: moment().add(0.5, 'hour')
+  },
+  {
+    id: 3,
+    group: 1,
+    title: 'item 3',
+    start_time: moment().add(2, 'hour'),
+    end_time: moment().add(3, 'hour')
+  }
+]
 
 interface EventProps {
   targetEvent: TimelineEventProps;
@@ -28,6 +52,9 @@ export const SampleTimeline = ({onShowFormView, targetEvent}: EventProps) => {
 	const divRef = useRef<HTMLDivElement>(null);
 
   const state = useEventsState();
+
+  // const token = useAuthContext();
+  console.log(`Event in timeline: ${JSON.stringify(state)}`);
 
   // TypeScriptでReactのイベントにどう型指定するか
   // https://komari.co.jp/blog/10724/
@@ -57,7 +84,6 @@ export const SampleTimeline = ({onShowFormView, targetEvent}: EventProps) => {
   return (
     <div>
       Rendered by react!
-      {/* <AddEventButton /> */}
       <chakra.div display="flex" justifyContent="flex-start" overflowY="auto" scrollSnapType="y mandatory">
         <Timeline
           groups={groups}

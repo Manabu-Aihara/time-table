@@ -10,16 +10,16 @@ import getDay from 'date-fns/getDay';
 // import enUS from 'date-fns/locale/en-US';
 import ja from 'date-fns/locale/ja';
 
-import { useEventsState } from '../../hooks/useContextFamily';
+import { useAuthContext, useEventsState } from '../../hooks/useContextFamily';
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { ItemComponent } from '../molecules/EventCardComponent';
-import { AddEventButton } from '../molecules/AddButtonComponent';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { topWidth } from '../sprinkles.responsive.css';
 import { gridArea } from './CalendarComponent.css';
 import { MyWeek } from '../organisms/DaysClassComponent';
-import { views } from '../organisms/DaysComponent';
+import views from '../organisms/DaysComponent';
+import { useAuthQuery } from '../../resources/queries';
 
 const locales = {
   'ja-JP': ja,
@@ -47,6 +47,9 @@ export const MyCalendar = () => {
 
   const state = useEventsState();
 
+  const info = useAuthQuery();
+  console.log(`ID in calendar: ${info.data}`);
+
 	// const [showModal, setShowModal] = useState(false);
 
   // ここは後にツールチップか何かで
@@ -60,23 +63,24 @@ export const MyCalendar = () => {
   console.log(`ダイアログ外: ${JSON.stringify(state)}`);
   return (
     <div>
-      <AddEventButton />
-      <chakra.div className={`${topWidth} ${gridArea}`} flexShrink="0" scrollSnapAlign="start">
+      <chakra.div className={topWidth} flexShrink="0" scrollSnapAlign="start">
         <button>
           <Link to="/timeline">サンプルタイムライン</Link>
         </button>
-        <Calendar
-          localizer={localizer}
-          events={state}
-          defaultView='week'
-          startAccessor="start"
-          endAccessor="end"
-          // onSelectEvent={handleSelectEvent}
-          // onSelectSlot={handleSelectSlot}
-          selectable
-          components={components}
-          views={views}
-        />
+        <div>
+          <Calendar
+            localizer={localizer}
+            events={state}
+            defaultView='week'
+            startAccessor="start"
+            endAccessor="end"
+            // onSelectEvent={handleSelectEvent}
+            // onSelectSlot={handleSelectSlot}
+            selectable
+            components={components}
+            views={views.views}
+          />
+        </div>
       </chakra.div>
     </div>
   );

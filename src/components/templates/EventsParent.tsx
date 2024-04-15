@@ -36,7 +36,7 @@ export const EventsContextProvider = ({ children }: { children: ReactNode }) => 
   const initialData: TimelineEventProps = {
     id: 0,
     staff_id: 1000,
-    group: 0,
+    group: 1,
     title: 'Learn cool stuff',
     start_time: moment().toDate(),
     end_time: moment().add(1, 'hours').toDate()

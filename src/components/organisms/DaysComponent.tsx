@@ -16,9 +16,14 @@ export const MyWeek = () => {
   const [event, setEvent] = useState<TimelineEventProps>();
 
   // return <TimeGrid range={range} eventOffset={15}/>
-  return <SampleTimeline onShowFormView={
-    (event: TimelineEventProps) => setEvent(event)}
-    targetEvent={event!} />
+  return (
+    <div>
+      Render Timeline!
+      <SampleTimeline onShowFormView={
+        (event: TimelineEventProps) => setEvent(event)}
+        targetEvent={event!} />
+    </div>
+  );
 }
 
 MyWeek.range = (date: Date) => {
@@ -51,15 +56,15 @@ MyWeek.navigate = (date: Date, action: 'PREV' | 'NEXT' | 'DATE', localizer: Date
 
 MyWeek.title = (date: Date, options: TitleOptions): string => {
   const [start, ...rest] = MyWeek.range(date);
-  options.formats = [start.toISOString(), 'cold room'];
+  options.formats = [];
   console.log(`TitleOptions: ${JSON.stringify(options)}`);
   // return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
-  return options.formats.concat(start.toISOString(), 'dayRangeHeaderFormat')
-    + ' — ' + options.formats.concat(rest.pop()!.toISOString(), 'dayRangeHeaderFormat');
+  return options.formats.concat(start.toISOString())
+    + ' — ' + options.formats.concat(rest.pop()!.toISOString());
 }
   
 // export const {views, ...otherprops} = {
-export const {views} = {
+const views = {
   views: {
     month: true,
     week: true,
@@ -67,3 +72,5 @@ export const {views} = {
   },
   // ... other props
 };
+
+export default views;

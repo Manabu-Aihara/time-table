@@ -1,11 +1,13 @@
 // import { Event } from 'react-big-calendar';
+import moment from 'moment';
+
 import { TimelineItemBase as TimelineItem } from 'react-calendar-timeline';
 
 import { EventItem } from './AppType';
 
 type Merge<T, U> = Omit<T, keyof U> & U
 
-type NewTimelineItem = Omit<TimelineItem<Date> & EventItem, 'title'>
+type NewTimelineItem = Omit<TimelineItem<moment.Moment | Date> & EventItem, 'title'>
 
 /**
  * Before App type

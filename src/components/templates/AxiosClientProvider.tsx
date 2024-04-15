@@ -11,21 +11,19 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
   // useContext(AuthStateContext);
   const token = useAuthContext();
   // const [token, setToken] = useState<AccessToken>('');
-  console.log(`Child: ${token}`);
-
-  const search = useLocation().search;
+  console.log(`Child: ${JSON.stringify(token)}`);
 
   useEffect(() => {
     // リクエスト前に実行。headerに認証情報を付与する
     const requestIntercept = basicAxios.interceptors.request.use(
       (config) => {
-        if (config.headers["Authorization"] === '') {
+        if (config.headers["Authorization"] === `Bearer ${null}`) {
           console.log("It's passed if!");
-          config.headers["Authorization"] = `Bearer ${token}`;
+          config.headers["Authorization"] = `Bearer ${token.accessToken}`;
         } else {
           console.log("It's passed else!");
-          const query = new URLSearchParams(search);
-          config.headers["Authorization"] = `Bearer ${query.get('token')}`;
+          // const query = new URLSearchParams(search);
+          config.headers["Authorization"] = `Bearer ${token.accessToken}`;
         }
         console.log(`headers: ${config.headers}`);
         return config;

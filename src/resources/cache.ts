@@ -13,7 +13,7 @@ export const eventKeys = {
 export const authKeys = {
   auth: ["auth"] as const,
   // pulls: () => [...authKeys.all, "detail"] as const,
-  pull: (token: string) => [...authKeys.auth, 'user_id', token] as const
+  pull: (token: string) => [...authKeys.auth, "user_id", token] as const
 }
 // ② キャッシュ操作のためのカスタムフック
 // mutations.ts がある場合に必要に応じて宣言
