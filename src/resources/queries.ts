@@ -1,17 +1,13 @@
-import { useCallback, useState, useReducer } from "react";
+import { useCallback, useMemo } from "react";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useLocation } from "react-router-dom";
+import moment from 'moment';
 
-import { TokenProp } from "../lib/AppType";
 import { TimelineEventProps } from "../lib/TimelineType";
-import { fetchEventsData, fetchGetId, fetchGetResponse } from "../hooks/useFetch";
+import { fetchEventsData, fetchGetResponse } from "./fetchlib";
 import { eventKeys, authKeys } from "./cache";
-import { useAuthContext, useAuthDispatch } from "../hooks/useContextFamily";
-
-export const useEventsQuery = () => {
-	return useQuery({queryKey: ["events"], queryFn: fetchEventsData});
-}
+import { useAuthContext } from "../hooks/useContextFamily";
 
 export const useTokenQuery = () => {
   const search = useLocation().search;
@@ -26,8 +22,8 @@ export const useTokenQuery = () => {
 export const useAuthQuery = () => {
   const tokenContext = useAuthContext();
 
-  const search = useLocation().search;
-  const query = new URLSearchParams(search);
+  // const search = useLocation().search;
+  // const query = new URLSearchParams(search);
   console.log(`Query token: ${tokenContext.accessToken}`);
 
   // 以下は恐ろしいことに…
@@ -40,28 +36,63 @@ export const useAuthQuery = () => {
 
 	return useQuery({
 		queryKey: ['user_id'],
-		queryFn: () => fetchGetResponse(query.get('token')!),
+		queryFn: () => fetchGetResponse(tokenContext.accessToken),
     // select: useCallback((result: number) => {
     //   return result;
     // }, [])
 	});
 }
 
-const useAllQuery = <TData = TimelineEventProps[]>(
-  options?: Omit<
-    UseQueryOptions<TimelineEventProps[], AxiosError, TData, typeof eventKeys.all>,
-    "queryKey" | "queryFn"
-  >
-) => {
-  return useQuery({queryKey: eventKeys.all, queryFn: fetchEventsData, ...options});
-};
+// Data not recalculated when select function changes #1580
+// https://github.com/TanStack/query/issues/1580
+export const useEventsQuery = () => {
+  const tokenContext = useAuthContext();
+  const { data, ...queryInfo } = useQuery({
+    queryKey: eventKeys.list(),
+    queryFn: () => fetchEventsData(tokenContext.accessToken)
+  })
+  return {
+    ...queryInfo,
+    data: useMemo(() => data?.map(item => ({
+      // That's point! "="
+      start: item.start = moment(item.start).toDate(),
+      end: item.end = moment(item.end).toDate(),
+      // summary: item.summary = 'sheep',
+      ...item
+    })), [data])
+  }
+}
+// export const useEventsQuery = () => {
+//   const tokenContext = useAuthContext();
+// 	return useQuery({
+//     queryKey: eventKeys.list(),
+//     queryFn: () => fetchEventsData(tokenContext.accessToken),
+//     select: useCallback((results: TimelineEventProps[]) => {
+//       const conv = results.map((result) => ({
+//         start: result.start_time?.toDate(),
+//         end: result.end_time?.toDate(),
+//         ...result
+//       }));
+//       return conv;
+//     }, []),
+//   });
+// }
 
-// type UtilOption<TData = TimelineEventProps[]> = {
+// const useAllQuery = <TData = TimelineEventProps[]>(
 //   options?: Omit<
-//     UseQueryOptions<TimelineEventProps[], AxiosError, TData, [string, (Record<string, unknown> | string)?]>,
+//     UseQueryOptions<TimelineEventProps[], AxiosError, TData, typeof eventKeys.all>,
 //     "queryKey" | "queryFn"
 //   >
-// }
+// ) => {
+//   return useQuery({queryKey: eventKeys.all, queryFn: fetchEventsData, ...options});
+// };
+
+type UtilOption<TData = TimelineEventProps[]> = {
+  options?: Omit<
+    UseQueryOptions<TimelineEventProps[], AxiosError, TData, [string, (Record<string, unknown> | string)?]>,
+    "queryKey" | "queryFn"
+  >
+}
 
 // export const useApi = <
 //   TQueryKey extends [string, (Record<string, unknown> | string)?],

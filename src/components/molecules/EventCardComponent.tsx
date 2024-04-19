@@ -7,7 +7,8 @@ export const ItemComponent = (updatedEvent: TimelineEventProps) => {
   // console.log(`呼び出し :${JSON.stringify(updatedEvent)}`);
   return (
     <div>
-      <span>{start?.toDateString()}: </span><span>{end?.toDateString()}</span>
+      <span>{start?.toISOString()}: </span>
+      <span>{end?.toISOString()}</span>
       <p>{title}</p>
     </div>
   )

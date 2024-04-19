@@ -16,31 +16,6 @@ import moment from 'moment';
 
 const groups = [{ id: 1, title: 'group 1' }, { id: 2, title: 'group 2' }]
 
-const exItems = [
-  {
-    id: 1,
-    group: 1,
-    staff_id: 500,
-    title: 'item 1',
-    start_time: moment(),
-    end_time: moment().add(1, 'hour')
-  },
-  {
-    id: 2,
-    group: 2,
-    title: 'item 2',
-    start_time: moment().add(-0.5, 'hour'),
-    end_time: moment().add(0.5, 'hour')
-  },
-  {
-    id: 3,
-    group: 1,
-    title: 'item 3',
-    start_time: moment().add(2, 'hour'),
-    end_time: moment().add(3, 'hour')
-  }
-]
-
 interface EventProps {
   targetEvent: TimelineEventProps;
 	onShowFormView: (targetEvent: TimelineEventProps) => void;
@@ -84,28 +59,35 @@ export const SampleTimeline = ({onShowFormView, targetEvent}: EventProps) => {
   return (
     <div>
       Rendered by react!
-      <chakra.div display="flex" justifyContent="flex-start" overflowY="auto" scrollSnapType="y mandatory">
-        <Timeline
-          groups={groups}
-          items={state.map((item) => {
-            return (
-              {
-                itemProps: {
-                  onDoubleClick: () => handleSelectEvent(item),
-                },
-                // id: item.id,
-                // staff_id: item.staff_id,
-                // group: item.group,
-                // start_time: item.start_time,
-                // end_time: item.end_time,
-                // onClick: () => handleSelectEvent(item)
-                ...item
-              }
-            );
-          })}
-          defaultTimeStart={moment().add(-12, 'hour')}
-          defaultTimeEnd={moment().add(12, 'hour')}
-        />
+      <chakra.div display="flex" justifyContent="flex-start" overflowX="auto" scrollSnapType="x mandatory">
+        <chakra.div display="flex" justifyContent="flex-start" overflowY="auto" scrollSnapType="y mandatory">
+          <Timeline
+            groups={groups}
+            items={state.map((item) => {
+              return (
+                {
+                  itemProps: {
+                    onDoubleClick: () => handleSelectEvent(item),
+                  },
+                  id: item.id,
+                  staff_id: item.staff_id,
+                  group: item.group,
+                  start: item.start,
+                  end: item.end,
+                  title: item.title,
+                  start_time: item.start_time,
+                  end_time: item.end_time,
+                  // onClick: () => handleSelectEvent(item)
+                  // ...item
+                }
+              );
+            })}
+            // itemRenderer={(prop) => prop.timelineContext}
+            // visibleTimeStart={-10000}
+            defaultTimeStart={moment().add(-24, 'hour')}
+            defaultTimeEnd={moment().add(24, 'hour')}
+          />
+        </chakra.div>
       </chakra.div>
       <chakra.div flexShrink="0" scrollSnapAlign="start" className={topWidth} onClick={handleOuterBubbling}>
         {showModal && <AddChildForm timelineEvent={targetEvent} closeClick={closeInputForm} ref={divRef} />}

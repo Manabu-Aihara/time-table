@@ -5,16 +5,6 @@ import { useEventsState } from '../../hooks/useContextFamily';
 import { useCreateMutation } from '../../hooks/useEventMutation';
 import { AuthGuardContext } from '../../lib/AppType';
 
-function GFG_Fun(plus?: string): string {
-
-	const date = new Date();
-
-  const mySQLDate = date.toISOString().split('T')[0] + ' '
-		+ date.toTimeString().split(' ')[0];
-
-  return plus === '' ? mySQLDate : mySQLDate + plus;
-}
-
 type InputElementProps = React.ComponentProps<'input'>;
 
 export const TitleInput = (auth: AuthGuardContext) => {

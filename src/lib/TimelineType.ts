@@ -1,13 +1,12 @@
 // import { Event } from 'react-big-calendar';
 import moment from 'moment';
-
 import { TimelineItemBase as TimelineItem } from 'react-calendar-timeline';
 
 import { EventItem } from './AppType';
 
 type Merge<T, U> = Omit<T, keyof U> & U
 
-type NewTimelineItem = Omit<TimelineItem<moment.Moment | Date> & EventItem, 'title'>
+type NewTimelineItem = Omit<TimelineItem<Date> & EventItem, 'title' | 'start_time' | 'end_time'>
 
 /**
  * Before App type
@@ -34,6 +33,8 @@ type NewTimelineItem = Omit<TimelineItem<moment.Moment | Date> & EventItem, 'tit
  */
 export type TimelineEventProps = Merge<NewTimelineItem, {
   title: React.ReactNode;
+	start_time?: moment.Moment;
+	end_time?: moment.Moment;
   onClick?: () => void;
 }>;
 

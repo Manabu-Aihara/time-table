@@ -1,9 +1,11 @@
 import { createContext, Dispatch, ReactNode, useReducer } from 'react';
-
 import moment from 'moment';
 
 // import { EventItem } from '../lib/EventItem';
 import { TimelineEventProps } from '../../lib/TimelineType';
+import { useEventsQuery } from '../../resources/queries';
+import { useAuthContext } from '../../hooks/useContextFamily';
+import { AuthGuardContext } from '../../lib/AppType';
 // import { timelineEventsReducer } from '../../lib/reducer';
 
 // type EventItems = EventItem[];
@@ -38,10 +40,18 @@ export const EventsContextProvider = ({ children }: { children: ReactNode }) => 
     staff_id: 1000,
     group: 1,
     title: 'Learn cool stuff',
-    start_time: moment().toDate(),
-    end_time: moment().add(1, 'hours').toDate()
+    start_time: moment(),
+    end_time: moment().add(1, 'hours'),
+    start: new Date(),
+    end: new Date(new Date().setHours(new Date().getHours() + 1))
   }
-  const state: TimelineEventPropsList = [initialData];
+
+  const { data } = useEventsQuery();
+
+  const toString = Object.prototype.toString;
+  // toString.call(new Date()); // [object Date]
+  console.log('Parent end last: ', toString.call(data?.slice(-1)[0].end));
+  const state: TimelineEventPropsList = [initialData].concat(data!);
   
   return (
     <EventsStateContext.Provider value={state}>

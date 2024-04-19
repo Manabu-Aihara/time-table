@@ -34,7 +34,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
   // const [auth, dispatch] = useReducer(useAuthReducer, {
   //   accessToken: '0123456789abcdef'
   // });
-  const _auth = {accessToken: '0123456789abcdef'};
+  const _auth: TokenProp = {accessToken: ''};
 
   const { data } = useTokenQuery();
   const auth: TokenProp = {accessToken: data!};

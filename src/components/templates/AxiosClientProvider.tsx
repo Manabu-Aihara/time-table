@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useContextFamily';
 import { refresh } from "../../lib/refresh";
 import basicAxios from "../../lib/AuthInfo";
-import { AccessToken } from "../../lib/AppType";
 
 export const AuthAxios = ({children}: {children: ReactNode}) => {
   // useContext(AuthStateContext);
@@ -22,7 +21,7 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
           config.headers["Authorization"] = `Bearer ${token.accessToken}`;
         } else {
           console.log("It's passed else!");
-          // const query = new URLSearchParams(search);
+          // const refreshToken = await refresh();
           config.headers["Authorization"] = `Bearer ${token.accessToken}`;
         }
         console.log(`headers: ${config.headers}`);
@@ -38,7 +37,7 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
         const prevRequest = error.config;
         console.log(`Old token: ${prevRequest?.headers["Authorization"]}`);
         // 403認証エラー(headerにaccess_tokenがない。もしくはaccess_tokenが無効)
-        if (error?.response?.status === 403/* && !prevRequest.sent*/) {
+        if (error?.response?.status === 401/* && !prevRequest.sent*/) {
           // prevRequest.sent = true;
           // 新しくaccess_tokenを発行する
           const newAccessToken = await refresh();

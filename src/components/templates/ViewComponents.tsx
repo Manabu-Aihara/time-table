@@ -24,7 +24,10 @@ export const RoutesComponent = () => {
           <EventsContextProvider>
             {/* <BrowserRouter> */}
               <Routes>
-                <Route path="/calendar"	element={<MyCalendar />} />
+                <Route path="/calendar"	element={<MyCalendar
+                  onShowFormView={(event: TimelineEventProps) => setEvent(event)}
+                  targetEvent={event!} />}
+                />
                 <Route path="/timeline" element={
                   <SampleTimeline
                     onShowFormView={(event: TimelineEventProps) => setEvent(event)}

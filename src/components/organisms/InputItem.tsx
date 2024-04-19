@@ -27,7 +27,10 @@ const options: OptionType[] = [
 	{value: 'complete', label: '完了'}
 ];
 
-export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventProps, childRef: Ref<HTMLDivElement>) => {
+export const AddChildForm = forwardRef(
+	({timelineEvent, closeClick}: InputEventProps,
+		childRef: Ref<HTMLDivElement>) => {
+
 	const initialValue: TimelineEventProps = {
 		// staff_id: timelineEvent.staff_id, group: timelineEvent.group,
 		// title: timelineEvent.title,
@@ -37,17 +40,14 @@ export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventP
 	}
 	const [eventItem, setEventItem] = useState<TimelineEventProps>(initialValue);
 	// const [done, setDone] = useState<string | undefined>(options[0].value);
-
 	// 君から卒業
-	const dispatch = useEventsDispatch();
-
-	const updateEvent = useUpdateMutation(timelineEvent.staff_id);
-
+	// const dispatch = useEventsDispatch();
   console.log(`Childの今のイベント: ${JSON.stringify(timelineEvent)}`);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>) => {
 		// name, valueという変数名で決まっているようだ
 		const {name, value} = e.target;
+		console.log(`event.target name: ${name}`);
 		setEventItem({...eventItem, [name]:value});
 	}
 
@@ -56,6 +56,7 @@ export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventP
 	// 	// console.log(actionMeta);
 	// }
 
+	const updateEvent = useUpdateMutation(timelineEvent.id);
 	const handleUpdate = (e: FormEvent) => {
 		e.preventDefault();
 		// dispatch({
@@ -71,14 +72,14 @@ export const AddChildForm = forwardRef(({timelineEvent, closeClick}: InputEventP
     console.log(`ここ注目：${JSON.stringify(eventItem)}`);
 	}
 
-	// useEffect(() => {
-	// 	setEventItem({
-	// 		...timelineEvent,
-	// 		summary: timelineEvent.summary,
-	// 		progress: timelineEvent.progress
-	// 	});
-	// 	console.log(`setEventItem: ${JSON.stringify(eventItem)}`);
-	// }, []);
+	useEffect(() => {
+		setEventItem({
+			...timelineEvent,
+			// summary: timelineEvent.summary,
+			// progress: timelineEvent.progress
+		});
+		console.log(`setEventItem: ${JSON.stringify(eventItem)}`);
+	}, []);
 
 	return (
 		<ChakraProvider>

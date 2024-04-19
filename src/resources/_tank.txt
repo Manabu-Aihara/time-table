@@ -1,0 +1,21 @@
+  
+export const fetchGetId = async (postToken: string): Promise<number> => {
+	// cookieに保存されたrefresh_tokenを送付してaccess_tokenを取得する
+	const resultID: number = await basicAxios.get('/event/all',
+		{
+			headers: {
+			'Access-Control-Allow-Origin': '*',
+			// mode: 'cors',
+			// Accept: 'application/json',
+			'Content-Type': 'application/json',
+			// credentials: 'include' // ここを追加。
+			// withCredentials: true
+			}
+		});
+  // ((prev: AuthGuardContext) => {
+  //   // access_tokenを保持する
+  //   return { ...prev, accessToken: authResponse.data };
+  // });
+	console.log(`とりあえず結果のID: ${JSON.stringify(resultID)}`);
+	return resultID;
+}

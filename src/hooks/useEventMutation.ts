@@ -22,15 +22,16 @@ export const useCreateMutation = () => {
   });
 }
 
-export const useUpdateMutation = (staffId: number) => {
+export const useUpdateMutation = (id: number) => {
   const queryClient = useQueryClient();
   const eventCache = useEventCache();
 
   return useMutation({
-    mutationFn: (timelineEvent: TimelineEventProps) => basicAxios.post(`/event/update/${staffId}`, timelineEvent),
+    mutationFn: (timelineEvent: TimelineEventProps) => basicAxios.post(`/event/update/${id}`, timelineEvent),
     onSuccess: (data, variables) => {
-      queryClient.setQueryData(["item", staffId], data);
-      console.log(`こっちが本命？: ${variables}`);
+      queryClient.setQueryData(["item", id], variables);
+      console.log(`こっちが本命？: ${JSON.stringify(data)}`);
+      eventCache.invalidateList();
     },
   });  
 }
