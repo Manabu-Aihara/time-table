@@ -3,11 +3,12 @@ import moment from 'moment';
 
 import { useEventsState } from '../../hooks/useContextFamily';
 import { useCreateMutation } from '../../hooks/useEventMutation';
-import { AuthGuardContext } from '../../lib/AppType';
+import { Auth } from '../../lib/TimelineType';
 
 type InputElementProps = React.ComponentProps<'input'>;
 
-export const TitleInput = (auth: AuthGuardContext) => {
+export const TitleInput = (auth: Auth) => {
+  console.log(`In modal auth info: ${JSON.stringify(auth)}`);
   const eventsState = useEventsState();
 
   const createEvent = useCreateMutation();
@@ -29,7 +30,7 @@ export const TitleInput = (auth: AuthGuardContext) => {
       createEvent.mutate({
         id: Number(eventsState.slice(-1)[0].id) + 1,
         group: 1,
-        staff_id: auth.auth_id,
+        staff_id: auth.authId!,
         title: title,
         start_time: moment(startDT),
         end_time: moment(endDT)
@@ -40,7 +41,7 @@ export const TitleInput = (auth: AuthGuardContext) => {
 
   return (
     <div>
-      <h3>{auth.auth_id}</h3>
+      <h3>{'authId' in auth ? auth.authId : 'IDなし'}</h3>
       {/* <form onSubmit={onSubmit}> */}
       <input
         // {...inputAttr}

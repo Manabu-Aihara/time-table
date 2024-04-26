@@ -29,7 +29,8 @@ export const SampleTimeline = ({onShowFormView, targetEvent}: EventProps) => {
   const state = useEventsState();
 
   // const token = useAuthContext();
-  console.log(`Event in timeline: ${JSON.stringify(state)}`);
+  const toString = Object.prototype.toString;
+  console.log(`Event in timeline: ${JSON.stringify(state)}`, toString.call(state.slice(-1)[0].end));
 
   // TypeScriptでReactのイベントにどう型指定するか
   // https://komari.co.jp/blog/10724/

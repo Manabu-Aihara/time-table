@@ -34,13 +34,11 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
     }
   }), []);
 
-  const info = useAuthQuery();
   const state = useEventsState();
-  console.log(`ID in calendar: ${info.data}`);
-
   const toString = Object.prototype.toString;
   // toString.call(new Date()); // [object Date]
-  console.log(`Calendar state: ${JSON.stringify(state)}`, toString.call(state.slice(-1)[0].end));
+  console.log(`Calendar state: ${JSON.stringify(state)}`);
+  // , toString.call(state.slice(-1)[0].end)
 
 	const [showModal, setShowModal] = useState(false);
 	const divRef = useRef<HTMLDivElement>(null);
@@ -61,7 +59,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
 
   const handleSelectEvent = useCallback((callingEvent: TimelineEventProps) => {
     const { title, start, end } = callingEvent;
-    console.log(`選んだイベント: ${start}:${end}:${title}`);
+    console.log(`選んだイベント: ${start}: ${end}: ${title}`);
     onShowFormView(callingEvent);
     setShowModal(true);
   }, []);

@@ -5,7 +5,7 @@ import moment from 'moment';
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { useEventsQuery } from '../../resources/queries';
 import { useAuthContext } from '../../hooks/useContextFamily';
-import { AuthGuardContext } from '../../lib/AppType';
+import { Auth } from '../../lib/TimelineType';
 // import { timelineEventsReducer } from '../../lib/reducer';
 
 // type EventItems = EventItem[];
@@ -50,7 +50,7 @@ export const EventsContextProvider = ({ children }: { children: ReactNode }) => 
 
   const toString = Object.prototype.toString;
   // toString.call(new Date()); // [object Date]
-  console.log('Parent end last: ', toString.call(data?.slice(-1)[0].end));
+  console.log('Parent end type: ', toString.call(data?.slice(-1)[0].end));
   const state: TimelineEventPropsList = [initialData].concat(data!);
   
   return (

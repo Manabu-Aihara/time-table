@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import { EventItem } from "./AppType";
+import { EventItem } from "./TimelineType";
 
 export const eventData: EventItem = {
   staff_id: 1000,

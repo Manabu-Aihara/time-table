@@ -100,6 +100,7 @@ export const AddChildForm = forwardRef(
 				<section className={boundaryTop}>
 					<Text>どんな感じ：</Text>
 					<Select name="progress" value={eventItem.progress} onChange={handleChange}>
+						<option>---進捗を選んでください---</option>
 						{options.map((option) => {
 							return (
 								<option value={option.label} key={option.value}>{option.label}</option>

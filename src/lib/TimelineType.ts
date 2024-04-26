@@ -1,12 +1,18 @@
-// import { Event } from 'react-big-calendar';
+import { Event } from 'react-big-calendar';
 import moment from 'moment';
 import { TimelineItemBase as TimelineItem } from 'react-calendar-timeline';
 
-import { EventItem } from './AppType';
+// type CustomEvent = Omit<Event, 'title'>
+export interface EventItem extends Event {
+	staff_id: number,
+	summary?: string,
+	progress?: string
+}
 
 type Merge<T, U> = Omit<T, keyof U> & U
 
-type NewTimelineItem = Omit<TimelineItem<Date> & EventItem, 'title' | 'start_time' | 'end_time'>
+type NewTimelineItem = Omit<TimelineItem<Date> & EventItem,
+	'id' | 'group' | 'title' | 'start_time' | 'end_time'>
 
 /**
  * Before App type
@@ -19,11 +25,13 @@ type NewTimelineItem = Omit<TimelineItem<Date> & EventItem, 'title' | 'start_tim
 /**
  * Finally Event type
  * type TimelineEventProps = {
-	id: Id;
-	group: Id;
+	id: Id → number;
+	group: Id → number;
 	// title?: React.ReactNode;
-	start_time: DateType;
-	end_time: DateType;
+	start_time?: DateType → monment.Moment;
+	end_time?: DateType → moment.Moment;
+	start?: Date;
+	end?: Date;
 
 	staff_id: number;
 	title: React.ReactNode;
@@ -31,18 +39,47 @@ type NewTimelineItem = Omit<TimelineItem<Date> & EventItem, 'title' | 'start_tim
 	progress?: string;
 }
  */
+// TimelineItemBaseのやっかいなId = string | numberを何とかしたい
+type PropertyToNumber<T> = {
+	[Key in keyof T]: number;
+}
+type PickTypeId = Pick<TimelineItem<Date>, 'id' | 'group'>;
+type NumberOfId = PropertyToNumber<PickTypeId>;
+type pickId = NumberOfId['id'];
+type pickGroup = NumberOfId['group'];
+const y : NumberOfId = {id: 123, group: 456}
+
 export type TimelineEventProps = Merge<NewTimelineItem, {
+	id: pickId;
+	group: pickGroup;
   title: React.ReactNode;
 	start_time?: moment.Moment;
 	end_time?: moment.Moment;
   onClick?: () => void;
 }>;
 
-// TimelineItemBaseのやっかいなId = string | numberを何とかしたい
-type ComposeDataType<T> = {
-	[Key in keyof T]: number;
-}
-type PickTypeId = Pick<TimelineEventProps, 'id'>;
-type NumberOfId = ComposeDataType<PickTypeId>;
-type X = NumberOfId['id']
-const y : NumberOfId = {id: 123}
+// ここから、認証Prop
+export type Auth = { type: 'auth'; authId: number } | { type: 'token'; accessToken: string };
+// export type Auth = { authId?: number; accessToken?: string; };
+// type X = Auth['type'];
+// export const getDecentAuthToken = (auth: Auth): Auth | undefined => {
+// 	const decentAuth = auth.type === 'token' ? auth : auth;
+// 	return decentAuth
+// }
+// export const getDecentAuthId = (auth: Auth): Auth | undefined => {
+// 	const decentAuth = auth.type === 'auth' ? auth : auth;
+// 	return decentAuth
+// }
+// type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
+// type DecentAuth = ReturnType<typeof getDecentAuth>
+
+// type Some<V> = {type: V};
+type Option<T> = T
+/**
+ * AuthGuardContext<V>: Option<T>を受け取って、渡されたのがAuth型なら中身の値の型を返す。
+ * 渡されたのがnumber型ならundefinedを返す。
+ */
+export type AuthGuardContext<V> = V extends Option<infer R> ? R : never;
+
+// const opt1: Auth = { accessToken: 'onigiri' };
+ 

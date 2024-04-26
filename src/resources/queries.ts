@@ -4,52 +4,46 @@ import { AxiosError } from "axios";
 import { useLocation } from "react-router-dom";
 import moment from 'moment';
 
-import { TimelineEventProps } from "../lib/TimelineType";
+import { TimelineEventProps, Auth } from "../lib/TimelineType";
 import { fetchEventsData, fetchGetResponse } from "./fetchlib";
 import { eventKeys, authKeys } from "./cache";
 import { useAuthContext } from "../hooks/useContextFamily";
 
-export const useTokenQuery = () => {
+export const useSearchQuery = (searchWord: string) => {
   const search = useLocation().search;
   const query = new URLSearchParams(search);
 
   return useQuery({
-    queryKey: ["auth"],
-    queryFn: () => query.get('token')
+    queryKey: authKeys.auth,
+    queryFn: () => query.get(searchWord)
   });
 }
 
-export const useAuthQuery = () => {
-  const tokenContext = useAuthContext();
+export const useAuthQuery = (searchToken: string) => {
+  const authContext = useAuthContext();
+  return useQuery({
+    queryKey: ['user_id'],
+    queryFn: () => fetchGetResponse(searchToken),
+  });
 
-  // const search = useLocation().search;
-  // const query = new URLSearchParams(search);
-  console.log(`Query token: ${tokenContext.accessToken}`);
-
-  // 以下は恐ろしいことに…
+    // 以下は恐ろしいことに…
   // const [tokenState, setTokenState] = useState<TokenProp>();
   // setTokenState({...tokenContext, accessToken: query.get('token')!});
   // const [state, dispatch] = useReducer((state: TokenProp, newState: Partial<TokenProp>) => ({ ...state, ...newState }),
   //   { accessToken: '' }
   // );
   // dispatch({accessToken: query.get('token')!});
-
-	return useQuery({
-		queryKey: ['user_id'],
-		queryFn: () => fetchGetResponse(tokenContext.accessToken),
-    // select: useCallback((result: number) => {
-    //   return result;
-    // }, [])
-	});
 }
 
 // Data not recalculated when select function changes #1580
 // https://github.com/TanStack/query/issues/1580
 export const useEventsQuery = () => {
-  const tokenContext = useAuthContext();
+  const search = useLocation().search;
+  const query = new URLSearchParams(search);
+  
   const { data, ...queryInfo } = useQuery({
     queryKey: eventKeys.list(),
-    queryFn: () => fetchEventsData(tokenContext.accessToken)
+    queryFn: () => fetchEventsData(query.get('token')!)
   })
   return {
     ...queryInfo,

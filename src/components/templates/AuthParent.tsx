@@ -1,13 +1,16 @@
-import { ReactNode, createContext, useReducer, Dispatch, useState } from "react";
+import { ReactNode, createContext, useReducer, Dispatch, useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
 
-import { TokenProp } from "../../lib/AppType";
-import { useTokenQuery } from "../../resources/queries";
+import { Auth } from "../../lib/TimelineType";
+import { useSearchQuery } from "../../resources/queries";
 
-export const AuthStateContext = createContext<TokenProp | undefined>(undefined);
+export const AuthStateContext = createContext<Auth | undefined>(undefined);
 
 export type Action = {
   type: 'UPDATE';
-  payload: {accessToken: string};
+  payload: {
+    token: string
+  };
 }
 
 type AuthDispatch = Dispatch<Action>;
@@ -17,31 +20,29 @@ export const AuthDispatchContext = createContext<AuthDispatch | undefined>(
   undefined
 );
 
-const useAuthReducer = (tokenProp: TokenProp, action: Action): TokenProp => {
-  switch(action.type){
-    case 'UPDATE':
-      return {...tokenProp, accessToken: action.payload.accessToken}
-    default:
-      throw new Error('Invalid action');
-  }
-}
+// const useAuthReducer = (token: Auth, action: Action): Auth => {
+//   switch(action.type){
+//     case 'UPDATE':
+//       return {...token, type: 'token', accessToken: action.payload.token}
+//     default:
+//       throw new Error('Invalid action');
+//   }
+// }
 
 export const AuthProvider = ({children}: {children: ReactNode}) => {
 
   // const [token, setToken] = useState<TokenProp>({
   //   accessToken: '0123456789abcdef'
   // });
-  // const [auth, dispatch] = useReducer(useAuthReducer, {
-  //   accessToken: '0123456789abcdef'
-  // });
-  const _auth: TokenProp = {accessToken: ''};
-
-  const { data } = useTokenQuery();
-  const auth: TokenProp = {accessToken: data!};
-  console.log(`Parent: ${JSON.stringify(auth)}`);
+  // const [auth, dispatch] = useReducer(useAuthReducer, '');
+  // console.log(`Parent: ${JSON.stringify(data)}`);
+  const search = useLocation().search;
+  const query = new URLSearchParams(search);
+  const { data } = useSearchQuery('token');
+  const _auth: Auth = { accessToken: data!, type: 'token' }
 
   return (
-    <AuthStateContext.Provider value={auth}>
+    <AuthStateContext.Provider value={_auth}>
       {/* <AuthDispatchContext.Provider value={dispatch}> */}
         {children}
       {/* </AuthDispatchContext.Provider> */}

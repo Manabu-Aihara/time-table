@@ -6,7 +6,7 @@ import basicAxios from "../lib/AuthInfo";
 
 export const fetchEventsData = async (postToken: string): Promise<TimelineEventProps[]> => {
 	const { data } = await basicAxios.request<TimelineEventProps[]>({
-		url: 'http://127.0.0.1:8000/event/all',
+		url: '/event/all',
 		method: 'GET',
 		headers: {
 			'Access-Control-Allow-Origin': '*',

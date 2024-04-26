@@ -1,6 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { ReactNode, useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
 
 import { useAuthContext } from '../../hooks/useContextFamily';
 import { refresh } from "../../lib/refresh";
@@ -8,9 +7,9 @@ import basicAxios from "../../lib/AuthInfo";
 
 export const AuthAxios = ({children}: {children: ReactNode}) => {
   // useContext(AuthStateContext);
-  const token = useAuthContext();
-  // const [token, setToken] = useState<AccessToken>('');
-  console.log(`Child: ${JSON.stringify(token)}`);
+  const authContext = useAuthContext();
+  console.log(`Client provider: ${JSON.stringify(authContext)}`);
+  const tokenContext = authContext.type === 'token' ? authContext.accessToken : undefined;  
 
   useEffect(() => {
     // リクエスト前に実行。headerに認証情報を付与する
@@ -18,11 +17,12 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
       (config) => {
         if (config.headers["Authorization"] === `Bearer ${null}`) {
           console.log("It's passed if!");
-          config.headers["Authorization"] = `Bearer ${token.accessToken}`;
+          config.headers["Authorization"] = `Bearer ${tokenContext}`;
         } else {
           console.log("It's passed else!");
-          // const refreshToken = await refresh();
-          config.headers["Authorization"] = `Bearer ${token.accessToken}`;
+          // const newAccessToken = refresh(auth.accessToken!);
+          // config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          config.headers["Authorization"] = `Bearer ${tokenContext}`;
         }
         console.log(`headers: ${config.headers}`);
         return config;
@@ -37,14 +37,18 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
         const prevRequest = error.config;
         console.log(`Old token: ${prevRequest?.headers["Authorization"]}`);
         // 403認証エラー(headerにaccess_tokenがない。もしくはaccess_tokenが無効)
-        if (error?.response?.status === 401/* && !prevRequest.sent*/) {
+        if (error?.response?.status === 403/* && !prevRequest.sent*/) {
           // prevRequest.sent = true;
-          // 新しくaccess_tokenを発行する
-          const newAccessToken = await refresh();
-          console.log(`New token: ${newAccessToken}`);
-          prevRequest!.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          // 再度実行する
-          return basicAxios(prevRequest!);
+          // 判別可能なユニオン型 (discriminated union)
+          // https://typescriptbook.jp/reference/values-types-variables/discriminated-union
+          if('accessToken' in authContext){
+            // 新しくaccess_tokenを発行する
+            const newAccessToken = await refresh(authContext.accessToken!);
+            console.log(`New token: ${newAccessToken}`);
+            prevRequest!.headers["Authorization"] = `Bearer ${newAccessToken.data}`;
+            // 再度実行する
+            return basicAxios(prevRequest!);
+          }
         }
         return Promise.reject(error);
       }
@@ -55,7 +59,7 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
       basicAxios.interceptors.request.eject(requestIntercept);
       basicAxios.interceptors.response.eject(responseIntercept);
     };
-  }, [token]);
+  }, [authContext]);
 
   return (
     <>
