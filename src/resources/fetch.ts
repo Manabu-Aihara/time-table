@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-import { TimelineEventProps } from "../lib/TimelineType";
+import { AuthInfoProp, TimelineEventProps } from "../lib/TimelineType";
 // import { AuthGuardContext } from "../components/templates/AuthParent";
 import basicAxios from "../lib/AuthInfo";
 
@@ -24,7 +24,7 @@ export const fetchEventsData = async (postToken: string): Promise<TimelineEventP
 // とりあえず、値が取れるからこっち採用
 const cache = new Map();
 
-export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse<number>> => {
+export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse<AuthInfoProp>> => {
   const authResponse = await basicAxios.post<AxiosResponse>('/timetable/inquiry', postToken,
 		{
 			headers: {

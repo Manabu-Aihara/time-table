@@ -35,6 +35,8 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   }), []);
 
   const state = useEventsState();
+
+  // コンソールでの話し
   const toString = Object.prototype.toString;
   // toString.call(new Date()); // [object Date]
   console.log(`Calendar state: ${JSON.stringify(state)}`);

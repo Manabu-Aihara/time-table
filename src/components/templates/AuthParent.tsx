@@ -1,10 +1,10 @@
 import { ReactNode, createContext, useReducer, Dispatch, useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 
-import { Auth } from "../../lib/TimelineType";
+import { AuthInfoProp } from "../../lib/TimelineType";
 import { useSearchQuery } from "../../resources/queries";
 
-export const AuthStateContext = createContext<Auth | undefined>(undefined);
+export const AuthStateContext = createContext<AuthInfoProp | undefined>(undefined);
 
 export type Action = {
   type: 'UPDATE';
@@ -39,7 +39,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
   const search = useLocation().search;
   const query = new URLSearchParams(search);
   const { data } = useSearchQuery('token');
-  const _auth: Auth = { accessToken: data!, type: 'token' }
+  const _auth: AuthInfoProp = { accessToken: data!, type: 'token' }
 
   return (
     <AuthStateContext.Provider value={_auth}>

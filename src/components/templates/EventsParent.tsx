@@ -4,8 +4,6 @@ import moment from 'moment';
 // import { EventItem } from '../lib/EventItem';
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { useEventsQuery } from '../../resources/queries';
-import { useAuthContext } from '../../hooks/useContextFamily';
-import { Auth } from '../../lib/TimelineType';
 // import { timelineEventsReducer } from '../../lib/reducer';
 
 // type EventItems = EventItem[];

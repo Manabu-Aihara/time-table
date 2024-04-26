@@ -22,7 +22,7 @@ export const useCreateMutation = () => {
   });
 }
 
-export const useUpdateMutation = (id: number) => {
+export const useUpdateMutation = (id: number | string) => {
   const queryClient = useQueryClient();
   const eventCache = useEventCache();
 

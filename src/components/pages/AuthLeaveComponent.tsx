@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useAuthQuery } from "../../resources/queries";
 import { useAuthContext } from "../../hooks/useContextFamily";
-import { Auth } from "../../lib/TimelineType";
 
 export const AuthLeavePage = () => {
   const authContext = useAuthContext();  
@@ -16,9 +15,11 @@ export const AuthLeavePage = () => {
   console.log(`とりあえず結果のID: ${JSON.stringify(data)}`);
   console.log(`とりあえず結果のerr: ${isError}`);
 
+  const strData = JSON.stringify(data, ['staff_id']);
+
   useEffect(() => {
     const f = async () => {
-      data && navigate(`/calendar?userID=${data}`);
+      data && navigate(`/calendar?userID=${JSON.parse(strData).staff_id}`);
     }
     f();
   }, [data]);

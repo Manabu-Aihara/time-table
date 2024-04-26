@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 
 import { useAuthContext } from '../../hooks/useContextFamily';
 import { refresh } from "../../lib/refresh";

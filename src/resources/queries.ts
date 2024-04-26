@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from "react";
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { QueriesResults, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { AxiosError, AxiosResponse } from "axios";
 import { useLocation } from "react-router-dom";
 import moment from 'moment';
 
-import { TimelineEventProps, Auth } from "../lib/TimelineType";
-import { fetchEventsData, fetchGetResponse } from "./fetchlib";
+import { TimelineEventProps, AuthInfoProp } from "../lib/TimelineType";
+import { fetchEventsData, fetchGetResponse } from "./fetch";
 import { eventKeys, authKeys } from "./cache";
 import { useAuthContext } from "../hooks/useContextFamily";
 
@@ -24,8 +24,16 @@ export const useAuthQuery = (searchToken: string) => {
   return useQuery({
     queryKey: ['user_id'],
     queryFn: () => fetchGetResponse(searchToken),
-  });
-
+    // select: useCallback((resp: AxiosResponse<AuthInfoProp>) => {
+    //   if(resp.data.type === 'auth')
+    //     return {
+    //       authId: resp.data.authId,
+    //       group: resp.data.group,
+    //       ...resp
+    //     }
+    // }, [])
+  })
+}
     // 以下は恐ろしいことに…
   // const [tokenState, setTokenState] = useState<TokenProp>();
   // setTokenState({...tokenContext, accessToken: query.get('token')!});
@@ -33,13 +41,14 @@ export const useAuthQuery = (searchToken: string) => {
   //   { accessToken: '' }
   // );
   // dispatch({accessToken: query.get('token')!});
-}
 
 // Data not recalculated when select function changes #1580
 // https://github.com/TanStack/query/issues/1580
 export const useEventsQuery = () => {
   const search = useLocation().search;
   const query = new URLSearchParams(search);
+  // data被り
+  // const { data } = useSearchQuery('token')
   
   const { data, ...queryInfo } = useQuery({
     queryKey: eventKeys.list(),

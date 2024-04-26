@@ -12,7 +12,7 @@ export interface EventItem extends Event {
 type Merge<T, U> = Omit<T, keyof U> & U
 
 type NewTimelineItem = Omit<TimelineItem<Date> & EventItem,
-	'id' | 'group' | 'title' | 'start_time' | 'end_time'>
+	'title' | 'start_time' | 'end_time'>
 
 /**
  * Before App type
@@ -50,8 +50,8 @@ type pickGroup = NumberOfId['group'];
 const y : NumberOfId = {id: 123, group: 456}
 
 export type TimelineEventProps = Merge<NewTimelineItem, {
-	id: pickId;
-	group: pickGroup;
+	// id: pickId;
+	// group: pickGroup;
   title: React.ReactNode;
 	start_time?: moment.Moment;
 	end_time?: moment.Moment;
@@ -59,7 +59,9 @@ export type TimelineEventProps = Merge<NewTimelineItem, {
 }>;
 
 // ここから、認証Prop
-export type Auth = { type: 'auth'; authId: number } | { type: 'token'; accessToken: string };
+export type AuthInfoProp =
+	{ type: 'auth'; authId: number; group: number }
+	| { type: 'token'; accessToken: string };
 // export type Auth = { authId?: number; accessToken?: string; };
 // type X = Auth['type'];
 // export const getDecentAuthToken = (auth: Auth): Auth | undefined => {
@@ -79,7 +81,7 @@ type Option<T> = T
  * AuthGuardContext<V>: Option<T>を受け取って、渡されたのがAuth型なら中身の値の型を返す。
  * 渡されたのがnumber型ならundefinedを返す。
  */
-export type AuthGuardContext<V> = V extends Option<infer R> ? R : never;
+export type AuthGuardContext<V extends Option<AuthInfoProp>> = V extends Option<infer R> ? R : never;
 
-// const opt1: Auth = { accessToken: 'onigiri' };
+const opt1: AuthInfoProp = { accessToken: 'onigiri', type: 'token' };
  
