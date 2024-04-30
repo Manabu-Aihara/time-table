@@ -16,6 +16,7 @@ export default defineConfig({
       },
     }),
   ],
+  envDir: './env',
   build: {
     chunkSizeWarningLimit: 100000000
   },
