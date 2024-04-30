@@ -2,13 +2,13 @@ import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar } from 'react-big-calendar'
 import { chakra } from '@chakra-ui/system';
+import cx from 'classnames';
 
 import { useEventsState } from '../../hooks/useContextFamily';
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { ItemComponent } from '../molecules/EventCardComponent';
 import { MyWeek } from '../organisms/DaysClassComponent';
 import views from '../organisms/DaysComponent';
-import { useAuthQuery } from '../../resources/queries';
 import { TitleInputModal } from '../organisms/DialogComponent'; 
 import { AddChildForm } from "../organisms/InputItem";
 import localizer from '../../lib/Localization';
@@ -16,6 +16,7 @@ import localizer from '../../lib/Localization';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { topWidth } from '../sprinkles.responsive.css';
 import { gridArea } from './CalendarComponent.css';
+import { ClassNames } from '@emotion/react';
 
 interface EventProps {
   targetEvent: TimelineEventProps;
@@ -35,12 +36,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   }), []);
 
   const state = useEventsState();
-
-  // コンソールでの話し
-  const toString = Object.prototype.toString;
-  // toString.call(new Date()); // [object Date]
   console.log(`Calendar state: ${JSON.stringify(state)}`);
-  // , toString.call(state.slice(-1)[0].end)
 
 	const [showModal, setShowModal] = useState(false);
 	const divRef = useRef<HTMLDivElement>(null);
@@ -56,12 +52,15 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
 
   useEffect(() => {
     divRef?.current?.scrollIntoView({behavior: 'smooth'});
-    console.log(`Calender outer: ${divRef.current?.outerHTML}`);
+    // console.log(`Calender outer: ${divRef.current?.outerHTML}`);
   }, [targetEvent]);
 
+  // コンソールでの話し
+  const toString = Object.prototype.toString;
+  // toString.call(new Date()); // [object Date]
   const handleSelectEvent = useCallback((callingEvent: TimelineEventProps) => {
-    const { title, start, end } = callingEvent;
-    console.log(`選んだイベント: ${start}: ${end}: ${title}`);
+    const { id, title } = callingEvent;
+    console.log(`選んだイベント: ${title}: ${toString.call(id)}`);
     onShowFormView(callingEvent);
     setShowModal(true);
   }, []);
@@ -73,11 +72,13 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   return (
     <div>
       <chakra.div display="flex" justifyContent="flex-start" overflowX="auto" scrollSnapType="x mandatory">
-        <chakra.div className={`${topWidth} ${gridArea}`} flexShrink="0" scrollSnapAlign="start">
+        <chakra.div className={cx(gridArea, topWidth)} flexShrink="0" scrollSnapAlign="start">
+          {/* <button className={topWidth}> */}
           <button>
             <Link to="/timeline">サンプルタイムライン</Link>
           </button>
           <TitleInputModal />
+          {/* <div className={topWidth}> */}
           <div>
             <Calendar
               localizer={localizer}
@@ -93,8 +94,12 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
             />
           </div>
         </chakra.div>
-        <chakra.div flexShrink="0" scrollSnapAlign="start" className={topWidth} onClick={handleOuterBubbling}>
-          {showModal && <AddChildForm timelineEvent={targetEvent} closeClick={closeInputForm} ref={divRef} />}
+        <chakra.div flexShrink="0" scrollSnapAlign="start"
+          className={topWidth} onClick={handleOuterBubbling}>
+          {showModal &&
+            <AddChildForm timelineEvent={targetEvent}
+            closeClick={closeInputForm} ref={divRef} />
+          }
         </chakra.div>
       </chakra.div>
     </div>

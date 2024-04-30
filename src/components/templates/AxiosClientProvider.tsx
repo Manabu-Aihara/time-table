@@ -2,14 +2,16 @@ import { AxiosError, AxiosResponse } from "axios";
 import { ReactNode, useEffect } from "react";
 
 import { useAuthContext } from '../../hooks/useContextFamily';
-import { refresh } from "../../lib/refresh";
 import basicAxios from "../../lib/AuthInfo";
+import { useRefreshQuery } from "../../resources/queries";
 
 export const AuthAxios = ({children}: {children: ReactNode}) => {
   // useContext(AuthStateContext);
   const authContext = useAuthContext();
-  console.log(`Client provider: ${JSON.stringify(authContext)}`);
+  console.log(`Client context: ${JSON.stringify(authContext)}`);
   const tokenContext = authContext.type === 'token' ? authContext.accessToken : undefined;  
+
+  const newAccessToken = useRefreshQuery();
 
   useEffect(() => {
     // リクエスト前に実行。headerに認証情報を付与する
@@ -20,9 +22,8 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
           config.headers["Authorization"] = `Bearer ${tokenContext}`;
         } else {
           console.log("It's passed else!");
-          // const newAccessToken = refresh(auth.accessToken!);
-          // config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          config.headers["Authorization"] = `Bearer ${tokenContext}`;
+          config.headers["Authorization"] = `Bearer ${newAccessToken.data}`;
+          // config.headers["Authorization"] = `Bearer ${tokenContext}`;
         }
         console.log(`headers: ${config.headers}`);
         return config;
@@ -41,14 +42,14 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
           // prevRequest.sent = true;
           // 判別可能なユニオン型 (discriminated union)
           // https://typescriptbook.jp/reference/values-types-variables/discriminated-union
-          if('accessToken' in authContext){
-            // 新しくaccess_tokenを発行する
-            const newAccessToken = await refresh(authContext.accessToken!);
-            console.log(`New token: ${newAccessToken}`);
-            prevRequest!.headers["Authorization"] = `Bearer ${newAccessToken.data}`;
-            // 再度実行する
-            return basicAxios(prevRequest!);
-          }
+          // if('accessToken' in authContext){
+          // 新しくaccess_tokenを発行する
+          // const newAccessToken = await useRefreshQuery();
+          console.log(`New token: ${newAccessToken}`);
+          prevRequest!.headers["Authorization"] = `Bearer ${newAccessToken.data}`;
+          // 再度実行する
+          return basicAxios(prevRequest!);
+          // }
         }
         return Promise.reject(error);
       }

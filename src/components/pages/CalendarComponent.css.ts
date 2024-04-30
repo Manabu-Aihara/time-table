@@ -2,6 +2,6 @@ import { style } from '@vanilla-extract/css';
 
 export const gridArea = style({
   display: 'grid',
-  gridTemplateRows: '0.5fr 9.5fr',
+  gridTemplateRows: '1fr 5fr 20fr',
   margin: '0 1%'
 });

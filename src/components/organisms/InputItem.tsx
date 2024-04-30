@@ -72,14 +72,14 @@ export const AddChildForm = forwardRef(
     console.log(`ここ注目：${JSON.stringify(eventItem)}`);
 	}
 
-	useEffect(() => {
-		setEventItem({
-			...timelineEvent,
-			// summary: timelineEvent.summary,
-			// progress: timelineEvent.progress
-		});
-		console.log(`setEventItem: ${JSON.stringify(eventItem)}`);
-	}, []);
+	// useEffect(() => {
+	// 	setEventItem({
+	// 		...timelineEvent,
+	// 		// summary: timelineEvent.summary,
+	// 		// progress: timelineEvent.progress
+	// 	});
+	// 	console.log(`setEventItem: ${JSON.stringify(eventItem)}`);
+	// }, []);
 
 	return (
 		<ChakraProvider>

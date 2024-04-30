@@ -1,15 +1,13 @@
 import { useState, FormEvent } from 'react';
 import moment from 'moment';
 
-import { useEventsState, useAuthContext } from '../../hooks/useContextFamily';
+import { useEventsState } from '../../hooks/useContextFamily';
 import { useCreateMutation } from '../../hooks/useEventMutation';
 import { AuthInfoProp } from '../../lib/TimelineType';
 
 type InputElementProps = React.ComponentProps<'input'>;
 
 export const TitleInput = (auth: AuthInfoProp) => {
-  // const authContext = useAuthContext();  
-  // const infoObj = authContext.type === 'auth' ? {staffId: authContext.authId, groupId: authContext.group} : undefined;  
   console.log(`In modal auth info: ${JSON.stringify(auth)}`);
   const eventsState = useEventsState();
 
@@ -43,8 +41,9 @@ export const TitleInput = (auth: AuthInfoProp) => {
 
   return (
     <div>
-      <h4>{auth.type === 'auth' ? auth.authId : 'IDなし'}</h4>
-      <h4>{auth.type === 'auth' ? auth.group : 'グループなし'}</h4>
+      <span>{auth.type === 'auth' ? auth.authId : 'IDなし'}</span>:
+      <span>{auth.type === 'auth' ? auth.group : 'グループなし'}</span>
+      <p></p>
       {/* <form onSubmit={onSubmit}> */}
       <input
         // {...inputAttr}

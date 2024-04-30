@@ -20,14 +20,14 @@ export const AuthDispatchContext = createContext<AuthDispatch | undefined>(
   undefined
 );
 
-// const useAuthReducer = (token: Auth, action: Action): Auth => {
-//   switch(action.type){
-//     case 'UPDATE':
-//       return {...token, type: 'token', accessToken: action.payload.token}
-//     default:
-//       throw new Error('Invalid action');
-//   }
-// }
+const useAuthReducer = (token: AuthInfoProp, action: Action): AuthInfoProp => {
+  switch(action.type){
+    case 'UPDATE':
+      return {...token, type: 'token', accessToken: action.payload.token}
+    default:
+      throw new Error('Invalid action');
+  }
+}
 
 export const AuthProvider = ({children}: {children: ReactNode}) => {
 
@@ -36,8 +36,9 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
   // });
   // const [auth, dispatch] = useReducer(useAuthReducer, '');
   // console.log(`Parent: ${JSON.stringify(data)}`);
-  const search = useLocation().search;
-  const query = new URLSearchParams(search);
+  // 状態保持ができません！
+  // const search = useLocation().search;
+  // const query = new URLSearchParams(search);
   const { data } = useSearchQuery('token');
   const _auth: AuthInfoProp = { accessToken: data!, type: 'token' }
 

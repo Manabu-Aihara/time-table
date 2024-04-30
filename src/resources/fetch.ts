@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
 import { AuthInfoProp, TimelineEventProps } from "../lib/TimelineType";
 // import { AuthGuardContext } from "../components/templates/AuthParent";
@@ -39,4 +39,15 @@ export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse
   // return cache.get(postToken);
 	console.log(`Auth header: ${JSON.stringify(authResponse)}`);
   return authResponse.data;
+};
+
+export const refresh = async (prev: string): Promise<AxiosResponse<string>> => {
+  const response = await basicAxios.get('/refresh', {
+    headers: {
+			'Access-Control-Allow-Origin': '*',
+			'Authorization': `Bearer ${prev}`,
+			'credentials': 'include' // ここを追加。
+		}
+  });
+  return response.data;
 };

@@ -75,13 +75,16 @@ export type AuthInfoProp =
 // type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
 // type DecentAuth = ReturnType<typeof getDecentAuth>
 
-// type Some<V> = {type: V};
-type Option<T> = T
+type Option<V> =
+{ type: V; authId: number; group: number }
+| { type: V; accessToken: string };
+
 /**
  * AuthGuardContext<V>: Option<T>を受け取って、渡されたのがAuth型なら中身の値の型を返す。
  * 渡されたのがnumber型ならundefinedを返す。
  */
-export type AuthGuardContext<V extends Option<AuthInfoProp>> = V extends Option<infer R> ? R : never;
+export type AuthGuardContext<V extends Option<unknown>> = V extends Option<infer R> ? R : never;
 
-const opt1: AuthInfoProp = { accessToken: 'onigiri', type: 'token' };
- 
+type AGC = AuthGuardContext<Option<AuthInfoProp>>;
+const opt1: AGC = {type: 'token', accessToken: ''};
+const opt2: AGC = {type: 'auth', authId: 0, group: 100};
