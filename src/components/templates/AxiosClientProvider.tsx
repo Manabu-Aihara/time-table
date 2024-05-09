@@ -12,12 +12,13 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
   const tokenContext = authContext.type === 'token' ? authContext.accessToken : undefined;  
 
   const newAccessToken = useRefreshQuery();
+  console.log(`If token: ${JSON.stringify(tokenContext)}`);
 
   useEffect(() => {
     // リクエスト前に実行。headerに認証情報を付与する
     const requestIntercept = basicAxios.interceptors.request.use(
       (config) => {
-        if (config.headers["Authorization"] === `Bearer ${null}`) {
+        if (config.headers["Authorization"] !== `Bearer ${null}`) {
           console.log("It's passed if!");
           config.headers["Authorization"] = `Bearer ${tokenContext}`;
         } else {
@@ -46,7 +47,7 @@ export const AuthAxios = ({children}: {children: ReactNode}) => {
           // 新しくaccess_tokenを発行する
           // const newAccessToken = await useRefreshQuery();
           console.log(`New token: ${newAccessToken}`);
-          prevRequest!.headers["Authorization"] = `Bearer ${newAccessToken.data}`;
+          prevRequest!.headers["Authorization"] = await `Bearer ${newAccessToken.data}`;
           // 再度実行する
           return basicAxios(prevRequest!);
           // }

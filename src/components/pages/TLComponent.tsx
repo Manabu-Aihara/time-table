@@ -90,8 +90,8 @@ export const SampleTimeline = ({onShowFormView, targetEvent}: EventProps) => {
           />
         </chakra.div>
       </chakra.div>
-      <chakra.div flexShrink="0" scrollSnapAlign="start" className={topWidth} onClick={handleOuterBubbling}>
-        {showModal && <AddChildForm timelineEvent={targetEvent} closeClick={closeInputForm} ref={divRef} />}
+      <chakra.div flexShrink="0" scrollSnapAlign="start" onClick={handleOuterBubbling}>
+        {showModal && <AddChildForm selectedEvent={targetEvent} closeClick={closeInputForm} ref={divRef} />}
       </chakra.div>
       <TitleInputModal />
     </div>

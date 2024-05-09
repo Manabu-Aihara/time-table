@@ -2,7 +2,6 @@ import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar } from 'react-big-calendar'
 import { chakra } from '@chakra-ui/system';
-import cx from 'classnames';
 
 import { useEventsState } from '../../hooks/useContextFamily';
 import { TimelineEventProps } from '../../lib/TimelineType';
@@ -16,7 +15,6 @@ import localizer from '../../lib/Localization';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { topWidth } from '../sprinkles.responsive.css';
 import { gridArea } from './CalendarComponent.css';
-import { ClassNames } from '@emotion/react';
 
 interface EventProps {
   targetEvent: TimelineEventProps;
@@ -50,9 +48,15 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
     setShowModal(false);
   }
 
+  const calendarRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     divRef?.current?.scrollIntoView({behavior: 'smooth'});
     // console.log(`Calender outer: ${divRef.current?.outerHTML}`);
+    // const element = Array.from(calendarRef.current?.children || []).find(
+    //   (item) => item.className === 'rbc-calendar'
+    // );
+    const month_elem = calendarRef.current?.querySelector('.rbc-month-view');
+    // console.log(`Month view: ${month_elem?.classList.add()}`);
   }, [targetEvent]);
 
   // コンソールでの話し
@@ -72,14 +76,14 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   return (
     <div>
       <chakra.div display="flex" justifyContent="flex-start" overflowX="auto" scrollSnapType="x mandatory">
-        <chakra.div className={cx(gridArea, topWidth)} flexShrink="0" scrollSnapAlign="start">
+        <chakra.div className={gridArea} flexShrink="0" scrollSnapAlign="start">
           {/* <button className={topWidth}> */}
           <button>
             <Link to="/timeline">サンプルタイムライン</Link>
           </button>
           <TitleInputModal />
           {/* <div className={topWidth}> */}
-          <div>
+          <div ref={calendarRef}>
             <Calendar
               localizer={localizer}
               events={state}
@@ -97,7 +101,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
         <chakra.div flexShrink="0" scrollSnapAlign="start"
           className={topWidth} onClick={handleOuterBubbling}>
           {showModal &&
-            <AddChildForm timelineEvent={targetEvent}
+            <AddChildForm selectedEvent={targetEvent}
             closeClick={closeInputForm} ref={divRef} />
           }
         </chakra.div>

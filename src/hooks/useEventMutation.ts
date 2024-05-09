@@ -28,10 +28,9 @@ export const useUpdateMutation = (id: number | string) => {
 
   return useMutation({
     mutationFn: (timelineEvent: TimelineEventProps) => basicAxios.post(`/event/update/${id}`, timelineEvent),
-    onSuccess: (data, variables) => {
-      queryClient.setQueryData(["item", id], variables);
-      console.log(`こっちが本命？: ${JSON.stringify(data)}`);
+    onSuccess: (/* data, */variables) => {
+      queryClient.setQueryData(['detail', id], variables);
       eventCache.invalidateList();
     },
-  });  
+  });
 }

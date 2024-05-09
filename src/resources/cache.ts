@@ -12,8 +12,9 @@ export const eventKeys = {
 
 export const authKeys = {
   auth: ["auth"] as const,
+  pull: (searchKey: string) => [...authKeys.auth, "userID", {searchKey}] as const,
   // pulls: () => [...authKeys.all, "detail"] as const,
-  pull: (token: string) => [...authKeys.auth, "user_id", token] as const
+  verify: (token: string) => [...authKeys.auth, "detail", {token}] as const
 }
 // ② キャッシュ操作のためのカスタムフック
 // mutations.ts がある場合に必要に応じて宣言
@@ -36,7 +37,9 @@ export const useAuthCache = () => {
   const queryClient = useQueryClient();
 
   return useMemo(() => ({
-    invalidateAuth: (token: string) =>
-      queryClient.invalidateQueries({queryKey: authKeys.pull(token)})
+    invalidateSearch: (search: string) =>
+      queryClient.invalidateQueries({queryKey: authKeys.pull(search)}),
+    invalidateVerify: (token: string) =>
+      queryClient.invalidateQueries({queryKey: authKeys.verify(token)})
   }), [queryClient]);
 }

@@ -48,7 +48,7 @@ export const EventsContextProvider = ({ children }: { children: ReactNode }) => 
 
   const toString = Object.prototype.toString;
   // toString.call(new Date()); // [object Date]
-  console.log('Parent end type: ', toString.call(data?.slice(-1)[0].end));
+  // console.log('Parent end type: ', toString.call(data?.slice(-1)[0].end));
   const state: TimelineEventPropsList = [initialData].concat(data!);
   
   return (

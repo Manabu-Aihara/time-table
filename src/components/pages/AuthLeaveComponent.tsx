@@ -15,7 +15,7 @@ export const AuthLeavePage = () => {
   console.log(`とりあえず結果のID: ${JSON.stringify(data)}`);
   console.log(`とりあえず結果のerr: ${isError}`);
 
-  const strData = JSON.stringify(data, ['staff_id']);
+  const strData = JSON.stringify(data);
 
   useEffect(() => {
     const f = async () => {

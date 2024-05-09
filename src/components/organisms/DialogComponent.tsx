@@ -1,13 +1,13 @@
 import { Box } from "@chakra-ui/react";
 
 import { TitleInput } from './InputTitleDialog';
+import { AuthInfoProp } from "../../lib/TimelineType";
 import { useDialog } from '../../hooks/useDialog';
-import { AuthInfoProp } from '../../lib/TimelineType';
 import { useAuthContext } from '../../hooks/useContextFamily';
 import { useAuthQuery } from '../../resources/queries';
 
 import { addButton } from "./AddButtonComponent.css";
-import { topWidth } from '../sprinkles.responsive.css';
+import { ExcludeAxios, safeJsonParse, toJsonValue } from "../../lib/UtilityType";
 
 export const TitleInputModal = () => {
   const { Dialog, open, close } = useDialog();
@@ -15,22 +15,30 @@ export const TitleInputModal = () => {
   const authContext = useAuthContext();  
   const tokenContext = authContext.type === 'token' ? authContext.accessToken : undefined;  
   const { data } = useAuthQuery(tokenContext!);
-  // or const { data } = useSearchQuery('userID');
+
   console.log(`Json stringfy: ${JSON.stringify(data)}`);
   const strData = JSON.stringify(data);
-  const value = JSON.parse(strData);
-  console.log(`Json parse: ${JSON.stringify(value)}`);
+  // パターン 1
+  const objValue = JSON.parse(strData);
   const guard: AuthInfoProp = {
-    authId: value.staff_id, group: value.group_id, type: 'auth'
-  };
+    authId: objValue.staff_id, group: objValue.group_id, type: 'auth'
+  } as const;
+  // パターン 2
+  // 型安全だか、うまくいかない
+  // const objValue = safeJsonParse(strData) as AuthInfoProp;
+  // const guard = objValue.type === 'auth' ? {
+  //     authId: objValue.authId, group: objValue.group, type: 'auth' as const
+  // } : objValue
+  // パターン 3
+  // 型安全だか、うまくいかない
 
   return (
-    // <Box className={topWidth}>
     <Box>
       <button onClick={open} className={addButton}>Add Event</button>
       <Dialog>
         <p>入力フォームコンテンツ</p>
         <TitleInput {...guard} />
+        {/* <TitleInput auth={jsonValue} /> */}
         <button onClick={close}>close</button>
       </Dialog>
     </Box>

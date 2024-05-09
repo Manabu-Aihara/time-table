@@ -1,11 +1,11 @@
 import { style } from '@vanilla-extract/css';
 
 export const formParent = style({
-  height: '40%',
+  height: '75%',
   border: 'lightgray 2px solid',
   borderRadius: '3% 4%',
   margin: '26% 1% 0 1%',
-  padding: '0 2%'
+  padding: '3% 3%',
 });
 
 export const fixedClose = style({
@@ -15,7 +15,7 @@ export const fixedClose = style({
   width: '10%',
   height: '10vh',
   position: 'fixed',
-  backgroundColor: 'gray',
+  backgroundColor: 'blue',
   borderRadius: '12%',
   padding: '2%'
 });

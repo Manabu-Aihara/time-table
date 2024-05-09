@@ -83,8 +83,8 @@ type Option<V> =
  * AuthGuardContext<V>: Option<T>を受け取って、渡されたのがAuth型なら中身の値の型を返す。
  * 渡されたのがnumber型ならundefinedを返す。
  */
-export type AuthGuardContext<V extends Option<unknown>> = V extends Option<infer R> ? R : never;
+type ExpectedAuth<V extends Option<unknown>> = V extends Option<infer R> ? R : never;
 
-type AGC = AuthGuardContext<Option<AuthInfoProp>>;
-const opt1: AGC = {type: 'token', accessToken: ''};
-const opt2: AGC = {type: 'auth', authId: 0, group: 100};
+export type AuthGuardContext = ExpectedAuth<Option<AuthInfoProp>>;
+const opt1: AuthGuardContext = {type: 'token', accessToken: ''};
+const opt2: AuthGuardContext = {type: 'auth', authId: 0, group: 100};

@@ -19,3 +19,19 @@ export const fetchGetId = async (postToken: string): Promise<number> => {
 	console.log(`とりあえず結果のID: ${JSON.stringify(resultID)}`);
 	return resultID;
 }
+
+// export const useEventsQuery = () => {
+//   const tokenContext = useAuthContext();
+// 	return useQuery({
+//     queryKey: eventKeys.list(),
+//     queryFn: () => fetchEventsData(tokenContext.accessToken),
+//     select: useCallback((results: TimelineEventProps[]) => {
+//       const conv = results.map((result) => ({
+//         start: result.start_time?.toDate(),
+//         end: result.end_time?.toDate(),
+//         ...result
+//       }));
+//       return conv;
+//     }, []),
+//   });
+// }

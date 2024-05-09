@@ -14,7 +14,7 @@ export const fetchEventsData = async (postToken: string): Promise<TimelineEventP
 			'credentials': 'include' // ここを追加。
 		}
 	});
-	console.log(`Event fetch data: ${JSON.stringify(data)}`, data.slice(-1)[0].end);
+	console.log(`Event fetch data: ${JSON.stringify(data)}`);
 	return data;
 	// .then(res => res.json());
 	// .then(json => console.log(json))
@@ -42,7 +42,7 @@ export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse
 };
 
 export const refresh = async (prev: string): Promise<AxiosResponse<string>> => {
-  const response = await basicAxios.get('/refresh', {
+  const response = await basicAxios.get<AxiosResponse>('/refresh', {
     headers: {
 			'Access-Control-Allow-Origin': '*',
 			'Authorization': `Bearer ${prev}`,
