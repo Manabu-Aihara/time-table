@@ -25,8 +25,8 @@ type NewTimelineItem = Omit<TimelineItem<Date> & EventItem,
 /**
  * Finally Event type
  * type TimelineEventProps = {
-	id: Id → number;
-	group: Id → number;
+	id: Id;
+	group: Id;
 	// title?: React.ReactNode;
 	start_time?: DateType → monment.Moment;
 	end_time?: DateType → moment.Moment;

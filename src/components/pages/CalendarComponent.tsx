@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar } from 'react-big-calendar'
+import { Calendar, Event } from 'react-big-calendar'
+import withDragAndDrop, { withDragAndDropProps } from 'react-big-calendar/lib/addons/dragAndDrop'
 import { chakra } from '@chakra-ui/system';
 
 import { useEventsState } from '../../hooks/useContextFamily';
@@ -34,9 +35,39 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   }), []);
 
   const state = useEventsState();
-  console.log(`Calendar state: ${JSON.stringify(state)}`);
+  // console.log(`Calendar state: ${JSON.stringify(state)}`);
 
-	const [showModal, setShowModal] = useState(false);
+  type PickEvent = Pick<TimelineEventProps, 'start' | 'end'>
+  const [events, setEvents] = useState<PickEvent[]>([...state]);
+
+  const DnDCalendar = withDragAndDrop(Calendar<TimelineEventProps>);
+  const onEventResize: withDragAndDropProps['onEventResize'] = data => {
+  const { start, end } = data
+
+    setEvents(currentEvents => {
+      const firstEvent = {
+        start: new Date(start),
+        end: new Date(end)
+      }
+      return [...currentEvents, firstEvent]
+    });
+  }
+  
+  const onEventDrop: withDragAndDropProps['onEventDrop'] = data => {
+    const { start, end } = data
+
+    setEvents(currentEvents => {
+      const firstEvent = {
+        start: new Date(start),
+        end: new Date(end)
+      }
+      console.log(`Drop action: ${start}, ${end}`);
+      // console.log(typeof events)
+      return [...currentEvents, firstEvent]
+    });
+  }
+
+  const [showModal, setShowModal] = useState(false);
 	const divRef = useRef<HTMLDivElement>(null);
 
   // TypeScriptでReactのイベントにどう型指定するか
@@ -52,9 +83,6 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   useEffect(() => {
     divRef?.current?.scrollIntoView({behavior: 'smooth'});
     // console.log(`Calender outer: ${divRef.current?.outerHTML}`);
-    // const element = Array.from(calendarRef.current?.children || []).find(
-    //   (item) => item.className === 'rbc-calendar'
-    // );
     const month_elem = calendarRef.current?.querySelector('.rbc-month-view');
     // console.log(`Month view: ${month_elem?.classList.add()}`);
   }, [targetEvent]);
@@ -84,12 +112,14 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
           <TitleInputModal />
           {/* <div className={topWidth}> */}
           <div ref={calendarRef}>
-            <Calendar
+            <DnDCalendar
               localizer={localizer}
               events={state}
               defaultView='week'
               startAccessor="start"
               endAccessor="end"
+              onEventDrop={onEventDrop}
+              onEventResize={onEventResize}
               onSelectEvent={handleSelectEvent}
               // onSelectSlot={handleSelectSlot}
               selectable

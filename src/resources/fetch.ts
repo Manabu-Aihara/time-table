@@ -6,7 +6,7 @@ import basicAxios from "../lib/AuthInfo";
 
 export const fetchEventsData = async (postToken: string): Promise<TimelineEventProps[]> => {
 	const { data } = await basicAxios.request<TimelineEventProps[]>({
-		url: 'http://test.yobo-system.net/event/all',
+		url: '/event/all',
 		method: 'GET',
 		headers: {
 			'Access-Control-Allow-Origin': '*',
@@ -25,7 +25,7 @@ export const fetchEventsData = async (postToken: string): Promise<TimelineEventP
 const cache = new Map();
 
 export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse<AuthInfoProp>> => {
-  const authResponse = await basicAxios.post<AxiosResponse>('http://test.yobo-system.net/timetable/inquiry', postToken,
+  const authResponse = await basicAxios.post<AxiosResponse>('/timetable/inquiry', postToken,
 		{
 			headers: {
 				'Access-Control-Allow-Origin': '*',
@@ -42,7 +42,7 @@ export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse
 };
 
 export const refresh = async (prev: string): Promise<AxiosResponse<string>> => {
-  const response = await basicAxios.get<AxiosResponse>('http://test.yobo-system.net/refresh', {
+  const response = await basicAxios.get<AxiosResponse>('/refresh', {
     headers: {
 			'Access-Control-Allow-Origin': '*',
 			'Authorization': `Bearer ${prev}`,

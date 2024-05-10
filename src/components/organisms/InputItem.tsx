@@ -54,9 +54,9 @@ export const AddChildForm = forwardRef(
 	// リテラルタイプ化
 	const selectedStaff = `${selectedEvent.staff_id}` as const;
 	const { data: infoContext } = useSearchQuery('userID');
-	infoContext === selectedStaff
-		? console.log(`Target event staff: ${infoContext}, Passing!`)
-		: console.log(`Parse staff: ${selectedStaff}, Dout!`);
+	// infoContext === selectedStaff
+	// 	? console.log(`Target event staff: ${infoContext}, Passing!`)
+	// 	: console.log(`Parse staff: ${selectedStaff}, Dout!`);
 
 	const { Dialog, open, close } = useDialog();
 
