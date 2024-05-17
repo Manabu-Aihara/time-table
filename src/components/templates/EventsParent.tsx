@@ -38,6 +38,7 @@ export const EventsContextProvider = ({ children }: { children: ReactNode }) => 
     staff_id: 1000,
     group: 1,
     title: 'Learn cool stuff',
+    // moment.utc("2019-02-21 09:00").local().format();  //"2019-02-21T18:00:00+09:00"
     start_time: moment(),
     end_time: moment().add(1, 'hours'),
     start: new Date(),
@@ -45,7 +46,7 @@ export const EventsContextProvider = ({ children }: { children: ReactNode }) => 
   }
 
   const { data } = useEventsQuery();
-
+  // console.log(`Parent events: ${data}`);
   const toString = Object.prototype.toString;
   // toString.call(new Date()); // [object Date]
   // console.log('Parent end type: ', toString.call(data?.slice(-1)[0].end));

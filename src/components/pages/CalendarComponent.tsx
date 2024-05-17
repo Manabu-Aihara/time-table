@@ -1,11 +1,12 @@
 import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Event } from 'react-big-calendar'
+import { Calendar } from 'react-big-calendar'
 import withDragAndDrop, { withDragAndDropProps } from 'react-big-calendar/lib/addons/dragAndDrop'
 import { chakra } from '@chakra-ui/system';
 
 import { useEventsState } from '../../hooks/useContextFamily';
-import { TimelineEventProps } from '../../lib/TimelineType';
+import { TimelineEventProps, PickDate } from '../../lib/TimelineType';
+import { useUpdateDateListMutation } from '../../hooks/useEventMutation';
 import { ItemComponent } from '../molecules/EventCardComponent';
 import { MyWeek } from '../organisms/DaysClassComponent';
 import views from '../organisms/DaysComponent';
@@ -14,8 +15,12 @@ import { AddChildForm } from "../organisms/InputItem";
 import localizer from '../../lib/Localization';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { topWidth } from '../sprinkles.responsive.css';
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
+import cx from 'classnames';
+// import { topWidth } from '../sprinkles.responsive.css';
 import { gridArea } from './CalendarComponent.css';
+import { useMouseEvents } from '../../hooks/useMouseHandle';
+import { eventData } from '../../lib/SampleState';
 
 interface EventProps {
   targetEvent: TimelineEventProps;
@@ -24,8 +29,7 @@ interface EventProps {
 
 export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   const components = useMemo(() => ({
-    event: ({ event }: { event: TimelineEventProps }) => {
-      // console.log(`When move?: ${JSON.stringify(event)}`);
+    event: ({ event }: { event: PickDate }) => {
       return (
         <>
           <ItemComponent {...event} />
@@ -35,37 +39,36 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   }), []);
 
   const state = useEventsState();
-  // console.log(`Calendar state: ${JSON.stringify(state)}`);
-
-  type PickEvent = Pick<TimelineEventProps, 'start' | 'end'>
-  const [events, setEvents] = useState<PickEvent[]>([...state]);
+  console.log(`Calendar state: ${JSON.stringify(state)}`);
 
   const DnDCalendar = withDragAndDrop(Calendar<TimelineEventProps>);
-  const onEventResize: withDragAndDropProps['onEventResize'] = data => {
-  const { start, end } = data
+  const { onEventResize, onEventDrop, eventsDate } = useMouseEvents();
 
-    setEvents(currentEvents => {
-      const firstEvent = {
-        start: new Date(start),
-        end: new Date(end)
-      }
-      return [...currentEvents, firstEvent]
-    });
-  }
-  
-  const onEventDrop: withDragAndDropProps['onEventDrop'] = data => {
-    const { start, end } = data
+  // idのだけの配列
+  const eventDateIds = eventsDate.map(eventDate => eventDate.id.toString());
+  console.log(`Calendar pick id: ${eventDateIds}`);
+  const updateEvents = useUpdateDateListMutation(eventDateIds);
 
-    setEvents(currentEvents => {
-      const firstEvent = {
-        start: new Date(start),
-        end: new Date(end)
-      }
-      console.log(`Drop action: ${start}, ${end}`);
-      // console.log(typeof events)
-      return [...currentEvents, firstEvent]
-    });
-  }
+  // useEffect(() => {
+  //   const nowEvent = eventsDate.find(evtDate => {
+  //     evtDate.id !== undefined ? evtDate : {}
+  //   });
+  //   console.log(`Now get event: ${JSON.stringify(nowEvent)}`);
+  //   const newState = state.filter(s => {
+  //     console.log(`Transform state: ${s.start}, ${s.end}, "ID ${s.id}"`);
+  //     s.id === nowEvent?.id && {id: nowEvent.id, start: nowEvent.start, end: nowEvent.end}
+  //   });
+  //   newState && state.concat(newState);
+  //   eventsDate.map((evtDate) => {
+  //     console.log(`Mouse action: ${evtDate.start}, ${evtDate.end}, "ID ${evtDate.id}"`);
+  //   });
+  // }, [onEventDrop, onEventResize]);
+  // updateEvent.mutate({
+  //   id: eventDate!.id,
+  //   start: eventDate?.start,
+  //   end: eventDate?.end
+  // });
+  console.log(`Pick time: ${JSON.stringify(eventsDate)}`);
 
   const [showModal, setShowModal] = useState(false);
 	const divRef = useRef<HTMLDivElement>(null);
@@ -118,8 +121,9 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
               defaultView='week'
               startAccessor="start"
               endAccessor="end"
-              onEventDrop={onEventDrop}
-              onEventResize={onEventResize}
+              onEventDrop={useMemo(() => onEventDrop, [])}
+              onEventResize={useMemo(() => onEventResize, [])}
+              resizable
               onSelectEvent={handleSelectEvent}
               // onSelectSlot={handleSelectSlot}
               selectable
@@ -128,8 +132,11 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
             />
           </div>
         </chakra.div>
+        <chakra.div>
+          <button onClick={() => updateEvents.mutate(eventsDate)}>UpdateUpdate</button>
+        </chakra.div>
         <chakra.div flexShrink="0" scrollSnapAlign="start"
-          className={topWidth} onClick={handleOuterBubbling}>
+          onClick={handleOuterBubbling}>
           {showModal &&
             <AddChildForm selectedEvent={targetEvent}
             closeClick={closeInputForm} ref={divRef} />

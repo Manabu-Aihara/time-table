@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter as TopRouter } from 'react-router-dom';
 
 import { Index } from './components';
+import DnDApp from './DnDApp';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // [SOLVED] useRoutes() may be used only in the context of a Router | How to use useRoutes in Reactjs?
@@ -10,6 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <TopRouter>
     <React.StrictMode>
       <Index />
+      {/* <DnDApp></DnDApp> */}
     </React.StrictMode>
   </TopRouter>,
 );

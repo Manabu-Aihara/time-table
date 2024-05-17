@@ -13,7 +13,7 @@ import startOfHour from 'date-fns/startOfHour'
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
-const App: FC = () => {
+const DnDApp: FC = () => {
   const [events, setEvents] = useState<Event[]>([
     {
       title: 'Learn cool stuff',
@@ -30,14 +30,13 @@ const App: FC = () => {
         start: new Date(start),
         end: new Date(end)
       }
-      // console.log(`コレ何：${JSON.stringify(currentEvents)}`);
-      // console.log(typeof events)
       return [...currentEvents, firstEvent]
-    })
+    });
+    console.log(`Resize: ${JSON.stringify(events)}`);
   }
 
   const onEventDrop: withDragAndDropProps['onEventDrop'] = data => {
-    console.log(data)
+    console.log(`Drop: ${data}`)
   }
 
   const handleSelectEvent = useCallback(
@@ -96,4 +95,4 @@ const localizer = dateFnsLocalizer({
 //\@ts-ignore
 const DnDCalendar = withDragAndDrop(Calendar)
 
-export default App
+export default DnDApp

@@ -4,7 +4,7 @@ import { ChakraProvider, Box, Text, Input, Button, Select } from '@chakra-ui/rea
 
 // import { EventItem } from '../../lib/EventItem';
 import { TimelineEventProps } from '../../lib/TimelineType';
-import { useUpdateMutation } from '../../hooks/useEventMutation';
+import { useUpdateEventMutation } from '../../hooks/useEventMutation';
 import { useDialog } from '../../hooks/useDialog';
 
 import { boundaryTop, boundaryY, buttonPosition } from '../sprinkles.responsive.css';
@@ -49,7 +49,7 @@ export const AddChildForm = forwardRef(
 	// 	// console.log(actionMeta);
 	// }
 
-	const updateEvent = useUpdateMutation(selectedEvent.id);
+	const updateEvent = useUpdateEventMutation(selectedEvent.id);
 
 	// リテラルタイプ化
 	const selectedStaff = `${selectedEvent.staff_id}` as const;

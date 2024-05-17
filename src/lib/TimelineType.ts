@@ -58,22 +58,12 @@ export type TimelineEventProps = Merge<NewTimelineItem, {
   onClick?: () => void;
 }>;
 
+export type PickDate = Pick<TimelineEventProps, 'start' | 'end' | 'id'>;
+
 // ここから、認証Prop
 export type AuthInfoProp =
 	{ type: 'auth'; authId: number; group: number }
 	| { type: 'token'; accessToken: string };
-// export type Auth = { authId?: number; accessToken?: string; };
-// type X = Auth['type'];
-// export const getDecentAuthToken = (auth: Auth): Auth | undefined => {
-// 	const decentAuth = auth.type === 'token' ? auth : auth;
-// 	return decentAuth
-// }
-// export const getDecentAuthId = (auth: Auth): Auth | undefined => {
-// 	const decentAuth = auth.type === 'auth' ? auth : auth;
-// 	return decentAuth
-// }
-// type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
-// type DecentAuth = ReturnType<typeof getDecentAuth>
 
 type Option<V> =
 { type: V; authId: number; group: number }

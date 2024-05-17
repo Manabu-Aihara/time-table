@@ -14,7 +14,7 @@ export const useSearchQuery = (searchKey: string) => {
   const query = new URLSearchParams(search);
 
   return useQuery({
-    queryKey: authKeys.pull(searchKey),
+    queryKey: authKeys.search(searchKey),
     queryFn: () => query.get(searchKey)
   });
 }

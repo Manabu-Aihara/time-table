@@ -10,7 +10,7 @@ import { AddChildForm } from "../organisms/InputItem";
 
 // make sure you include the timeline stylesheet or the timeline will not be styled
 import 'react-calendar-timeline/lib/Timeline.css';
-import { topWidth } from '../sprinkles.responsive.css';
+// import { topWidth } from '../sprinkles.responsive.css';
 
 import moment from 'moment';
 
