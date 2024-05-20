@@ -1,0 +1,19 @@
+  // useEffect(() => {
+    // const nowEvent = eventsDate.find(evtDate => {
+    //   evtDate.id !== undefined ? evtDate : {}
+    // });
+    // console.log(`Now get event: ${JSON.stringify(nowEvent)}`);
+    // const updateState = state.filter(s => {
+    //   console.log(`Transform state: ${s.start}, ${s.end}, "ID ${s.id}"`);
+    //   nowEvent?.id === s.id ? {id: nowEvent.id, start: nowEvent.start, end: nowEvent.end} : undefined
+    // });
+    // const newState = updateState ? state.concat(updateState): state;
+  //   eventsDate.map((evtDate) => {
+  //     console.log(`Mouse action: ${evtDate.start}, ${evtDate.end}, "ID ${evtDate.id}"`);
+  //   });
+  // }, [onEventDrop, onEventResize]);
+  // updateEvent.mutate({
+  //   id: eventDate!.id,
+  //   start: eventDate?.start,
+  //   end: eventDate?.end
+  // });

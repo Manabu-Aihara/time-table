@@ -32,13 +32,13 @@ export const boundaryX = atoms({
 	}
 });
 
-// export const topWidth = atoms({
-// 	width: {
-// 		mobile: 'full',
-// 		tablet: 'full',
-// 		desktop: 'half'
-// 	}
-// });
+export const topWidth = atoms({
+	width: {
+		mobile: 'full',
+		tablet: 'full',
+		desktop: 'half'
+	}
+});
 
 export const buttonPosition = atoms({
 	position: {

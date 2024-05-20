@@ -4,45 +4,46 @@ import { withDragAndDropProps, EventInteractionArgs } from 'react-big-calendar/l
 import { PickDate, TimelineEventProps } from '../lib/TimelineType';
 
 export const useMouseEvents = () => {
-  const [eventsDate, setEventsDate] = useState<PickDate[]>([]);
+  // const [eventsDate, setEventsDate] = useState<PickDate[]>([]);
+  const [eventList, setEventList] = useState<TimelineEventProps[]>([]);
   
-  const onEventResize: withDragAndDropProps<TimelineEventProps>['onEventResize'] = data => {
-  // const onEventResize = useCallback(({ event: handleEvent, start, end }: EventInteractionArgs<TimelineEventProps>) => {
-    const { event: handleEvent, start, end } = data;
+  // const onEventResize: withDragAndDropProps<TimelineEventProps>['onEventResize'] = data => {
+  const onEventResize = useCallback(({ event: handleEvent, start, end }: EventInteractionArgs<TimelineEventProps>) => {
+    // const { event: handleEvent, start, end } = data;
 
-    setEventsDate(currentEvents => {
-      // const target = currentEvents.find((evt) => evt.id === handleEvent.id);
-      const resizedTime: PickDate =  {
-        id: handleEvent.id,
+    setEventList(currentEvents => {
+      const target = currentEvents.find((evt) => evt.id === handleEvent.id);
+      const resizedEvent: TimelineEventProps =  {
+        ...handleEvent,
         start: new Date(start),
         end: new Date(end)
       }
-      console.log(`before: ${JSON.stringify(currentEvents)}, resize: ${JSON.stringify(resizedTime)}`);
-      return [...currentEvents, resizedTime]
+      console.log(`before: ${JSON.stringify(currentEvents)}, resize: ${JSON.stringify(resizedEvent)}`);
+      return [...currentEvents, resizedEvent]
     });
       // console.log(`Pick time R: ${JSON.stringify(eventsDate)}`);
-  }
-    // }, []);
+  // }
+  }, []);
 
-  const onEventDrop: withDragAndDropProps<TimelineEventProps>['onEventDrop'] = data => {
-  // const onEventDrop = useCallback(({ event: handleEvent, start, end }: EventInteractionArgs<TimelineEventProps>) => {
-    const { event: handleEvent, start, end } = data;
+  // const onEventDrop: withDragAndDropProps<TimelineEventProps>['onEventDrop'] = data => {
+  const onEventDrop = useCallback(({ event: handleEvent, start, end }: EventInteractionArgs<TimelineEventProps>) => {
+    // const { event: handleEvent, start, end } = data;
 
-    setEventsDate(currentEvents => {
-      const target = currentEvents.find((evt) => evt.id === handleEvent.id);
-      const movedTime: PickDate =  {
-        id: handleEvent.id,
+    setEventList(currentEvents => {
+      // const target = currentEvents.find((evt) => evt.id === handleEvent.id);
+      const movedEvent: TimelineEventProps =  {
+        ...handleEvent,
         start: new Date(start),
         end: new Date(end)
       }
-      console.log(`before: ${JSON.stringify(currentEvents)}, move: ${JSON.stringify(movedTime)}`);
-      return [...currentEvents, movedTime]
+      console.log(`before: ${JSON.stringify(currentEvents)}, move: ${JSON.stringify(movedEvent)}`);
+      return [...currentEvents, movedEvent]
     });
     // console.log(`Pick time D: ${JSON.stringify(eventsDate)}`);
-    }
-  // }, []);
+    // }
+  }, []);
 
-  return {onEventResize, onEventDrop, eventsDate};
+  return {onEventResize, onEventDrop, eventList};
 }
 
 const useMouseEvent = () => {

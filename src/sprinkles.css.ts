@@ -31,7 +31,7 @@ const responsiveStyles = defineProperties({
     paddingLeft: space,
     paddingRight: space,
     // etc.
-    // width: horizon,
+    width: horizon,
     position: ['fixed', 'static']
   },
   shorthands: {

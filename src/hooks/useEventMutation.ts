@@ -44,7 +44,7 @@ export const useUpdateDateListMutation = (targetIds: string[]) => {
   const eventCache = useEventCache();
 
   return useMutation({
-    mutationFn: (timeBeltArray: PickDate[]) => 
+    mutationFn: (timeBeltArray: TimelineEventProps[]) => 
       basicAxios.post(`/date/update`, {
         data: timeBeltArray
       }),
