@@ -68,6 +68,7 @@ export const useEventsQuery = () => {
     ...queryInfo,
     data: useMemo(() => data?.map(item => ({
       // That's point! "="
+      // 日本標準時
       start: item.start = moment(item.start).toDate(),
       end: item.end = moment(item.end).toDate(),
       // summary: item.summary = 'sheep',

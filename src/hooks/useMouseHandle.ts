@@ -12,8 +12,9 @@ export const useMouseEvents = () => {
     // const { event: handleEvent, start, end } = data;
 
     setEventList(currentEvents => {
-      const target = currentEvents.find((evt) => evt.id === handleEvent.id);
+      // const target = currentEvents.find((evt) => evt.id === handleEvent.id);
       const resizedEvent: TimelineEventProps =  {
+        // スプレッドが先だったんですね…
         ...handleEvent,
         start: new Date(start),
         end: new Date(end)

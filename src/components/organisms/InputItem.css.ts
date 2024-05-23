@@ -4,8 +4,8 @@ export const formParent = style({
   height: '40%',
   border: 'lightgray 2px solid',
   borderRadius: '3% 4%',
-  margin: '26% 1% 0 1%',
-  padding: '0 2%'
+  // margin: '26% 1% 0 1%',
+  padding: '3% 3%'
 });
 
 export const fixedClose = style({

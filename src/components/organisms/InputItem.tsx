@@ -35,7 +35,7 @@ export const AddChildForm = forwardRef(
 	// const [done, setDone] = useState<string | undefined>(options[0].value);
 	// 君から卒業
 	// const dispatch = useEventsDispatch();
-  console.log(`Childの今のイベント: ${JSON.stringify(selectedEvent)}`);
+  console.log(`Handle Event: ${JSON.stringify(selectedEvent)}`);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>) => {
 		// name, valueという変数名で決まっているようだ
@@ -48,6 +48,7 @@ export const AddChildForm = forwardRef(
 	// 	setDone(selectedOption?.label);
 	// 	// console.log(actionMeta);
 	// }
+	// console.log(`InputItem ref: ${JSON.stringify(childRef)}`);
 
 	const updateEvent = useUpdateEventMutation(selectedEvent.id);
 

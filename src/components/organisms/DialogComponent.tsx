@@ -16,17 +16,17 @@ export const TitleInputModal = () => {
   const tokenContext = authContext.type === 'token' ? authContext.accessToken : undefined;  
   const { data } = useAuthQuery(tokenContext!);
 
-  console.log(`Json stringfy: ${JSON.stringify(data)}`);
   const strData = JSON.stringify(data);
   // パターン 1
   const objValue = JSON.parse(strData);
+  console.log(`Json type: ${typeof objValue.staff_id}, ${typeof objValue.group_id}`);
   const guard: AuthInfoProp = {
     authId: objValue.staff_id, group: objValue.group_id, type: 'auth'
   } as const;
   // パターン 2
   // 型安全だか、うまくいかない
   // const objValue = safeJsonParse(strData) as AuthInfoProp;
-  // const guard = objValue.type === 'auth' ? {
+  // const guard: AuthInfoProp = objValue.type === 'auth' ? {
   //     authId: objValue.authId, group: objValue.group, type: 'auth' as const
   // } : objValue
   // パターン 3

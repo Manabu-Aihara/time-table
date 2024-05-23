@@ -7,8 +7,8 @@ import { chakra } from '@chakra-ui/system';
 import { useEventsState } from '../../hooks/useContextFamily';
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { useMouseEvents } from '../../hooks/useMouseHandle';
-import { useUpdateDateListMutation } from '../../hooks/useEventMutation';
 import { ItemComponent } from '../molecules/EventCardComponent';
+import { TimesUpdateButton } from '../molecules/UpdateButtonComponent';
 import { MyWeek } from '../organisms/DaysClassComponent';
 import views from '../organisms/DaysComponent';
 import { TitleInputModal } from '../organisms/DialogComponent'; 
@@ -19,7 +19,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import cx from 'classnames';
 import { topWidth } from '../sprinkles.responsive.css';
-import { gridArea } from './CalendarComponent.css';
+import { flexXmandatory, gridArea } from './CalendarComponent.css';
 // import { eventData } from '../../lib/SampleState';
 
 interface EventProps {
@@ -46,22 +46,17 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   const DnDCalendar = withDragAndDrop(Calendar<TimelineEventProps>);
   const { onEventResize, onEventDrop, eventList } = useMouseEvents();
 
-  // idのだけの配列
-  const eventDateIds = eventList.map(eventItem => eventItem.id.toString());
-  console.log(`Calendar pick id: ${eventDateIds}`);
-  const updateEvents = useUpdateDateListMutation(eventDateIds);
-
   const newState = eventList ? state.concat(eventList) : state;
-  console.log(`Pick time: ${JSON.stringify(eventList)}`);
+  console.log(`Expect update events: ${JSON.stringify(eventList)}`);
 
+  // Viewの切り替え調節、このまんま使える
   const [displayDate, setDisplayDate] = useState(new Date());
   console.log(`What rbc date: ${displayDate}`);
-  const [returnView, setReturnView] = useState<View>();
   const onNavigate = useCallback((newDate: Date) => setDisplayDate(newDate), [setDisplayDate]);
+  const [returnView, setReturnView] = useState<View>();
   const onView = useCallback((newView: View) => setReturnView(newView), [setReturnView]);
 
   console.log(`Calendar state: ${JSON.stringify(newState)}`);
-
 
   /**
    * Issue summary & progress
@@ -78,21 +73,17 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
     setShowModal(false);
   }
 
-  // const calendarRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    divRef?.current?.scrollIntoView({behavior: 'smooth'});
+    divRef.current?.scrollIntoView({behavior: 'smooth'});
+    // divRefs.current[1].scrollIntoView({behavior: 'smooth'});
     console.log(`Calender outer: ${divRef.current?.outerHTML}`);
-    // console.log(`Modal Apparance: ${JSON.stringify(targetEvent)}`);
+    // console.log(`Form Apparance: ${JSON.stringify(targetEvent)}`);
     // const month_elem = calendarRef.current?.querySelector('.rbc-month-view');
     // console.log(`Month view: ${month_elem?.classList.add()}`);
   }, [targetEvent]);
 
-  // コンソールでの話し
-  const toString = Object.prototype.toString;
-  // toString.call(new Date()); // [object Date]
   const handleSelectEvent = useCallback((callingEvent: TimelineEventProps) => {
-    const { id, title } = callingEvent;
-    console.log(`選んだイベント: ${title}: ${toString.call(id)}`);
+    console.log(`Selected event: ${JSON.stringify(callingEvent)}`);
     onShowFormView(callingEvent);
     setShowModal(true);
   }, []);
@@ -102,21 +93,24 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   }
 
   return (
-    <div>
+    <chakra.div>
       <TitleInputModal />
-      <chakra.div display="flex" justifyContent="flex-start" overflowX="auto" scrollSnapType="x mandatory">
+      {eventList.length > 0 &&
+        <TimesUpdateButton timeChangeEvents={eventList} />}
+      <chakra.div className={flexXmandatory}>
         <chakra.div className={cx(gridArea, topWidth)} flexShrink="0" scrollSnapAlign="start">
-          <button onClick={() => updateEvents.mutate(eventList)}>UpdateUpdate</button>
           <button>
             <Link to="/timeline">サンプルタイムライン</Link>
           </button>
-          {/* <div className={topWidth}> */}
-          <chakra.div overflowX='hidden'>
+          {/* 【CSS】overflowの使い方解説！要素のはみ出し解決
+           https://zero-plus.io/media/overflow/ */}
+          <chakra.div overflowX="hidden">
             <DnDCalendar
               date={displayDate}
               localizer={localizer}
               events={newState}
-              // defaultView='week'
+              // ドラッグ・アンド・ドロップ、リサイズ後、weekに戻ります
+              defaultView="week"
               startAccessor="start"
               endAccessor="end"
               onNavigate={onNavigate}
@@ -124,7 +118,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
               onEventResize={onEventResize}
               resizable
               onSelectEvent={handleSelectEvent}
-              // onSelectSlot={handleSelectSlot}
+              // onSelectSlot={}
               selectable
               onView={onView}
               components={components}
@@ -141,6 +135,6 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
           }
         </chakra.div>
       </chakra.div>
-    </div>
+    </chakra.div>
   );
 }

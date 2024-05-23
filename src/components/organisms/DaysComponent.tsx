@@ -68,7 +68,8 @@ const views = {
   views: {
     month: true,
     week: true,
-    day: true
+    day: true,
+    agenda: true
   },
   // ... other props
 };

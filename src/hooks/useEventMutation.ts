@@ -65,7 +65,7 @@ export const useUpdateDateListMutation = (targetIds: string[]) => {
   });
 }
 
-export const useUpdateDateMutation = (targetId: number | string) => {
+const useUpdateDateMutation = (targetId: number | string) => {
   const queryClient = useQueryClient();
   const eventCache = useEventCache();
 
