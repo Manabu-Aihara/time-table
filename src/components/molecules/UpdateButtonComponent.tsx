@@ -1,5 +1,5 @@
 import { forwardRef, Ref } from "react";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { ChakraProvider, Box, Button, Text } from "@chakra-ui/react";
 
 import { useUpdateDateListMutation } from "../../hooks/useEventMutation";
 import { TimelineEventProps } from "../../lib/TimelineType";
@@ -21,9 +21,13 @@ export const TimesUpdateButton = forwardRef(
   const updateEvents = useUpdateDateListMutation(timeChangeEventIds);
 
   return (
-    <Box ref={buttonRef}>
-      <Button onClick={() => updateEvents.mutate(timeChangeEvents)}>変更する</Button>
-      <Text>{timeChangeEvents.length}</Text>
-    </Box>
-  )
+    <ChakraProvider>
+      {timeChangeEvents.length > 0 &&
+        <Box ref={buttonRef}>
+          <Button onClick={() => updateEvents.mutate(timeChangeEvents)}>変更する</Button>
+          <Text>変更回数: {timeChangeEvents.length}</Text>
+        </Box>
+      }
+    </ChakraProvider>
+  );
 });

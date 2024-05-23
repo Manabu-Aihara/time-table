@@ -28,16 +28,6 @@ interface EventProps {
 }
 
 export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
-  const components = useMemo(() => ({
-    event: ({ event }: { event: TimelineEventProps }) => {
-      return (
-        <>
-          <ItemComponent {...event} />
-        </>
-      );
-    }
-  }), []);
-
   const state = useEventsState();
 
   /**
@@ -75,8 +65,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
 
   useEffect(() => {
     divRef.current?.scrollIntoView({behavior: 'smooth'});
-    // divRefs.current[1].scrollIntoView({behavior: 'smooth'});
-    console.log(`Calender outer: ${divRef.current?.outerHTML}`);
+    // console.log(`Calender outer: ${divRef.current?.outerHTML}`);
     // console.log(`Form Apparance: ${JSON.stringify(targetEvent)}`);
     // const month_elem = calendarRef.current?.querySelector('.rbc-month-view');
     // console.log(`Month view: ${month_elem?.classList.add()}`);
@@ -92,11 +81,20 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
     setShowModal(false);
   }
 
+  const components = useMemo(() => ({
+    event: ({ event }: { event: TimelineEventProps }) => {
+      return (
+        <>
+          <ItemComponent {...event} />
+        </>
+      );
+    }
+  }), []);
+
   return (
     <chakra.div>
       <TitleInputModal />
-      {eventList.length > 0 &&
-        <TimesUpdateButton timeChangeEvents={eventList} />}
+      <TimesUpdateButton timeChangeEvents={eventList} />
       <chakra.div className={flexXmandatory}>
         <chakra.div className={cx(gridArea, topWidth)} flexShrink="0" scrollSnapAlign="start">
           <button>

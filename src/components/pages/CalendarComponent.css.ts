@@ -10,6 +10,6 @@ export const flexXmandatory = style({
 
 export const gridArea = style({
   display: 'grid',
-  gridTemplateRows: '1fr 9fr',
+  gridTemplateRows: '1fr 19fr',
   margin: '0 1%'
 });
