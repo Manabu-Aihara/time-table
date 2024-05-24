@@ -55,11 +55,12 @@ export const useUpdateDateListMutation = (targetIds: string[]) => {
       );
       return { prevEvents };
     },
-    onError: (error, variables, context) => {
+    // onError: (error, variables, context) => {
+    //   console.log(`error!: ${error}`);
+    //   console.log(`variables: ${variables}, context: ${JSON.stringify(context)}`)
+    // },
+    onSettled: (error) => {
       console.log(`error!: ${error}`);
-      console.log(`variables: ${variables}, context: ${JSON.stringify(context)}`)
-    },
-    onSuccess: () => {
       eventCache.invalidateList();
     }
   });

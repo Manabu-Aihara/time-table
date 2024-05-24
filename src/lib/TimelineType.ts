@@ -55,7 +55,7 @@ export type TimelineEventProps = Merge<NewTimelineItem, {
   title: React.ReactNode;
 	start_time?: moment.Moment;
 	end_time?: moment.Moment;
-  onClick?: () => void;
+  isDraggable?: boolean;
 }>;
 
 export type PickDate = Pick<TimelineEventProps, 'start' | 'end' | 'id'>;
@@ -78,3 +78,6 @@ type ExpectedAuth<V extends Option<unknown>> = V extends Option<infer R> ? R : n
 export type AuthGuardContext = ExpectedAuth<Option<AuthInfoProp>>;
 const opt1: AuthGuardContext = {type: 'token', accessToken: ''};
 const opt2: AuthGuardContext = {type: 'auth', authId: 0, group: 100};
+
+export type DivWrapProps = React.ComponentProps<'div'>;
+

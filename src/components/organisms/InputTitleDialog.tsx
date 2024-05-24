@@ -35,8 +35,8 @@ export const TitleInput = (auth: AuthInfoProp) => {
         group: auth!.group,
         staff_id: auth!.authId,
         title: title,
-        start_time: moment(),
-        end_time: moment().add(1, 'hours')
+        start_time: moment(startDT),
+        end_time: moment(endDT)
       });
       // eventsState.concat(eventItem!);
     }

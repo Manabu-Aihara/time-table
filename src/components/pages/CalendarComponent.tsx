@@ -1,11 +1,11 @@
 import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Views, View } from 'react-big-calendar'
+import { Calendar, Views, View, EventWrapperProps } from 'react-big-calendar'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import { chakra } from '@chakra-ui/system';
 
 import { useEventsState } from '../../hooks/useContextFamily';
-import { TimelineEventProps } from '../../lib/TimelineType';
+import { DivWrapProps, TimelineEventProps } from '../../lib/TimelineType';
 import { useMouseEvents } from '../../hooks/useMouseHandle';
 import { ItemComponent } from '../molecules/EventCardComponent';
 import { TimesUpdateButton } from '../molecules/UpdateButtonComponent';
@@ -20,6 +20,7 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import cx from 'classnames';
 import { topWidth } from '../sprinkles.responsive.css';
 import { flexXmandatory, gridArea } from './CalendarComponent.css';
+import { ItemWrapComponent } from '../molecules/CardWrapComponent';
 // import { eventData } from '../../lib/SampleState';
 
 interface EventProps {
@@ -33,6 +34,12 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   /**
    * Drag and Drop
    */
+  const eventPropGetter = useCallback((event: TimelineEventProps) => {
+    console.log(`Getter: ${JSON.stringify(event)}`);
+    return event.isDraggable ? { className: 'isDraggable' } : { className: 'nonDraggable' }
+  }, []);
+
+
   const DnDCalendar = withDragAndDrop(Calendar<TimelineEventProps>);
   const { onEventResize, onEventDrop, eventList } = useMouseEvents();
 
@@ -88,7 +95,14 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
           <ItemComponent {...event} />
         </>
       );
-    }
+    },
+    // eventContainerWrapper: (eventWrap: DivWrapProps ) => {
+    //   return (
+    //     <>
+    //       <ItemWrapComponent divWrap={eventWrap} />
+    //     </>
+    //   );
+    // }
   }), []);
 
   return (
@@ -112,6 +126,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
               startAccessor="start"
               endAccessor="end"
               onNavigate={onNavigate}
+              eventPropGetter={eventPropGetter}
               onEventDrop={onEventDrop}
               onEventResize={onEventResize}
               resizable

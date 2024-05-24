@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { PickDate } from "../lib/TimelineType";
 
 // ① Query Key
 // queries.ts がある場合に必要に応じて宣言

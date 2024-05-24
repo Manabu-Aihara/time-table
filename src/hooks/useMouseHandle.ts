@@ -4,11 +4,12 @@ import { withDragAndDropProps, EventInteractionArgs } from 'react-big-calendar/l
 import { PickDate, TimelineEventProps } from '../lib/TimelineType';
 
 export const useMouseEvents = () => {
-  // const [eventsDate, setEventsDate] = useState<PickDate[]>([]);
   const [eventList, setEventList] = useState<TimelineEventProps[]>([]);
+  const [prevItem, setPrevItem] = useState<TimelineEventProps>();
   
   // const onEventResize: withDragAndDropProps<TimelineEventProps>['onEventResize'] = data => {
-  const onEventResize = useCallback(({ event: handleEvent, start, end }: EventInteractionArgs<TimelineEventProps>) => {
+  const onEventResize = useCallback(
+    ({ event: handleEvent, start, end }: EventInteractionArgs<TimelineEventProps>) => {
     // const { event: handleEvent, start, end } = data;
 
     setEventList(currentEvents => {
@@ -17,12 +18,14 @@ export const useMouseEvents = () => {
         // スプレッドが先だったんですね…
         ...handleEvent,
         start: new Date(start),
-        end: new Date(end)
+        end: new Date(end),
+        isDraggable: true
       }
-      console.log(`before: ${JSON.stringify(currentEvents)}, resize: ${JSON.stringify(resizedEvent)}`);
+      // console.log(`before: ${JSON.stringify(currentEvents)}, resize: ${JSON.stringify(resizedEvent)}`);
       return [...currentEvents, resizedEvent]
     });
-      // console.log(`Pick time R: ${JSON.stringify(eventsDate)}`);
+    setPrevItem(handleEvent);
+    console.log(`Handle event: ${JSON.stringify(prevItem)}`);
   // }
   }, []);
 
@@ -35,16 +38,18 @@ export const useMouseEvents = () => {
       const movedEvent: TimelineEventProps =  {
         ...handleEvent,
         start: new Date(start),
-        end: new Date(end)
+        end: new Date(end),
+        isDraggable: true
       }
-      console.log(`before: ${JSON.stringify(currentEvents)}, move: ${JSON.stringify(movedEvent)}`);
+      // console.log(`before: ${JSON.stringify(currentEvents)}, move: ${JSON.stringify(movedEvent)}`);
       return [...currentEvents, movedEvent]
     });
-    // console.log(`Pick time D: ${JSON.stringify(eventsDate)}`);
+    setPrevItem(handleEvent);
+    console.log(`Handle event: ${JSON.stringify(prevItem)}`);
     // }
   }, []);
 
-  return {onEventResize, onEventDrop, eventList};
+  return {onEventResize, onEventDrop, eventList, prevItem};
 }
 
 const useMouseEvent = () => {
