@@ -9,7 +9,7 @@ export function useEventsState() {
   return state;
 }
   
-export function useEventsDispatch() {
+function useEventsDispatch() {
   const dispatch = useContext(EventsDispatchContext);
   if (!dispatch) throw new Error('EventProvider not found');
   return dispatch;
@@ -21,7 +21,7 @@ export function useAuthContext() {
   return auth;
 }
 
-export function useAuthDispatch() {
+function useAuthDispatch() {
   const auth = useContext(AuthDispatchContext);
   if (!auth) throw new Error('AuthProvider not found');
   return auth;

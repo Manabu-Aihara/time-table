@@ -1,11 +1,11 @@
-import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
+import { useMemo, useState, useEffect, useCallback, useRef, Children } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Views, View, EventWrapperProps } from 'react-big-calendar'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import { chakra } from '@chakra-ui/system';
 
 import { useEventsState } from '../../hooks/useContextFamily';
-import { DivWrapProps, TimelineEventProps } from '../../lib/TimelineType';
+import { DecentEventWrapperProps, TimelineEventProps } from '../../lib/TimelineType';
 import { useMouseEvents } from '../../hooks/useMouseHandle';
 import { ItemComponent } from '../molecules/EventCardComponent';
 import { TimesUpdateButton } from '../molecules/UpdateButtonComponent';
@@ -20,7 +20,7 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import cx from 'classnames';
 import { topWidth } from '../sprinkles.responsive.css';
 import { flexXmandatory, gridArea } from './CalendarComponent.css';
-import { ItemWrapComponent } from '../molecules/CardWrapComponent';
+import { EventContainerProps, ItemWrapComponent } from '../molecules/CardWrapComponent';
 // import { eventData } from '../../lib/SampleState';
 
 interface EventProps {
@@ -34,17 +34,25 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   /**
    * Drag and Drop
    */
-  const eventPropGetter = useCallback((event: TimelineEventProps) => {
-    console.log(`Getter: ${JSON.stringify(event)}`);
-    return event.isDraggable ? { className: 'isDraggable' } : { className: 'nonDraggable' }
-  }, []);
-
-
   const DnDCalendar = withDragAndDrop(Calendar<TimelineEventProps>);
-  const { onEventResize, onEventDrop, eventList } = useMouseEvents();
+  const { onEventResize, onEventDrop, eventList, prevRef } = useMouseEvents();
+
+  // const eventPropGetter = useCallback((event: TimelineEventProps) => {
+  //   console.log(`Getter: ${JSON.stringify(event)}`);
+  //   return event.isDraggable ? { className: 'isDraggable' } : { className: 'nonDraggable' }
+  // }, []);
+  // const excludeState = state.find(v => v.isDraggable === true)
 
   const newState = eventList ? state.concat(eventList) : state;
   console.log(`Expect update events: ${JSON.stringify(eventList)}`);
+  state.map((evt, j) => {
+    if(prevRef){
+      (prevRef.current?.isDraggabled === true && prevRef.current.id === evt.id)
+        && delete state[j];
+        // console.log(`Exclude event id: ${prevRef.current.id}, ${j}`);
+    }
+  });
+  // console.log(`Exclude event: ${excludeState}`);
 
   // Viewの切り替え調節、このまんま使える
   const [displayDate, setDisplayDate] = useState(new Date());
@@ -96,10 +104,20 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
         </>
       );
     },
-    // eventContainerWrapper: (eventWrap: DivWrapProps ) => {
+    // eventWrapper: (props: DecentEventWrapperProps, { children }: { children: React.ReactNode }) => {
+    //   console.log(props);
+    //   const { event } = props;
+    //   const wrapAttribute = {
+    //     ...props,
+    //     className: prevRef.current?.className
+    //   }
+
     //   return (
     //     <>
-    //       <ItemWrapComponent divWrap={eventWrap} />
+    //       <div {...wrapAttribute}>
+    //         <p>{event.title}</p>
+    //         {children}
+    //       </div>
     //     </>
     //   );
     // }
@@ -126,7 +144,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
               startAccessor="start"
               endAccessor="end"
               onNavigate={onNavigate}
-              eventPropGetter={eventPropGetter}
+              // eventPropGetter={eventPropGetter}
               onEventDrop={onEventDrop}
               onEventResize={onEventResize}
               resizable
@@ -134,7 +152,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
               // onSelectSlot={}
               selectable
               onView={onView}
-              components={components}
+              // components={components}
               views={views.views}
             />
           </chakra.div>

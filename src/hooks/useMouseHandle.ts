@@ -1,11 +1,11 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { withDragAndDropProps, EventInteractionArgs } from 'react-big-calendar/lib/addons/dragAndDrop'
 
 import { PickDate, TimelineEventProps } from '../lib/TimelineType';
 
 export const useMouseEvents = () => {
   const [eventList, setEventList] = useState<TimelineEventProps[]>([]);
-  const [prevItem, setPrevItem] = useState<TimelineEventProps>();
+  const prevRef = useRef<TimelineEventProps>();
   
   // const onEventResize: withDragAndDropProps<TimelineEventProps>['onEventResize'] = data => {
   const onEventResize = useCallback(
@@ -19,13 +19,13 @@ export const useMouseEvents = () => {
         ...handleEvent,
         start: new Date(start),
         end: new Date(end),
-        isDraggable: true
       }
       // console.log(`before: ${JSON.stringify(currentEvents)}, resize: ${JSON.stringify(resizedEvent)}`);
       return [...currentEvents, resizedEvent]
     });
-    setPrevItem(handleEvent);
-    console.log(`Handle event: ${JSON.stringify(prevItem)}`);
+    prevRef.current = handleEvent;
+    prevRef.current.isDraggabled = true;
+    console.log(`Handle event: ${JSON.stringify(prevRef.current)}`);
   // }
   }, []);
 
@@ -39,17 +39,17 @@ export const useMouseEvents = () => {
         ...handleEvent,
         start: new Date(start),
         end: new Date(end),
-        isDraggable: true
       }
       // console.log(`before: ${JSON.stringify(currentEvents)}, move: ${JSON.stringify(movedEvent)}`);
       return [...currentEvents, movedEvent]
     });
-    setPrevItem(handleEvent);
-    console.log(`Handle event: ${JSON.stringify(prevItem)}`);
+    prevRef.current = handleEvent;
+    prevRef.current.isDraggabled = true;
+    console.log(`Handle event: ${JSON.stringify(prevRef.current)}`);
     // }
   }, []);
 
-  return {onEventResize, onEventDrop, eventList, prevItem};
+  return {onEventResize, onEventDrop, eventList, prevRef};
 }
 
 const useMouseEvent = () => {

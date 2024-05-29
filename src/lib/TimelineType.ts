@@ -1,4 +1,4 @@
-import { Event } from 'react-big-calendar';
+import { Event, EventWrapperProps } from 'react-big-calendar';
 import moment from 'moment';
 import { TimelineItemBase as TimelineItem } from 'react-calendar-timeline';
 
@@ -55,7 +55,7 @@ export type TimelineEventProps = Merge<NewTimelineItem, {
   title: React.ReactNode;
 	start_time?: moment.Moment;
 	end_time?: moment.Moment;
-  isDraggable?: boolean;
+  isDraggabled?: boolean;
 }>;
 
 export type PickDate = Pick<TimelineEventProps, 'start' | 'end' | 'id'>;
@@ -79,5 +79,5 @@ export type AuthGuardContext = ExpectedAuth<Option<AuthInfoProp>>;
 const opt1: AuthGuardContext = {type: 'token', accessToken: ''};
 const opt2: AuthGuardContext = {type: 'auth', authId: 0, group: 100};
 
-export type DivWrapProps = React.ComponentProps<'div'>;
-
+export type DecentEventWrapperProps = Omit<EventWrapperProps<TimelineEventProps>,
+	'continuesAfter' | 'continuesPrior' | 'isBackgroundEvent' | 'resizable'>;

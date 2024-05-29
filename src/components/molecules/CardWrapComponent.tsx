@@ -1,13 +1,16 @@
-import { DivWrapProps, TimelineEventProps } from "../../lib/TimelineType"
+import { EventWrapperProps } from 'react-big-calendar';
+import { TimelineEventProps } from "../../lib/TimelineType"
 
-type EventContainerProps = {
-  // event: TimelineEventProps;
-  divWrap: DivWrapProps;
+export type EventContainerProps = {
+  event: EventWrapperProps<TimelineEventProps>;
+  children: React.ReactNode;
 }
-export const ItemWrapComponent = ({ divWrap }: EventContainerProps) => {
-  const { className } = divWrap;
+export const ItemWrapComponent = ({ event, children }: EventContainerProps) => {
 
   return (
-    <div {...divWrap}>ラップ{className}</div>
+    <div>
+      <p>{event.className}</p>
+      {children}
+    </div>
   );
 }
