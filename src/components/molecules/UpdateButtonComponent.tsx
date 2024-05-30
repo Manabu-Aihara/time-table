@@ -16,7 +16,7 @@ export const TimesUpdateButton = forwardRef(
   const timeChangeEventIds = timeChangeEvents.map(
     timeChangeEvent => timeChangeEvent.id.toString()
   );
-  console.log(`Expect update id: ${timeChangeEventIds}`);
+  // console.log(`Expect update id: ${timeChangeEventIds}`);
 
   const updateEvents = useUpdateDateListMutation(timeChangeEventIds);
 

@@ -1,13 +1,13 @@
-import { useMemo, useState, useEffect, useCallback, useRef, Children } from 'react';
+import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Views, View, EventWrapperProps } from 'react-big-calendar'
-import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
+import { Calendar, Views, View } from 'react-big-calendar'
+import withDragAndDrop, { withDragAndDropProps } from 'react-big-calendar/lib/addons/dragAndDrop'
 import { chakra } from '@chakra-ui/system';
 
 import { useEventsState } from '../../hooks/useContextFamily';
-import { DecentEventWrapperProps, TimelineEventProps } from '../../lib/TimelineType';
+import { TimelineEventProps } from '../../lib/TimelineType';
 import { useMouseEvents } from '../../hooks/useMouseHandle';
-import { ItemComponent } from '../molecules/EventCardComponent';
+import { CustomContainerWrapper, CustomEventWrapper, CustomEventCard } from '../molecules/WrapComponent';
 import { TimesUpdateButton } from '../molecules/UpdateButtonComponent';
 import { MyWeek } from '../organisms/DaysClassComponent';
 import views from '../organisms/DaysComponent';
@@ -20,15 +20,14 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import cx from 'classnames';
 import { topWidth } from '../sprinkles.responsive.css';
 import { flexXmandatory, gridArea } from './CalendarComponent.css';
-import { EventContainerProps, ItemWrapComponent } from '../molecules/CardWrapComponent';
 // import { eventData } from '../../lib/SampleState';
 
-interface EventProps {
+interface EventFormProps {
   targetEvent: TimelineEventProps;
 	onShowFormView: (targetEvent: TimelineEventProps) => void;
 }
 
-export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
+export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   const state = useEventsState();
 
   /**
@@ -37,22 +36,20 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
   const DnDCalendar = withDragAndDrop(Calendar<TimelineEventProps>);
   const { onEventResize, onEventDrop, eventList, prevRef } = useMouseEvents();
 
-  // const eventPropGetter = useCallback((event: TimelineEventProps) => {
-  //   console.log(`Getter: ${JSON.stringify(event)}`);
-  //   return event.isDraggable ? { className: 'isDraggable' } : { className: 'nonDraggable' }
-  // }, []);
-  // const excludeState = state.find(v => v.isDraggable === true)
+  const eventPropGetter = useCallback((event: TimelineEventProps) => {
+    console.log(`Getter: ${JSON.stringify(event)}`);
+    return event.isDraggabled ? { className: 'isDraggable' } : { className: 'nonDraggable' }
+  }, []);
 
-  const newState = eventList ? state.concat(eventList) : state;
-  console.log(`Expect update events: ${JSON.stringify(eventList)}`);
   state.map((evt, j) => {
     if(prevRef){
       (prevRef.current?.isDraggabled === true && prevRef.current.id === evt.id)
-        && delete state[j];
-        // console.log(`Exclude event id: ${prevRef.current.id}, ${j}`);
+        && (delete state[j] && console.log(`Exclude event id: ${prevRef.current?.id}, ${j}`));
     }
   });
-  // console.log(`Exclude event: ${excludeState}`);
+  console.log(`Old state: ${JSON.stringify(state)}`);
+  const newState = eventList ? state.concat(eventList) : state;
+  console.log(`Expect update events: ${JSON.stringify(eventList)}`);
 
   // Viewの切り替え調節、このまんま使える
   const [displayDate, setDisplayDate] = useState(new Date());
@@ -96,31 +93,10 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
     setShowModal(false);
   }
 
-  const components = useMemo(() => ({
-    event: ({ event }: { event: TimelineEventProps }) => {
-      return (
-        <>
-          <ItemComponent {...event} />
-        </>
-      );
-    },
-    // eventWrapper: (props: DecentEventWrapperProps, { children }: { children: React.ReactNode }) => {
-    //   console.log(props);
-    //   const { event } = props;
-    //   const wrapAttribute = {
-    //     ...props,
-    //     className: prevRef.current?.className
-    //   }
-
-    //   return (
-    //     <>
-    //       <div {...wrapAttribute}>
-    //         <p>{event.title}</p>
-    //         {children}
-    //       </div>
-    //     </>
-    //   );
-    // }
+  const customComponents = useMemo(() => ({
+    event: CustomEventCard,
+    eventWrapper: CustomEventWrapper,
+    eventContainerWrapper: CustomContainerWrapper
   }), []);
 
   return (
@@ -144,7 +120,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
               startAccessor="start"
               endAccessor="end"
               onNavigate={onNavigate}
-              // eventPropGetter={eventPropGetter}
+              eventPropGetter={eventPropGetter}
               onEventDrop={onEventDrop}
               onEventResize={onEventResize}
               resizable
@@ -152,7 +128,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventProps) => {
               // onSelectSlot={}
               selectable
               onView={onView}
-              // components={components}
+              // components={customComponents}
               views={views.views}
             />
           </chakra.div>

@@ -17,3 +17,21 @@
   //   start: eventDate?.start,
   //   end: eventDate?.end
   // });
+
+      // eventWrapper: (props: DecentEventWrapperProps, { children }: { children: React.ReactNode }) => {
+    //   console.log(props);
+    //   const { event } = props;
+    //   const wrapAttribute = {
+    //     ...props,
+    //     className: prevRef.current?.className
+    //   }
+
+    //   return (
+    //     <>
+    //       <div {...wrapAttribute}>
+    //         <p>{event.title}</p>
+    //         {children}
+    //       </div>
+    //     </>
+    //   );
+    // }

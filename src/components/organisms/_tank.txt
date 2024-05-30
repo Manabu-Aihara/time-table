@@ -35,3 +35,28 @@ const items = [
   //     />
   //   </div>
   // );
+
+  /**
+   * withPropsで拡張するprops
+   */
+  interface InjectedProps {
+    themeColor: string;
+  }
+
+  /**
+   * コンポーネントを受け取ってthemeColorのpropsを追加する
+   * @param WrappedComponent 拡張したいコンポーネント
+   * @returns {React.FC<Omit<P, keyof InjectedProps>>}
+   */
+  const withSimple = <P extends InjectedProps = InjectedProps>(
+    WrappedComponent: React.ComponentType<P>
+  ) => {
+    return (props: Omit<P, keyof InjectedProps>) => {
+      return (
+        <WrappedComponent
+          {...{ themeColor: "#aaaaaa" }}
+          {...(props as P)}
+        ></WrappedComponent>
+      );
+    };
+  };
