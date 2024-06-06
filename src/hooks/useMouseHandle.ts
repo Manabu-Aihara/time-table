@@ -5,6 +5,8 @@ import { PickDate, TimelineEventProps } from '../lib/TimelineType';
 
 export const useMouseEvents = () => {
   const [eventList, setEventList] = useState<TimelineEventProps[]>([]);
+  // How to access previous props or state with React Hooks
+  // https://blog.logrocket.com/accessing-previous-props-state-react-hooks/
   const prevRef = useRef<TimelineEventProps>();
   
   // const onEventResize: withDragAndDropProps<TimelineEventProps>['onEventResize'] = data => {
@@ -19,12 +21,13 @@ export const useMouseEvents = () => {
         ...handleEvent,
         start: new Date(start),
         end: new Date(end),
+        isDraggable: true
       }
       // console.log(`before: ${JSON.stringify(currentEvents)}, resize: ${JSON.stringify(resizedEvent)}`);
       return [...currentEvents, resizedEvent]
     });
     prevRef.current = handleEvent;
-    prevRef.current.isDraggabled = true;
+    prevRef.current.isDraggable = true;
     console.log(`Handle event: ${JSON.stringify(prevRef.current)}`);
   // }
   }, []);
@@ -39,12 +42,13 @@ export const useMouseEvents = () => {
         ...handleEvent,
         start: new Date(start),
         end: new Date(end),
+        isDraggable: true
       }
       // console.log(`before: ${JSON.stringify(currentEvents)}, move: ${JSON.stringify(movedEvent)}`);
       return [...currentEvents, movedEvent]
     });
     prevRef.current = handleEvent;
-    prevRef.current.isDraggabled = true;
+    prevRef.current.isDraggable = true;
     console.log(`Handle event: ${JSON.stringify(prevRef.current)}`);
     // }
   }, []);

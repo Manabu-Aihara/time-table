@@ -1,4 +1,4 @@
-import { forwardRef, Ref } from "react";
+import { forwardRef, Ref, useEffect, useState } from "react";
 import { ChakraProvider, Box, Button, Text } from "@chakra-ui/react";
 
 import { useUpdateDateListMutation } from "../../hooks/useEventMutation";
@@ -10,21 +10,24 @@ type ChangingProp = {
 
 export const TimesUpdateButton = forwardRef(
   ({timeChangeEvents}: ChangingProp, buttonRef: Ref<HTMLDivElement>) => {
-  console.log(timeChangeEvents);
+  console.log(`Event list =: `, timeChangeEvents);
 
   // idのだけの配列
   const timeChangeEventIds = timeChangeEvents.map(
     timeChangeEvent => timeChangeEvent.id.toString()
   );
-  // console.log(`Expect update id: ${timeChangeEventIds}`);
 
   const updateEvents = useUpdateDateListMutation(timeChangeEventIds);
+  const handleUpdateAction = () => {
+    updateEvents.mutate(timeChangeEvents);
+    // console.log('Updateしたつもり');
+  }
 
   return (
     <ChakraProvider>
       {timeChangeEvents.length > 0 &&
         <Box ref={buttonRef}>
-          <Button onClick={() => updateEvents.mutate(timeChangeEvents)}>変更する</Button>
+          <Button onClick={handleUpdateAction}>変更する</Button>
           <Text>変更回数: {timeChangeEvents.length}</Text>
         </Box>
       }

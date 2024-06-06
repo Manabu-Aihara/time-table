@@ -1,15 +1,24 @@
-import { PropsWithChildren } from 'react';
+import { CSSProperties, PropsWithChildren, useRef } from 'react';
 
 import { EventWrapperProps, EventProps } from 'react-big-calendar';
+
+import { useSearchQuery } from '../../resources/queries';
 import { TimelineEventProps } from "../../lib/TimelineType";
 
 // React component type in TypeScript
 // https://stackoverflow.com/questions/56947690/react-component-type-in-typescript
 export const CustomContainerWrapper: React.FC<PropsWithChildren> = ({children}) => {
+  const containerStyle: CSSProperties = {
+    width: '100%',
+    height: '100%',
+    background: 'pink',
+    position: 'relative'
+  }
+
   return (
     <div
       id="custom-container-wrapper"
-      style={{background: 'pink'}}
+      // style={containerStyle}
     >
       {children}
     </div>
@@ -18,29 +27,41 @@ export const CustomContainerWrapper: React.FC<PropsWithChildren> = ({children}) 
 
 type ComponentWithChildrenProps = PropsWithChildren<EventWrapperProps<TimelineEventProps>>
 export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) => {
-  // console.log('CustomWrapper props', props);
-  const { style } = props;
-  const newHeight = style?.height?.toString().includes('calc')
-    ? style.height : `${style?.height}`;
+  const { event, onClick, style } = props;
+
+  const getterMaybeProp = props.getters.eventProp;
+  const getterProp = getterMaybeProp && getterMaybeProp(event, event.start!, event.end!, false);
+  getterProp && console.log(`Getter prop: ${JSON.stringify(getterProp['style'])}`);
+	// const { data } = useSearchQuery('userID');
+
+  const ref = useRef<HTMLDivElement>(null);
+  const elm = ref.current?.querySelector('.rbc-event');
+  // view-portからの座標、今回使わない
+  // console.log(`Role button div: ${JSON.stringify(elm?.getBoundingClientRect())}`);
+  // const childRefTop = elm?.getBoundingClientRect().top;
+
+  const wrapperStyle: CSSProperties = {
+    width: '100%',
+    height: `${elm?.clientHeight}px`,
+    outline: '2px solid orange',
+    outlineOffset: '2px',
+    boxSizing: 'border-box',
+    position: 'absolute',
+    top: `${style?.top}%`
+  }
+
+  const handleCapture = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    console.log(`Capture event: ${e.target}`);
+    if(!(e.target instanceof HTMLButtonElement)){
+      return;
+    }
+    onClick(e);
+    alert('受け取りました');
+  }
 
   return (
-    <div
-      id="custom-wrapper"
-      {...{
-        ...props,
-        style: {
-          ...style,
-          // top: `${style?.top}%`,
-          height: '100%',
-          position: 'absolute',
-          // background: 'green'
-        },
-        // accessor: {
-        //   start: props.event.start,
-        //   end: props.event.end
-        // }
-      }}
-    >
+    <div ref={ref}>
+      <button style={wrapperStyle} onClick={(e) => handleCapture(e)}></button>
       {props.children}
     </div>
   );

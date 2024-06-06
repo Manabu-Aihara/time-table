@@ -4,12 +4,10 @@ import { ChakraProvider, Box, Text, Input, Button, Select } from '@chakra-ui/rea
 
 // import { EventItem } from '../../lib/EventItem';
 import { TimelineEventProps } from '../../lib/TimelineType';
-import { useUpdateEventMutation } from '../../hooks/useEventMutation';
 import { useDialog } from '../../hooks/useDialog';
 
 import { boundaryTop, boundaryY, buttonPosition } from '../sprinkles.responsive.css';
 import { formParent } from './InputItem.css';
-import { useSearchQuery } from '../../resources/queries';
 
 type InputEventProps = {
 	selectedEvent: TimelineEventProps;
@@ -35,7 +33,7 @@ export const AddChildForm = forwardRef(
 	// const [done, setDone] = useState<string | undefined>(options[0].value);
 	// 君から卒業
 	// const dispatch = useEventsDispatch();
-  console.log(`Handle Event: ${JSON.stringify(selectedEvent)}`);
+  console.log(`Handle event: ${JSON.stringify(selectedEvent)}`);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>) => {
 		// name, valueという変数名で決まっているようだ
@@ -48,44 +46,13 @@ export const AddChildForm = forwardRef(
 	// 	setDone(selectedOption?.label);
 	// 	// console.log(actionMeta);
 	// }
-	// console.log(`InputItem ref: ${JSON.stringify(childRef)}`);
-
-	const updateEvent = useUpdateEventMutation(selectedEvent.id);
-
-	// リテラルタイプ化
-	const selectedStaff = `${selectedEvent.staff_id}` as const;
-	const { data: infoContext } = useSearchQuery('userID');
-	// infoContext === selectedStaff
-	// 	? console.log(`Target event staff: ${infoContext}, Passing!`)
-	// 	: console.log(`Parse staff: ${selectedStaff}, Dout!`);
 
 	const { Dialog, open, close } = useDialog();
-
-	const handleUpdate = (e: FormEvent) => {
-		e.preventDefault();
-		// dispatch({
-		// 	type: 'UPDATE',
-		// 	payload: eventItem
-		// });
-		if(infoContext !== selectedStaff) {
-			e.stopPropagation();
-			console.log('上通りました');
-			open();
-		} else {
-			console.log('下通りました');
-			updateEvent.mutate({
-				...eventItem,
-				summary: eventItem.summary,
-				progress: eventItem.progress
-			});
-			console.log(`Update!: ${JSON.stringify(eventItem)}`);
-		}
-	}
 
 	return (
 		<ChakraProvider>
 			<Box ref={childRef} className={formParent}>
-				<Button type='button' backgroundColor='blueviolet' onClick={closeClick} className={buttonPosition}>
+				<Button type='button' backgroundColor='green' onClick={closeClick} className={buttonPosition}>
 					<Text fontSize='2rem' color='white'>×</Text><Text color='white'>閉じる</Text>
 				</Button>
 				<Text fontSize='2rem' fontWeight='bold'>{selectedEvent.staff_id}</Text>
@@ -114,7 +81,6 @@ export const AddChildForm = forwardRef(
 				<section className={boundaryY}>
 					{/* <Button onClick={e =>
 						infoContext !== selectedStaff ? open() : handleUpdate(e)}>送信</Button> */}
-					<Button onClick={handleUpdate}>送信</Button>
 				</section>
 			</Box>
 			<Box>

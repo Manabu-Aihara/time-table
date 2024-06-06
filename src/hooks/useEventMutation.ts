@@ -22,13 +22,13 @@ export const useCreateMutation = () => {
   });
 }
 
-export const useUpdateEventMutation = (targetId: number | string) => {
+export const useUpdateEventMutation = (updateUrl: string, targetId: number | string) => {
   const queryClient = useQueryClient();
   const eventCache = useEventCache();
 
   return useMutation({
     mutationFn: (timelineEvent: TimelineEventProps) =>
-      basicAxios.post(`/event/update/${targetId}`, timelineEvent),
+      basicAxios.post(`/${updateUrl}/${targetId}`, timelineEvent),
     onMutate: (timelineEvent) => {
       queryClient.setQueryData(eventKeys.detail(targetId), timelineEvent);
     },
