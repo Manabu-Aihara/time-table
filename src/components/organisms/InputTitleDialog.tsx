@@ -1,4 +1,5 @@
 import { useState, FormEvent } from 'react';
+import { ChakraProvider, Box, Text, Input, Button } from '@chakra-ui/react';
 import moment from 'moment';
 
 import { useEventsState } from '../../hooks/useContextFamily';
@@ -10,8 +11,7 @@ type InputElementProps = React.ComponentProps<'input'>;
 export const TitleInput = (auth: AuthInfoProp) => {
 // export const TitleInput = (jsonAuth: JSONValue) => {
   // const objJson = safeJsonParse(jsonAuth!.toString());
-  console.log(`In modal auth info: ${JSON.stringify(auth)}`);
-  
+  // console.log(`In modal auth info: ${JSON.stringify(auth)}`);
   const eventsState = useEventsState();
 
   const createEvent = useCreateMutation();
@@ -43,20 +43,22 @@ export const TitleInput = (auth: AuthInfoProp) => {
   }
 
   return (
-    <div>
-      <span>{auth.type === 'auth' ? auth.authId : 'IDなし'}</span>:
-      <span>{auth.type === 'auth' ? auth.group : 'グループなし'}</span>
-      <p></p>
-      {/* <form onSubmit={onSubmit}> */}
-      <input
-        // {...inputAttr}
-        placeholder="やることを入力してください"
-        onChange={handleChange}
-      />
-      <button onClick={onSubmit}>追加</button>
-      {/* </form> */}
-      <p></p>
-      {/* <button onClick={close}>close</button> */}
-    </div>
+    <ChakraProvider>
+      <Box>
+        <Text>ID {auth.type === 'auth' ? auth.authId : 'IDなし'}</Text>
+        <Text>所属 {auth.type === 'auth' ? auth.group : 'グループなし'}</Text>
+        <Text></Text>
+        {/* <form onSubmit={onSubmit}> */}
+        <Input
+          // {...inputAttr}
+          placeholder="やることを入力してください"
+          onChange={handleChange}
+        />
+        <Button onClick={onSubmit}>追加</Button>
+        {/* </form> */}
+        <Text></Text>
+        {/* <button onClick={close}>close</button> */}
+      </Box>
+    </ChakraProvider>
   );
 }

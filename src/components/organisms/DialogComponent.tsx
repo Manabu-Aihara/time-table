@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 
 import { TitleInput } from './InputTitleDialog';
 import { AuthInfoProp } from "../../lib/TimelineType";
@@ -29,17 +29,15 @@ export const TitleInputModal = () => {
   // const guard: AuthInfoProp = objValue.type === 'auth' ? {
   //     authId: objValue.authId, group: objValue.group, type: 'auth' as const
   // } : objValue
-  // パターン 3
-  // 型安全だか、うまくいかない
 
   return (
     <Box>
       <button onClick={open} className={addButton}>Add Event</button>
       <Dialog>
-        <p>入力フォームコンテンツ</p>
+        <Text>入力フォームコンテンツ</Text>
         <TitleInput {...guard} />
         {/* <TitleInput auth={jsonValue} /> */}
-        <button onClick={close}>close</button>
+        <Button onClick={close}>close</Button>
       </Dialog>
     </Box>
   );

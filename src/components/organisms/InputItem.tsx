@@ -5,9 +5,11 @@ import { ChakraProvider, Box, Text, Input, Button, Select } from '@chakra-ui/rea
 // import { EventItem } from '../../lib/EventItem';
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { useDialog } from '../../hooks/useDialog';
+import { useSearchQuery } from '../../resources/queries';
 
 import { boundaryTop, boundaryY, buttonPosition } from '../sprinkles.responsive.css';
 import { formParent } from './InputItem.css';
+import { EventUpdateButtons } from '../molecules/EventUpdateButtonComponent';
 
 type InputEventProps = {
 	selectedEvent: TimelineEventProps;
@@ -47,6 +49,13 @@ export const AddChildForm = forwardRef(
 	// 	// console.log(actionMeta);
 	// }
 
+	// リテラルタイプ化
+	const selectedStaff = `${selectedEvent.staff_id}` as const;
+	const { data: infoContext } = useSearchQuery('userID');
+	// infoContext === selectedStaff
+	// 	? console.log(`Target event staff: ${infoContext}, Passing!`)
+	// 	: console.log(`Parse staff: ${selectedStaff}, Dout!`);
+
 	const { Dialog, open, close } = useDialog();
 
 	return (
@@ -61,10 +70,6 @@ export const AddChildForm = forwardRef(
 					<Text>内容：</Text>
 					<Input name="summary" onChange={handleChange} value={eventItem.summary} />
 				</section>
-				{/* <section className={boundaryTop}>
-					<Text>誰が：</Text>
-					<Input name="owner" onChange={handleChange} value={todo.owner} />
-				</section> */}
 				<section className={boundaryTop}>
 					<Text>どんな感じ：</Text>
 					<Select name="progress" value={eventItem.progress} onChange={handleChange}>
@@ -78,10 +83,11 @@ export const AddChildForm = forwardRef(
 					</Select>
 					{/* <Select options={options} onChange={handleSelectChange} /> */}
 				</section>
-				<section className={boundaryY}>
-					{/* <Button onClick={e =>
-						infoContext !== selectedStaff ? open() : handleUpdate(e)}>送信</Button> */}
-				</section>
+				{infoContext === selectedStaff ?
+					<section className={boundaryY}>
+						<EventUpdateButtons {...eventItem}></EventUpdateButtons>
+					</section> : <Box></Box>
+				}
 			</Box>
 			<Box>
 				<Dialog>

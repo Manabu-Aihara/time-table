@@ -15,20 +15,34 @@ export const useCreateMutation = () => {
   const eventCache = useEventCache();
 
   return useMutation({
-    mutationFn: (timelineEvent: TimelineEventProps) => basicAxios.post(`/event/add`, timelineEvent),
+    mutationFn: (timelineEvent: TimelineEventProps) =>
+      basicAxios.post(`/event/add`, timelineEvent),
     onSuccess: () => {
       return eventCache.invalidateList();
     }
   });
 }
 
-export const useUpdateEventMutation = (updateUrl: string, targetId: number | string) => {
+export const useDeleteMutation = (targetId: number | string) => {
+  const eventCache = useEventCache();
+
+  return useMutation({
+    mutationFn: () =>
+      basicAxios.delete(`/event/remove/${targetId}`),
+    onSuccess: () => {
+      console.log('ここ通ってます');
+      return eventCache.invalidateList();
+    }
+  });
+}
+
+export const useUpdateEventMutation = (targetId: number | string) => {
   const queryClient = useQueryClient();
   const eventCache = useEventCache();
 
   return useMutation({
     mutationFn: (timelineEvent: TimelineEventProps) =>
-      basicAxios.post(`/${updateUrl}/${targetId}`, timelineEvent),
+      basicAxios.post(`/event/update/${targetId}`, timelineEvent),
     onMutate: (timelineEvent) => {
       queryClient.setQueryData(eventKeys.detail(targetId), timelineEvent);
     },

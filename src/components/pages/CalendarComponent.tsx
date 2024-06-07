@@ -5,11 +5,12 @@ import withDragAndDrop, { withDragAndDropProps } from 'react-big-calendar/lib/ad
 import { chakra } from '@chakra-ui/system';
 
 import { useEventsState } from '../../hooks/useContextFamily';
+import { useDialog } from "../../hooks/useDialog";
 import localizer from '../../lib/Localization';
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { useMouseEvents } from '../../hooks/useMouseHandle';
 import { CustomContainerWrapper, CustomEventWrapper, CustomEventCard } from '../molecules/WrapComponent';
-import { TimesUpdateButton } from '../molecules/UpdateButtonComponent';
+import { TimesUpdateButton } from '../molecules/TimeUpdateButtonComponent';
 import { MyWeek } from '../organisms/DaysClassComponent';
 import views from '../organisms/DaysComponent';
 import { TitleInputModal } from '../organisms/DialogComponent'; 
@@ -35,18 +36,21 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   const eventPropGetter = useCallback((event: TimelineEventProps) => {
     // 後ろの要素をクリックさせたい時は「pointer-events」を使おう。
     // https://hp-shizuoka.jp/column/2018/01/21584/
-    const gtStyle: CSSProperties = {
+    const exceptStyle: CSSProperties = {
       pointerEvents: 'none',
       opacity: '.7'
     }
     const draggableClass = event.isDraggable ?
       { className: 'isDraggable' } : { className: 'nonDraggable' }
+    const indenticalStyle: CSSProperties = {
+      pointerEvents: 'none'
+    }
 
     if(event.staff_id.toString() != data){
-			console.log(`上通りました: ${event.staff_id}`);
-      return { style: gtStyle }
+			// console.log(`上通りました: ${event.staff_id}`);
+      return { style: exceptStyle }
     }else{
-      console.log('下通りました');
+      // console.log('下通りました');
       return draggableClass
     }
   }, [data]);
@@ -108,7 +112,9 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
     setShowModal(false);
   }
 
+  const { open } = useDialog();
   const clickRef = useRef<number | undefined>(undefined);
+  const [isOpen, setIsOpen] = useState(false);
   const onSelectSlot = useCallback((slotInfo: SlotInfo) => {
     /**
      * Here we are waiting 250 milliseconds (use what you want) prior to firing
@@ -119,11 +125,13 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
      */
     window.clearTimeout(clickRef?.current);
     clickRef.current = window.setTimeout(() => {
-      window.alert(JSON.stringify(slotInfo));
-      // console.log(JSON.stringify(slotInfo));
+      // window.alert(JSON.stringify(slotInfo));
+      open();
+      setIsOpen(true);
     }, 250);
+    console.log(`Slot ref: ${clickRef.current}`);
+    return slotInfo.start;
   }, []);
-
 
   const customComponents = useMemo(() => ({
     event: CustomEventCard,
@@ -133,7 +141,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
 
   return (
     <chakra.div>
-      <TitleInputModal />
+      {isOpen && <TitleInputModal />}
       <TimesUpdateButton timeChangeEvents={eventList} />
       <chakra.div className={flexXmandatory}>
         <chakra.div className={cx(gridArea, topWidth)} flexShrink="0" scrollSnapAlign="start">
@@ -157,7 +165,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
               onEventResize={onEventResize}
               resizable
               onSelectEvent={handleSelectEvent}
-              // onSelectSlot={onSelectSlot}
+              onSelectSlot={onSelectSlot}
               selectable
               onView={onView}
               components={customComponents}

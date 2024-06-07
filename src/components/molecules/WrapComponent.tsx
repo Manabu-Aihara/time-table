@@ -31,7 +31,7 @@ export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) 
 
   const getterMaybeProp = props.getters.eventProp;
   const getterProp = getterMaybeProp && getterMaybeProp(event, event.start!, event.end!, false);
-  getterProp && console.log(`Getter prop: ${JSON.stringify(getterProp['style'])}`);
+  // getterProp && console.log(`Getter prop: ${JSON.stringify(getterProp['style'])}`);
 	// const { data } = useSearchQuery('userID');
 
   const ref = useRef<HTMLDivElement>(null);
@@ -41,6 +41,10 @@ export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) 
   // const childRefTop = elm?.getBoundingClientRect().top;
 
   const wrapperStyle: CSSProperties = {
+    width: 'fit-content',
+    height: '100%'
+  }
+  const nextStyle: CSSProperties = {
     width: '100%',
     height: `${elm?.clientHeight}px`,
     outline: '2px solid orange',
@@ -60,8 +64,8 @@ export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) 
   }
 
   return (
-    <div ref={ref}>
-      <button style={wrapperStyle} onClick={(e) => handleCapture(e)}></button>
+    <div style={wrapperStyle} ref={ref}>
+      <button style={nextStyle} onClick={(e) => handleCapture(e)}></button>
       {props.children}
     </div>
   );
