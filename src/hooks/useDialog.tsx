@@ -26,9 +26,9 @@ export const useDialog = (): Result => {
 
   const Dialog: React.FC<UseDialogProp> = useCallback(
     (prop: UseDialogProp): React.ReactNode => {
-      return <div>これhookの<Component isOpen={isOpen} onClose={close} {...prop} /></div>;
+      return <div><Component isOpen={isOpen} onClose={close} {...prop} /></div>;
     },
-    [close, isOpen]
+    [isOpen]
   );
 
   return { open, close, Dialog };

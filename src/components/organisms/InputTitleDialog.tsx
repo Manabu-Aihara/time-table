@@ -6,9 +6,12 @@ import { useEventsState } from '../../hooks/useContextFamily';
 import { useCreateMutation } from '../../hooks/useEventMutation';
 import { AuthInfoProp } from '../../lib/TimelineType';
 
-type InputElementProps = React.ComponentProps<'input'>;
+type TitleInputProps = {
+  authInfo: AuthInfoProp;
+  slotStartTime: Date;
+}
 
-export const TitleInput = (auth: AuthInfoProp) => {
+export const TitleInput = ({authInfo, slotStartTime}: TitleInputProps) => {
 // export const TitleInput = (jsonAuth: JSONValue) => {
   // const objJson = safeJsonParse(jsonAuth!.toString());
   // console.log(`In modal auth info: ${JSON.stringify(auth)}`);
@@ -21,19 +24,19 @@ export const TitleInput = (auth: AuthInfoProp) => {
     setTitle(e.target.value);
   };
 
-  const startDT = moment().format('YYYY-MM-DD HH:mm:ss');
-  const endDT = moment().add(1, 'hours').format('YYYY-MM-DD HH:mm:ss');
+  const startDT = moment(slotStartTime).format('YYYY-MM-DD HH:mm:ss');
+  const endDT = moment(slotStartTime).add(1, 'hours').format('YYYY-MM-DD HH:mm:ss');
   // console.log(`end_time: ${moment(endDT)}`);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    if(auth.type === 'auth'){
+    if(authInfo.type === 'auth'){
       // createEvent.mutate(eventItem!);
       createEvent.mutate({
         id: Number(eventsState.slice(-1)[0].id) + 1,
-        group: auth!.group,
-        staff_id: auth!.authId,
+        group: authInfo.group,
+        staff_id: authInfo.authId,
         title: title,
         start_time: moment(startDT),
         end_time: moment(endDT)
@@ -45,8 +48,8 @@ export const TitleInput = (auth: AuthInfoProp) => {
   return (
     <ChakraProvider>
       <Box>
-        <Text>ID {auth.type === 'auth' ? auth.authId : 'IDなし'}</Text>
-        <Text>所属 {auth.type === 'auth' ? auth.group : 'グループなし'}</Text>
+        <Text>ID {authInfo.type === 'auth' ? authInfo.authId : 'IDなし'}</Text>
+        <Text>所属 {authInfo.type === 'auth' ? authInfo.group : 'グループなし'}</Text>
         <Text></Text>
         {/* <form onSubmit={onSubmit}> */}
         <Input

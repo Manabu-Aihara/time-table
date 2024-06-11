@@ -1,19 +1,19 @@
 import { useMemo, useState, useEffect, useCallback, useRef, CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Views, View, SlotInfo } from 'react-big-calendar'
-import withDragAndDrop, { withDragAndDropProps } from 'react-big-calendar/lib/addons/dragAndDrop'
+import withDragAndDrop, { OnDragStartArgs, withDragAndDropProps } from 'react-big-calendar/lib/addons/dragAndDrop'
 import { chakra } from '@chakra-ui/system';
 
 import { useEventsState } from '../../hooks/useContextFamily';
 import { useDialog } from "../../hooks/useDialog";
+import { useAuthInfo } from '../../hooks/useAuthGuard';
+import { useMouseEvents } from '../../hooks/useMouseHandle';
 import localizer from '../../lib/Localization';
 import { TimelineEventProps } from '../../lib/TimelineType';
-import { useMouseEvents } from '../../hooks/useMouseHandle';
 import { CustomContainerWrapper, CustomEventWrapper, CustomEventCard } from '../molecules/WrapComponent';
 import { TimesUpdateButton } from '../molecules/TimeUpdateButtonComponent';
 import { MyWeek } from '../organisms/DaysClassComponent';
 import views from '../organisms/DaysComponent';
-import { TitleInputModal } from '../organisms/DialogComponent'; 
 import { AddChildForm } from "../organisms/InputItem";
 import { useSearchQuery } from '../../resources/queries';
 
@@ -22,6 +22,8 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import cx from 'classnames';
 import { topWidth } from '../sprinkles.responsive.css';
 import { flexXmandatory, gridArea } from './CalendarComponent.css';
+import { TitleInput } from '../organisms/InputTitleDialog';
+import { useChangeDebugger, usePrevious } from '../../hooks/useCompare';
 // import { eventData } from '../../lib/SampleState';
 
 interface EventFormProps {
@@ -43,7 +45,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
     const draggableClass = event.isDraggable ?
       { className: 'isDraggable' } : { className: 'nonDraggable' }
     const indenticalStyle: CSSProperties = {
-      pointerEvents: 'none'
+      pointerEvents: 'auto'
     }
 
     if(event.staff_id.toString() != data){
@@ -51,7 +53,8 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
       return { style: exceptStyle }
     }else{
       // console.log('下通りました');
-      return draggableClass
+      // return draggableClass
+      return { style: indenticalStyle }
     }
   }, [data]);
   
@@ -60,6 +63,11 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
    */
   const DnDCalendar = withDragAndDrop(Calendar<TimelineEventProps>);
   const { onEventResize, onEventDrop, eventList, prevRef } = useMouseEvents();
+
+  // リテラルタイプ化
+	const selectedStaff = `${prevRef.current?.staff_id}` as const;
+	const { data: infoContext } = useSearchQuery('userID');
+  // console.log(infoContext === selectedStaff.toString() ? true : false);
 
   state.map((evt, j) => {
     if(prevRef){
@@ -81,11 +89,28 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   console.log(`Calendar state: ${JSON.stringify(newState)}`);
 
   /**
+   * Slot and Dialog
+   */
+  const { Dialog, open, close } = useDialog();
+  const clickRef = useRef<number | undefined>(undefined);
+  const [slotInfoState, setSlotInfoState] = useState<SlotInfo>();
+  useChangeDebugger([targetEvent]);
+  // console.log('Compared: ', targetEvent, prevValue);
+  const onSelectSlot = useCallback((slotInfo: SlotInfo) => {
+    window.clearTimeout(clickRef?.current);
+    clickRef.current = window.setTimeout(() => {
+      setSlotInfoState(slotInfo);
+      open();
+    }, 250)
+  }, []);
+
+  const guard = useAuthInfo();
+
+  /**
    * Issue summary & progress
    */
   const [showModal, setShowModal] = useState(false);
 	const divRef = useRef<HTMLDivElement>(null);
-
   // TypeScriptでReactのイベントにどう型指定するか
   // https://komari.co.jp/blog/10724/
   const handleOuterFormBubbling = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -101,38 +126,31 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
     // console.log(`Month view: ${month_elem?.classList.add()}`);
   }, [targetEvent]);
 
-  const handleSelectEvent = useCallback((callingEvent: TimelineEventProps, e: React.SyntheticEvent) => {
-    // e.preventDefault()
-    console.log(`Selected event: ${JSON.stringify(callingEvent)}, ${e.target}`);
+  const handleSelectEvent = useCallback(
+    (callingEvent: TimelineEventProps, e: React.SyntheticEvent) =>
+  {
+    // e.stopPropagation();
+    console.log(`Selected event: ${JSON.stringify(callingEvent)}`, e.target);
     onShowFormView(callingEvent);
     setShowModal(true);
+  }, []);
+
+  const onDragStart = useCallback((args: OnDragStartArgs<TimelineEventProps>) => {
+    const { event, action } = args;
+    if(action === 'move'){
+      alert(action);
+      onShowFormView(event);
+      setShowModal(true);
+    }
   }, []);
 
   const closeInputForm = () => {
     setShowModal(false);
   }
 
-  const { open } = useDialog();
-  const clickRef = useRef<number | undefined>(undefined);
-  const [isOpen, setIsOpen] = useState(false);
-  const onSelectSlot = useCallback((slotInfo: SlotInfo) => {
-    /**
-     * Here we are waiting 250 milliseconds (use what you want) prior to firing
-     * our method. Why? Because both 'click' and 'doubleClick'
-     * would fire, in the event of a 'doubleClick'. By doing
-     * this, the 'click' handler is overridden by the 'doubleClick'
-     * action.
-     */
-    window.clearTimeout(clickRef?.current);
-    clickRef.current = window.setTimeout(() => {
-      // window.alert(JSON.stringify(slotInfo));
-      open();
-      setIsOpen(true);
-    }, 250);
-    console.log(`Slot ref: ${clickRef.current}`);
-    return slotInfo.start;
-  }, []);
-
+  /**
+   * Wrapper component
+   */
   const customComponents = useMemo(() => ({
     event: CustomEventCard,
     eventWrapper: CustomEventWrapper,
@@ -141,7 +159,6 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
 
   return (
     <chakra.div>
-      {isOpen && <TitleInputModal />}
       <TimesUpdateButton timeChangeEvents={eventList} />
       <chakra.div className={flexXmandatory}>
         <chakra.div className={cx(gridArea, topWidth)} flexShrink="0" scrollSnapAlign="start">
@@ -161,8 +178,19 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
               endAccessor="end"
               onNavigate={onNavigate}
               eventPropGetter={eventPropGetter}
+              // onDragStart={(...args) => console.log(args)}
+              onDragStart={onDragStart}
               onEventDrop={onEventDrop}
               onEventResize={onEventResize}
+              // onEventDrop={() => {
+              //   if(selectedStaff)
+              //     infoContext === selectedStaff.toString() ? onEventDrop : undefined
+              //   }
+              // }
+              // onEventResize={() => {
+              //   if(selectedStaff)infoContext === selectedStaff.toString() ? onEventResize : undefined
+              //   }
+              // }
               resizable
               onSelectEvent={handleSelectEvent}
               onSelectSlot={onSelectSlot}
@@ -173,6 +201,11 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
             />
           </chakra.div>
         </chakra.div>
+        <Dialog {...slotInfoState}>
+          <p>入力フォームコンテンツ</p>
+          {slotInfoState && <TitleInput authInfo={guard} slotStartTime={slotInfoState.start} />}
+          <button onClick={close}>close</button>
+        </Dialog>
         <chakra.div flexShrink="0" scrollSnapAlign="start"
           className={topWidth}
           onClick={handleOuterFormBubbling}>

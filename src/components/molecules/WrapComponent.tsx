@@ -2,8 +2,8 @@ import { CSSProperties, PropsWithChildren, useRef } from 'react';
 
 import { EventWrapperProps, EventProps } from 'react-big-calendar';
 
-import { useSearchQuery } from '../../resources/queries';
 import { TimelineEventProps } from "../../lib/TimelineType";
+import { useSearchQuery } from '../../resources/queries';
 
 // React component type in TypeScript
 // https://stackoverflow.com/questions/56947690/react-component-type-in-typescript
@@ -36,13 +36,19 @@ export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) 
 
   const ref = useRef<HTMLDivElement>(null);
   const elm = ref.current?.querySelector('.rbc-event');
+  // useEffect(() => {
+  //   console.log(`Parent height: ${ref.current?.addEventListener}`);
+  // }, [ref]);
   // view-portからの座標、今回使わない
   // console.log(`Role button div: ${JSON.stringify(elm?.getBoundingClientRect())}`);
   // const childRefTop = elm?.getBoundingClientRect().top;
 
   const wrapperStyle: CSSProperties = {
     width: 'fit-content',
-    height: '100%'
+    height: '100%',
+    // width: '100%',
+    // height: `${ref.current?.clientHeight}px`,
+    // pointerEvents: 'fill'
   }
   const nextStyle: CSSProperties = {
     width: '100%',
@@ -51,23 +57,27 @@ export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) 
     outlineOffset: '2px',
     boxSizing: 'border-box',
     position: 'absolute',
-    top: `${style?.top}%`
+    top: `${style?.top}%`,
   }
 
   const handleCapture = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    console.log(`Capture event: ${e.target}`);
+    // console.log('Capture event: ', e.target);
     if(!(e.target instanceof HTMLButtonElement)){
       return;
     }
     onClick(e);
     alert('受け取りました');
+    // e.stopPropagation();
   }
 
+	const { data } = useSearchQuery('userID');
   return (
-    <div style={wrapperStyle} ref={ref}>
-      <button style={nextStyle} onClick={(e) => handleCapture(e)}></button>
-      {props.children}
-    </div>
+    // event.staff_id.toString() != data ?
+      <div style={wrapperStyle} ref={ref}>
+        <button style={nextStyle} onClick={(e) => handleCapture(e)}></button>
+        {props.children}
+      </div>
+      // : <div style={wrapperStyle}>{props.children}</div>
   );
 }
 

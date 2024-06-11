@@ -28,7 +28,7 @@ export const useMouseEvents = () => {
     });
     prevRef.current = handleEvent;
     prevRef.current.isDraggable = true;
-    console.log(`Handle event: ${JSON.stringify(prevRef.current)}`);
+    console.log(`DnD previsious event: ${JSON.stringify(prevRef.current)}`);
   // }
   }, []);
 
@@ -49,7 +49,7 @@ export const useMouseEvents = () => {
     });
     prevRef.current = handleEvent;
     prevRef.current.isDraggable = true;
-    console.log(`Handle event: ${JSON.stringify(prevRef.current)}`);
+    console.log(`DnD Previsious event: ${JSON.stringify(prevRef.current)}`);
     // }
   }, []);
 

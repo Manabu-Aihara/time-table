@@ -5,7 +5,7 @@ import Timeline from 'react-calendar-timeline';
 
 import { TimelineEventProps } from '../../lib/TimelineType';
 import { useEventsState, useAuthContext } from '../../hooks/useContextFamily';
-import { TitleInputModal } from '../organisms/DialogComponent'; 
+// import { TitleInputModal } from '../organisms/DialogComponent'; 
 import { AddChildForm } from "../organisms/InputItem";
 
 // make sure you include the timeline stylesheet or the timeline will not be styled
@@ -93,7 +93,7 @@ export const SampleTimeline = ({onShowFormView, targetEvent}: EventProps) => {
       <chakra.div flexShrink="0" scrollSnapAlign="start" onClick={handleOuterBubbling}>
         {showModal && <AddChildForm selectedEvent={targetEvent} closeClick={closeInputForm} ref={divRef} />}
       </chakra.div>
-      <TitleInputModal />
+      {/* <TitleInputModal /> */}
     </div>
   );
 }
