@@ -22,7 +22,7 @@ export const TimesUpdateButton = forwardRef(
   const handleUpdateAction = () => {
     updateEvents.mutate(timeChangeEvents);
     // console.log('Updateしたつもり');
-    timeChangeEvents.splice(0);
+    // timeChangeEvents.splice(0);
   }
 
   return (
