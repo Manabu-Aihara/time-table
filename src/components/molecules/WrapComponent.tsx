@@ -7,21 +7,22 @@ import { useSearchQuery } from '../../resources/queries';
 
 // React component type in TypeScript
 // https://stackoverflow.com/questions/56947690/react-component-type-in-typescript
-export const CustomContainerWrapper: React.FC<PropsWithChildren> = ({children}) => {
+export const CustomContainerWrapper: React.FC<PropsWithChildren> =
+  (props) => {
   const containerStyle: CSSProperties = {
     width: '100%',
     height: '100%',
     background: 'pink',
-    position: 'relative'
+    // position: 'relative'
   }
-
+  console.log('Container FC: ', props);
   return (
-    <div
-      id="custom-container-wrapper"
-      // style={containerStyle}
-    >
-      {children}
-    </div>
+      <div
+        id="custom-container-wrapper"
+        style={containerStyle}
+      >
+        {props.children}
+      </div>
   );
 }
 
@@ -36,9 +37,6 @@ export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) 
 
   const ref = useRef<HTMLDivElement>(null);
   const elm = ref.current?.querySelector('.rbc-event');
-  // useEffect(() => {
-  //   console.log(`Parent height: ${ref.current?.addEventListener}`);
-  // }, [ref]);
   // view-portからの座標、今回使わない
   // console.log(`Role button div: ${JSON.stringify(elm?.getBoundingClientRect())}`);
   // const childRefTop = elm?.getBoundingClientRect().top;
@@ -46,9 +44,6 @@ export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) 
   const wrapperStyle: CSSProperties = {
     width: 'fit-content',
     height: '100%',
-    // width: '100%',
-    // height: `${ref.current?.clientHeight}px`,
-    // pointerEvents: 'fill'
   }
   const nextStyle: CSSProperties = {
     width: '100%',
@@ -67,17 +62,13 @@ export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) 
     }
     onClick(e);
     alert('受け取りました');
-    // e.stopPropagation();
   }
 
-	const { data } = useSearchQuery('userID');
   return (
-    // event.staff_id.toString() != data ?
-      <div style={wrapperStyle} ref={ref}>
+      <div ref={ref}>
         <button style={nextStyle} onClick={(e) => handleCapture(e)}></button>
         {props.children}
       </div>
-      // : <div style={wrapperStyle}>{props.children}</div>
   );
 }
 

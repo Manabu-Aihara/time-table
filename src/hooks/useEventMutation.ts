@@ -29,8 +29,9 @@ export const useDeleteMutation = (targetId: number | string) => {
   return useMutation({
     mutationFn: () =>
       basicAxios.delete(`/event/remove/${targetId}`),
-    onSuccess: () => {
-      console.log('ここ通ってます');
+    onSettled: (error) => {
+      console.log('サクセス通ってます');
+      console.log(`error!: ${error}`);
       return eventCache.invalidateList();
     }
   });

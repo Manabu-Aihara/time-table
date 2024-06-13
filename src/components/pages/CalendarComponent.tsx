@@ -13,7 +13,7 @@ import { TimelineEventProps } from '../../lib/TimelineType';
 import { CustomContainerWrapper, CustomEventWrapper, CustomEventCard } from '../molecules/WrapComponent';
 import { TimesUpdateButton } from '../molecules/TimeUpdateButtonComponent';
 import { MyWeek } from '../organisms/DaysClassComponent';
-import views from '../organisms/DaysComponent';
+import { views } from '../organisms/DaysComponent';
 import { AddChildForm } from "../organisms/InputItem";
 import { useSearchQuery } from '../../resources/queries';
 
@@ -91,17 +91,24 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   /**
    * Slot and Dialog
    */
+  const countRef = useRef<number | undefined>();
+
   const { Dialog, open, close } = useDialog();
   const clickRef = useRef<number | undefined>(undefined);
   const [slotInfoState, setSlotInfoState] = useState<SlotInfo>();
-  useChangeDebugger([targetEvent]);
+  // useChangeDebugger([targetEvent]);
   // console.log('Compared: ', targetEvent, prevValue);
   const onSelectSlot = useCallback((slotInfo: SlotInfo) => {
     window.clearTimeout(clickRef?.current);
     clickRef.current = window.setTimeout(() => {
+    if(countRef.current === clickRef.current){
       setSlotInfoState(slotInfo);
+      console.log('ここ通りました');
       open();
-    }, 250)
+    }
+    }, 250);
+    countRef.current = clickRef.current;
+    console.log('今の状態 Slot: ', countRef.current, clickRef.current);
   }, []);
 
   const guard = useAuthInfo();
@@ -120,25 +127,25 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
     setShowModal(false);
   }
 
-  useEffect(() => {
-    divRef.current?.scrollIntoView({behavior: 'smooth'});
-    // const month_elem = calendarRef.current?.querySelector('.rbc-month-view');
-    // console.log(`Month view: ${month_elem?.classList.add()}`);
-  }, [targetEvent]);
-
   const handleSelectEvent = useCallback(
     (callingEvent: TimelineEventProps, e: React.SyntheticEvent) =>
   {
-    // e.stopPropagation();
-    console.log(`Selected event: ${JSON.stringify(callingEvent)}`, e.target);
+    e.preventDefault();
+    // console.log(`Selected event: ${JSON.stringify(callingEvent)}`, e.target);
     onShowFormView(callingEvent);
+    countRef.current = undefined;
+    console.log('切り替わりました Handle: ', countRef.current);
     setShowModal(true);
   }, []);
+
+  useEffect(() => {
+    // console.log('Effect通りました', eventFlag);
+    divRef.current?.scrollIntoView({behavior: 'smooth'});
+  }, [targetEvent]);
 
   const onDragStart = useCallback((args: OnDragStartArgs<TimelineEventProps>) => {
     const { event, action } = args;
     if(action === 'move'){
-      alert(action);
       onShowFormView(event);
       setShowModal(true);
     }
@@ -182,22 +189,13 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
               onDragStart={onDragStart}
               onEventDrop={onEventDrop}
               onEventResize={onEventResize}
-              // onEventDrop={() => {
-              //   if(selectedStaff)
-              //     infoContext === selectedStaff.toString() ? onEventDrop : undefined
-              //   }
-              // }
-              // onEventResize={() => {
-              //   if(selectedStaff)infoContext === selectedStaff.toString() ? onEventResize : undefined
-              //   }
-              // }
               resizable
               onSelectEvent={handleSelectEvent}
               onSelectSlot={onSelectSlot}
               selectable
               onView={onView}
               components={customComponents}
-              views={views.views}
+              views={views}
             />
           </chakra.div>
         </chakra.div>
