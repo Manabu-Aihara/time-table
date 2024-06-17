@@ -23,7 +23,6 @@ import cx from 'classnames';
 import { topWidth } from '../sprinkles.responsive.css';
 import { flexXmandatory, gridArea } from './CalendarComponent.css';
 import { TitleInput } from '../organisms/InputTitleDialog';
-import { useChangeDebugger, usePrevious } from '../../hooks/useCompare';
 // import { eventData } from '../../lib/SampleState';
 
 interface EventFormProps {
@@ -53,8 +52,8 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
       return { style: exceptStyle }
     }else{
       // console.log('下通りました');
-      // return draggableClass
-      return { style: indenticalStyle }
+      return draggableClass
+      // return { style: indenticalStyle }
     }
   }, [data]);
   
@@ -64,7 +63,6 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   const DnDCalendar = withDragAndDrop(Calendar<TimelineEventProps>);
   const { onEventResize, onEventDrop, eventList, prevRef } = useMouseEvents();
 
-  // リテラルタイプ化
 	const selectedStaff = `${prevRef.current?.staff_id}` as const;
 	const { data: infoContext } = useSearchQuery('userID');
   // console.log(infoContext === selectedStaff.toString() ? true : false);
@@ -72,9 +70,10 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   state.map((evt, j) => {
     if(prevRef){
       (prevRef.current?.isDraggable === true && prevRef.current.id === evt.id)
-        && (delete state[j] && console.log(`Exclude event id: ${prevRef.current?.id}, ${j}`));
+        ? prevRef.current = undefined : state[j]
     }
   });
+  /* && console.log(`Exclude event id: ${prevRef.current?.id}, ${j}`)*/
   // console.log(`Old state: ${JSON.stringify(state)}`);
   const newState = eventList ? state.concat(eventList) : state;
   console.log(`Expect update events: ${JSON.stringify(eventList)}`);
@@ -101,11 +100,11 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   const onSelectSlot = useCallback((slotInfo: SlotInfo) => {
     window.clearTimeout(clickRef?.current);
     clickRef.current = window.setTimeout(() => {
-    if(countRef.current === clickRef.current){
-      setSlotInfoState(slotInfo);
-      console.log('ここ通りました');
-      open();
-    }
+      if(countRef.current === clickRef.current){
+        setSlotInfoState(slotInfo);
+        console.log('ここ通りました');
+        open();
+      }
     }, 250);
     countRef.current = clickRef.current;
     console.log('今の状態 Slot: ', countRef.current, clickRef.current);
@@ -128,10 +127,9 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   }
 
   const handleSelectEvent = useCallback(
-    (callingEvent: TimelineEventProps, e: React.SyntheticEvent) =>
+    (callingEvent: TimelineEventProps, e: React.SyntheticEvent<HTMLElement, Event>) =>
   {
-    e.preventDefault();
-    // console.log(`Selected event: ${JSON.stringify(callingEvent)}`, e.target);
+    console.log(`Event motion: ${e.type}`);
     onShowFormView(callingEvent);
     countRef.current = undefined;
     console.log('切り替わりました Handle: ', countRef.current);
@@ -190,9 +188,10 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
               onEventDrop={onEventDrop}
               onEventResize={onEventResize}
               resizable
-              onSelectEvent={handleSelectEvent}
+              // onSelectEvent={handleSelectEvent}
+              onDoubleClickEvent={handleSelectEvent}
               onSelectSlot={onSelectSlot}
-              selectable
+              selectable='ignoreEvents'
               onView={onView}
               components={customComponents}
               views={views}

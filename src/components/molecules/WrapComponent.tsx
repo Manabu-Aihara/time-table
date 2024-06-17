@@ -1,4 +1,4 @@
-import { CSSProperties, PropsWithChildren, useRef } from 'react';
+import { CSSProperties, ComponentPropsWithRef, PropsWithChildren, useRef } from 'react';
 
 import { EventWrapperProps, EventProps } from 'react-big-calendar';
 
@@ -7,7 +7,7 @@ import { useSearchQuery } from '../../resources/queries';
 
 // React component type in TypeScript
 // https://stackoverflow.com/questions/56947690/react-component-type-in-typescript
-export const CustomContainerWrapper: React.FC<PropsWithChildren> =
+export const CustomContainerWrapper: React.FC<Record<string, never>> =
   (props) => {
   const containerStyle: CSSProperties = {
     width: '100%',
@@ -28,7 +28,7 @@ export const CustomContainerWrapper: React.FC<PropsWithChildren> =
 
 type ComponentWithChildrenProps = PropsWithChildren<EventWrapperProps<TimelineEventProps>>
 export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) => {
-  const { event, onClick, style } = props;
+  const { event, onClick, onDoubleClick, style } = props;
 
   const getterMaybeProp = props.getters.eventProp;
   const getterProp = getterMaybeProp && getterMaybeProp(event, event.start!, event.end!, false);
@@ -56,7 +56,8 @@ export const CustomEventWrapper: React.FC<ComponentWithChildrenProps> = (props) 
   }
 
   const handleCapture = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    // console.log('Capture event: ', e.target);
+    // ID違いのフォーム表示
+    // console.log('Capture event: ', e);
     if(!(e.target instanceof HTMLButtonElement)){
       return;
     }

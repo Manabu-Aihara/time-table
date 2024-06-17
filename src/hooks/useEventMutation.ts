@@ -70,12 +70,14 @@ export const useUpdateDateListMutation = (targetIds: string[]) => {
       );
       return { prevEvents };
     },
-    // onError: (error, variables, context) => {
+    // 一回引っかかって、ここで終了してしまう
+    // onError: (error, variables) => {
     //   console.log(`error!: ${error}`);
-    //   console.log(`variables: ${variables}, context: ${JSON.stringify(context)}`)
+    //   console.log(`variables: ${JSON.stringify(variables)}, context: prevEventsと同じよ`)
     // },
-    onSettled: (error) => {
-      console.log(`error!: ${error}`);
+    onSettled: (data, error) => {
+      console.log(`Mutation data: ${data}`);
+      console.log(`Mutation error: ${error}`);
       eventCache.invalidateList();
     }
   });
