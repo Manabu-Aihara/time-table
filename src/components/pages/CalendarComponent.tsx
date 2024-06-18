@@ -63,15 +63,18 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   const DnDCalendar = withDragAndDrop(Calendar<TimelineEventProps>);
   const { onEventResize, onEventDrop, eventList, prevRef } = useMouseEvents();
 
-	const selectedStaff = `${prevRef.current?.staff_id}` as const;
-	const { data: infoContext } = useSearchQuery('userID');
+	// const selectedStaff = `${prevRef.current?.staff_id}` as const;
+	// const { data: infoContext } = useSearchQuery('userID');
   // console.log(infoContext === selectedStaff.toString() ? true : false);
 
   state.map((evt, j) => {
-    if(prevRef){
-      (prevRef.current?.isDraggable === true && prevRef.current.id === evt.id)
-        ? prevRef.current = undefined : state[j]
+  // if(prevRef){
+    if(prevRef.current?.isDraggable === true && prevRef.current.id === evt.id){
+      console.log(`Exclude event id: ${prevRef.current?.id}, ${j}`);
+      delete state[j];
+      prevRef.current = undefined;
     }
+  // }
   });
   /* && console.log(`Exclude event id: ${prevRef.current?.id}, ${j}`)*/
   // console.log(`Old state: ${JSON.stringify(state)}`);

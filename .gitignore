@@ -29,5 +29,10 @@ sample/
 *.old
 
 # こっちの都合
-*.bak
+env/.env
+yarn.lock
 package-lock.json
+_tank.txt
+*.bak
+src/sample/
+_dust/
