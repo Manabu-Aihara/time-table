@@ -33,9 +33,9 @@ export const useDeleteMutation = (targetId: number | string) => {
     // onError: (error) => {
     //   console.log(`error!: ${error}`);
     // },
-    onSuccess: () => {
+    onSettled: () => {
       console.log('サクセス通ってます');
-      return eventCache.invalidateList();
+      eventCache.invalidateList();
     }
   });
 }
