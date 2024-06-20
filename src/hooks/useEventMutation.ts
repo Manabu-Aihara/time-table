@@ -49,10 +49,13 @@ export const useUpdateEventMutation = (targetId: number | string) => {
     onMutate: (timelineEvent) => {
       queryClient.setQueryData(eventKeys.detail(targetId), timelineEvent);
     },
-    onError: (error) => console.log(`error!: ${error}`),
-    onSuccess: () => {
+    // 一回引っかかって、ここで終了してしまう
+    // onError: (error) => console.log(`error!: ${error}`),
+    onSettled: (data, error) => {
+      // console.log(`Mutation data: ${data}`);
+      console.log(`Mutation error: ${error}`);
       eventCache.invalidateList();
-    },
+    }
   });
 }
 
