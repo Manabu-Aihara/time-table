@@ -132,7 +132,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   const handleSelectEvent = useCallback(
     (callingEvent: TimelineEventProps, e: React.SyntheticEvent<HTMLElement, Event>) =>
   {
-    console.log(`Event motion: ${e.type}`);
+    console.log(`Event motion: ${e.nativeEvent}`);
     onShowFormView(callingEvent);
     countRef.current = undefined;
     console.log('切り替わりました Handle: ', countRef.current);
@@ -191,8 +191,8 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
               onEventDrop={onEventDrop}
               onEventResize={onEventResize}
               resizable
-              // onSelectEvent={handleSelectEvent}
-              onDoubleClickEvent={handleSelectEvent}
+              onSelectEvent={handleSelectEvent}
+              // onDoubleClickEvent={handleSelectEvent}
               onSelectSlot={onSelectSlot}
               selectable='ignoreEvents'
               onView={onView}
