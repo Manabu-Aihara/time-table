@@ -29,9 +29,10 @@ export const useDeleteMutation = (targetId: number | string) => {
   return useMutation({
     mutationFn: () =>
       basicAxios.delete(`/event/remove/${targetId}`),
-    onError: (error) => {
-      console.log(`error!: ${error}`);
-    },
+    // 一回引っかかって、ここで終了してしまう
+    // onError: (error) => {
+    //   console.log(`error!: ${error}`);
+    // },
     onSuccess: () => {
       console.log('サクセス通ってます');
       return eventCache.invalidateList();
@@ -49,13 +50,10 @@ export const useUpdateEventMutation = (targetId: number | string) => {
     onMutate: (timelineEvent) => {
       queryClient.setQueryData(eventKeys.detail(targetId), timelineEvent);
     },
-    // 一回引っかかって、ここで終了してしまう
-    // onError: (error) => console.log(`error!: ${error}`),
-    onSettled: (data, error) => {
-      // console.log(`Mutation data: ${data}`);
-      console.log(`Mutation error: ${error}`);
+    onError: (error) => console.log(`error!: ${error}`),
+    onSuccess: () => {
       eventCache.invalidateList();
-    }
+    },
   });
 }
 
