@@ -4,12 +4,13 @@ import { AuthInfoProp, TimelineEventProps } from "../lib/TimelineType";
 // import { AuthGuardContext } from "../components/templates/AuthParent";
 import basicAxios from "../lib/AuthInfo";
 
+const BASE_URL = import.meta.env.VITE_PANDA;
 export const fetchEventsData = async (postToken: string): Promise<TimelineEventProps[]> => {
 	const { data } = await basicAxios.request<TimelineEventProps[]>({
 		url: '/event/all',
 		method: 'GET',
 		headers: {
-			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Origin': BASE_URL,
 			'Authorization': `Bearer ${postToken}`,
 			'credentials': 'include' // ここを追加。
 		}
@@ -28,7 +29,7 @@ export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse
   const authResponse = await basicAxios.post<AxiosResponse>('/timetable/inquiry', postToken,
 		{
 			headers: {
-				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Origin': BASE_URL,
 				'Authorization': `Bearer ${postToken}`,
 				'credentials': 'include' // ここを追加。
 			}
@@ -44,7 +45,7 @@ export const fetchGetResponse = async (postToken: string): Promise<AxiosResponse
 export const refresh = async (prev: string): Promise<AxiosResponse<string>> => {
   const response = await basicAxios.get<AxiosResponse>('/refresh', {
     headers: {
-			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Origin': BASE_URL,
 			'Authorization': `Bearer ${prev}`,
 			'credentials': 'include' // ここを追加。
 		}
