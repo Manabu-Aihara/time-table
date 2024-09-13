@@ -88,7 +88,7 @@ export const MyCalendar = ({onShowFormView, targetEvent}: EventFormProps) => {
   const [returnView, setReturnView] = useState<View>();
   const onView = useCallback((newView: View) => setReturnView(newView), [setReturnView]);
 
-  console.log(`Calendar state: ${JSON.stringify(newState)}`);
+  // console.log(`Calendar state: ${JSON.stringify(newState)}`);
 
   /**
    * Slot and Dialog

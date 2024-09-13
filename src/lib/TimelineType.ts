@@ -63,7 +63,7 @@ export type PickDate = Pick<TimelineEventProps, 'start' | 'end' | 'id'>;
 
 // ここから、認証Prop
 export type AuthInfoProp =
-	{ type: 'auth'; authId: number; group: number }
+	{ type: 'auth'; authId: number; code: number; group: string }
 	| { type: 'token'; accessToken: string };
 
 type Option<V> =
@@ -78,7 +78,7 @@ type ExpectedAuth<V extends Option<unknown>> = V extends Option<infer R> ? R : n
 
 export type AuthGuardContext = ExpectedAuth<Option<AuthInfoProp>>;
 const opt1: AuthGuardContext = {type: 'token', accessToken: ''};
-const opt2: AuthGuardContext = {type: 'auth', authId: 0, group: 100};
+const opt2: AuthGuardContext = {type: 'auth', authId: 0, code: 100, group: ''};
 
 // type DecentEventWrapperProps = Omit<EventWrapperProps<TimelineEventProps>,
 // 	'continuesAfter' | 'continuesPrior' | 'isBackgroundEvent' | 'resizable'>;

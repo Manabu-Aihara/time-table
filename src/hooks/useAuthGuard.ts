@@ -11,9 +11,9 @@ export const useAuthInfo = () => {
   const strData = JSON.stringify(data);
   // パターン 1
   const objValue = JSON.parse(strData);
-  console.log(`Json type: ${typeof objValue.staff_id}, ${typeof objValue.group_id}`);
+  // console.log(`Json type: ${typeof objValue.staff_id}, ${typeof objValue.group_name}`);
   const guard: AuthInfoProp = {
-    authId: objValue.staff_id, group: objValue.group_id, type: 'auth'
+    authId: objValue.staff_id, code: objValue.group_id, group: objValue.group_name, type: 'auth'
   } as const;
 
   return guard;

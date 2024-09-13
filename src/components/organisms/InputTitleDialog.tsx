@@ -35,7 +35,7 @@ export const TitleInput = ({authInfo, slotStartTime}: TitleInputProps) => {
       // createEvent.mutate(eventItem!);
       createEvent.mutate({
         id: Number(eventsState.slice(-1)[0].id) + 1,
-        group: authInfo.group,
+        group: authInfo.code,
         staff_id: authInfo.authId,
         title: title,
         start_time: moment(startDT),
