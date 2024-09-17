@@ -49,7 +49,7 @@ export const TitleInput = ({authInfo, slotStartTime}: TitleInputProps) => {
     <ChakraProvider>
       <Box>
         <Text>ID {authInfo.type === 'auth' ? authInfo.authId : 'IDなし'}</Text>
-        <Text>所属 {authInfo.type === 'auth' ? authInfo.group : 'グループなし'}</Text>
+        <Text>所属 {authInfo.type === 'auth' ? authInfo.code : 'グループなし'}</Text>
         <Text></Text>
         {/* <form onSubmit={onSubmit}> */}
         <Input
