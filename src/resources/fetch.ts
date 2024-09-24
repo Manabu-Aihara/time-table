@@ -4,7 +4,7 @@ import { AuthInfoProp, TimelineEventProps } from "../lib/TimelineType";
 // import { AuthGuardContext } from "../components/templates/AuthParent";
 import basicAxios from "../lib/AuthInfo";
 
-const BASE_URL = import.meta.env.VITE_PANDA;
+const BASE_URL = import.meta.env.VITE_LOCAL;
 export const fetchEventsData = async (postToken: string): Promise<TimelineEventProps[]> => {
 	const { data } = await basicAxios.request<TimelineEventProps[]>({
 		url: '/event/all',

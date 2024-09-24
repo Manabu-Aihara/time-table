@@ -40,7 +40,7 @@ export const AddChildForm = forwardRef(
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLSelectElement>) => {
 		// name, valueという変数名で決まっているようだ
 		const {name, value} = e.target;
-		console.log(`event.target name: ${name}`);
+		// console.log(`event.target name: ${name}`);
 		setEventItem({...eventItem, [name]:value});
 	}
 
